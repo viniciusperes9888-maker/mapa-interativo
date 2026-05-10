@@ -74,6 +74,7 @@ margin-bottom:10px;
 color:white;
 cursor:pointer;
 transition:0.2s;
+user-select:none;
 }
 
 .menu-item:hover{
@@ -119,22 +120,22 @@ line-height:1.5;
 <div id="sidebar">
 
 <div class="menu-title">
-Categorias
+CATEGORIAS
 </div>
 
-<div class="menu-item">
+<div class="menu-item" onclick="toggleCategoria('Acidente')">
 🚗 Acidentes
 </div>
 
-<div class="menu-item">
+<div class="menu-item" onclick="toggleCategoria('Crime')">
 🔫 Crimes
 </div>
 
-<div class="menu-item">
+<div class="menu-item" onclick="toggleCategoria('Afogamento')">
 🌊 Afogamentos
 </div>
 
-<div class="menu-item">
+<div class="menu-item" onclick="toggleCategoria('Incêndio')">
 🔥 Incêndios
 </div>
 
@@ -154,6 +155,15 @@ zoom: 11
 });
 
 const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgXkVwHtnAUHymxilLI8PLSIe8vqTC-sZHNNy5RpgGlCCUYku0DDYXyFxXI8OWKQWZNxnhA820PGyA/pub?output=csv';
+
+let markers = [];
+
+let filtrosAtivos = {
+Acidente:true,
+Crime:true,
+Afogamento:true,
+Incêndio:true
+};
 
 Papa.parse(csvUrl, {
 
@@ -176,6 +186,10 @@ if(item.Categoria == 'Crime'){
 cor = 'black';
 }
 
+if(item.Categoria == 'Incêndio'){
+cor = 'orange';
+}
+
 const popupHTML = `
 
 <div class="popup-title">
@@ -191,13 +205,17 @@ ${item.Categoria}
 <b>Feridos:</b> ${item.VitimasFeridas}<br>
 <b>Mortos:</b> ${item.VitimasMortas}<br><br>
 
-${item.Descricao}
+${item.Descricao}<br><br>
+
+<a href="${item.Link}" target="_blank" style="color:#4da6ff;">
+Ver fonte
+</a>
 
 </div>
 
 `;
 
-new mapboxgl.Marker({
+const marker = new mapboxgl.Marker({
 color:cor
 })
 
@@ -213,6 +231,10 @@ new mapboxgl.Popup({offset:25})
 
 .addTo(map);
 
+marker.categoria = item.Categoria;
+
+markers.push(marker);
+
 }
 
 });
@@ -220,6 +242,30 @@ new mapboxgl.Popup({offset:25})
 }
 
 });
+
+function toggleCategoria(categoria){
+
+filtrosAtivos[categoria] = !filtrosAtivos[categoria];
+
+markers.forEach(marker => {
+
+if(marker.categoria == categoria){
+
+if(filtrosAtivos[categoria]){
+
+marker.getElement().style.display = 'block';
+
+}else{
+
+marker.getElement().style.display = 'none';
+
+}
+
+}
+
+});
+
+}
 
 </script>
 
