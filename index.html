@@ -1,16 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 
 <head>
-<meta charset="utf-8">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Coruja Presente</title>
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
 <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+
 <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
 
 <style>
 
@@ -22,347 +27,613 @@ font-family:Arial;
 }
 
 body{
-background:#111;
 overflow:hidden;
-}
-
-#topbar{
-position:absolute;
-top:0;
-left:0;
-right:0;
-height:70px;
-background:#161616;
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:0 25px;
-z-index:20;
-border-bottom:1px solid #2a2a2a;
-}
-
-#logo{
-color:white;
-font-size:34px;
-font-weight:bold;
-}
-
-#city-search{
-width:320px;
-padding:12px;
-border:none;
-border-radius:12px;
-background:#222;
-color:white;
-font-size:15px;
-outline:none;
-}
-
-#sidebar{
-position:absolute;
-top:70px;
-left:0;
-bottom:0;
-width:280px;
-background:#181818;
-padding:20px;
-z-index:20;
-overflow:auto;
-border-right:1px solid #2a2a2a;
+background:#0b0f14;
 }
 
 #map{
 position:absolute;
-top:70px;
-left:280px;
-right:340px;
+top:0;
 bottom:0;
+width:100%;
 }
 
-#rightpanel{
+/* TOPBAR */
+
+#topbar{
+
 position:absolute;
-top:70px;
-right:0;
-bottom:0;
-width:340px;
-background:#181818;
-padding:20px;
+top:15px;
+left:50%;
+transform:translateX(-50%);
+
+width:700px;
+height:60px;
+
+background:rgba(18,18,18,0.88);
+
+backdrop-filter:blur(12px);
+
+border:1px solid rgba(255,255,255,0.08);
+
+border-radius:18px;
+
 z-index:20;
-overflow:auto;
-border-left:1px solid #2a2a2a;
+
+display:flex;
+align-items:center;
+
+padding:0 18px;
+
+gap:15px;
+
+box-shadow:0 0 20px rgba(0,0,0,0.4);
+
 }
 
-.menu-title{
-color:#999;
-font-size:13px;
+#logo{
+
+color:white;
+font-size:24px;
+font-weight:bold;
+
+display:flex;
+align-items:center;
+
+gap:10px;
+
+white-space:nowrap;
+
+}
+
+#search{
+
+flex:1;
+
+height:42px;
+
+background:#1f252d;
+
+border:none;
+
+outline:none;
+
+border-radius:12px;
+
+padding:0 15px;
+
+color:white;
+
+font-size:15px;
+
+}
+
+/* SIDEBAR */
+
+#sidebar{
+
+position:absolute;
+
+left:18px;
+top:90px;
+
+width:230px;
+
+background:rgba(18,18,18,0.88);
+
+backdrop-filter:blur(12px);
+
+border:1px solid rgba(255,255,255,0.08);
+
+border-radius:18px;
+
+padding:18px;
+
+z-index:20;
+
+box-shadow:0 0 20px rgba(0,0,0,0.4);
+
+}
+
+.sidebar-title{
+
+color:#8d99a7;
+
+font-size:12px;
+
 margin-bottom:15px;
-text-transform:uppercase;
+
 letter-spacing:1px;
+
+text-transform:uppercase;
+
 }
 
 .menu-item{
-background:#222;
-padding:15px;
+
+background:#1d232b;
+
+height:52px;
+
 border-radius:14px;
-margin-bottom:12px;
-color:white;
-cursor:pointer;
-transition:0.2s;
+
 display:flex;
+
 align-items:center;
+
 justify-content:space-between;
+
+padding:0 14px;
+
+margin-bottom:10px;
+
+cursor:pointer;
+
+transition:0.2s;
+
+color:white;
+
 }
 
 .menu-item:hover{
-background:#333;
+
+background:#29313b;
+
 }
 
 .menu-left{
+
 display:flex;
+
 align-items:center;
-gap:10px;
+
+gap:12px;
+
 }
 
 .checkbox{
+
 width:18px;
 height:18px;
-border-radius:4px;
+
 background:#00c853;
+
+border-radius:5px;
+
 display:flex;
+
 align-items:center;
 justify-content:center;
+
 font-size:12px;
 font-weight:bold;
+
 }
 
 .counter{
-background:#333;
+
+background:#313944;
+
 padding:5px 10px;
+
 border-radius:20px;
-font-size:13px;
+
+font-size:12px;
+
 }
 
-.stats-box{
-background:#222;
+/* STATS */
+
+#stats{
+
+position:absolute;
+
+right:18px;
+top:90px;
+
+width:260px;
+
+display:flex;
+
+flex-direction:column;
+
+gap:14px;
+
+z-index:20;
+
+}
+
+.stats-card{
+
+background:rgba(18,18,18,0.88);
+
+backdrop-filter:blur(12px);
+
+border:1px solid rgba(255,255,255,0.08);
+
+border-radius:18px;
+
 padding:18px;
-border-radius:16px;
-margin-bottom:18px;
+
+box-shadow:0 0 20px rgba(0,0,0,0.4);
+
 }
 
 .stats-title{
-font-size:13px;
-color:#999;
+
+font-size:12px;
+
+color:#95a0af;
+
 margin-bottom:10px;
+
 text-transform:uppercase;
+
 }
 
-.stats-number{
-font-size:42px;
+.stats-value{
+
+font-size:40px;
+
 font-weight:bold;
+
 color:white;
+
 }
 
-.stats-text{
-font-size:26px;
+.stats-small{
+
+font-size:22px;
+
 font-weight:bold;
+
 color:white;
+
 }
+
+/* POPUP */
 
 .mapboxgl-popup-content{
-background:#1b1b1b;
+
+background:#15191f;
+
 color:white;
-border-radius:16px;
+
+border-radius:18px;
+
 padding:18px;
+
+border:1px solid rgba(255,255,255,0.08);
+
 }
 
 .popup-title{
+
 font-size:22px;
+
 font-weight:bold;
+
 margin-bottom:12px;
-color:#ff4d4d;
+
+color:#ff5a5a;
+
 }
 
-.popup-text{
+.popup-content{
+
 font-size:14px;
+
 line-height:1.7;
+
 }
 
-.popup-link{
+.popup-button{
+
 display:inline-block;
+
 margin-top:12px;
+
+background:#262f3a;
+
 padding:10px 14px;
+
 border-radius:10px;
-background:#2a2a2a;
+
 color:white;
+
 text-decoration:none;
+
 }
 
 </style>
+
 </head>
 
 <body>
 
+<div id="map"></div>
+
+<!-- TOPBAR -->
+
 <div id="topbar">
 
 <div id="logo">
+
 🦉 Coruja Presente
+
 </div>
 
 <input
 type="text"
-id="city-search"
-placeholder="🔍 Onde você mora?"
+id="search"
+placeholder="Onde você mora?"
 >
 
 </div>
 
+<!-- SIDEBAR -->
+
 <div id="sidebar">
 
-<div class="menu-title">
+<div class="sidebar-title">
+
 Categorias
+
 </div>
 
-<div class="menu-item" onclick="toggleCategoria('Acidente')">
+<div class="menu-item"
+onclick="toggleCategoria('Acidente')">
 
 <div class="menu-left">
-<div class="checkbox" id="check-Acidente">✓</div>
-🚗 Acidentes
+
+<div class="checkbox"
+id="check-Acidente">
+
+✓
+
 </div>
 
-<div class="counter" id="count-Acidente">0</div>
+<i class="fa-solid fa-car-burst"></i>
+
+Acidentes
 
 </div>
 
-<div class="menu-item" onclick="toggleCategoria('Crime')">
+<div class="counter"
+id="count-Acidente">
+
+0
+
+</div>
+
+</div>
+
+<div class="menu-item"
+onclick="toggleCategoria('Crime')">
 
 <div class="menu-left">
-<div class="checkbox" id="check-Crime">✓</div>
-🔫 Crimes
+
+<div class="checkbox"
+id="check-Crime">
+
+✓
+
 </div>
 
-<div class="counter" id="count-Crime">0</div>
+<i class="fa-solid fa-gun"></i>
+
+Crimes
 
 </div>
 
-<div class="menu-item" onclick="toggleCategoria('Afogamento')">
+<div class="counter"
+id="count-Crime">
+
+0
+
+</div>
+
+</div>
+
+<div class="menu-item"
+onclick="toggleCategoria('Afogamento')">
 
 <div class="menu-left">
-<div class="checkbox" id="check-Afogamento">✓</div>
-🌊 Afogamentos
+
+<div class="checkbox"
+id="check-Afogamento">
+
+✓
+
 </div>
 
-<div class="counter" id="count-Afogamento">0</div>
+<i class="fa-solid fa-water"></i>
+
+Afogamentos
 
 </div>
 
-<div class="menu-item" onclick="toggleCategoria('Incêndio')">
+<div class="counter"
+id="count-Afogamento">
+
+0
+
+</div>
+
+</div>
+
+<div class="menu-item"
+onclick="toggleCategoria('Incêndio')">
 
 <div class="menu-left">
-<div class="checkbox" id="check-Incêndio">✓</div>
-🔥 Incêndios
-</div>
 
-<div class="counter" id="count-Incêndio">0</div>
+<div class="checkbox"
+id="check-Incêndio">
 
-</div>
+✓
 
 </div>
 
-<div id="map"></div>
+<i class="fa-solid fa-fire"></i>
 
-<div id="rightpanel">
+Incêndios
 
-<div class="menu-title">
-Estatísticas da cidade
 </div>
 
-<div class="stats-box">
+<div class="counter"
+id="count-Incêndio">
+
+0
+
+</div>
+
+</div>
+
+</div>
+
+<!-- STATS -->
+
+<div id="stats">
+
+<div class="stats-card">
+
 <div class="stats-title">
-Cidade selecionada
+
+Cidade atual
+
 </div>
 
-<div class="stats-text" id="cidadeAtual">
+<div class="stats-small"
+id="cidadeAtual">
+
 Macaé
-</div>
+
 </div>
 
-<div class="stats-box">
+</div>
+
+<div class="stats-card">
+
 <div class="stats-title">
+
 Ocorrências filtradas
+
 </div>
 
-<div class="stats-number" id="totalOcorrencias">
+<div class="stats-value"
+id="totalOcorrencias">
+
 0
-</div>
+
 </div>
 
-<div class="stats-box">
+</div>
+
+<div class="stats-card">
+
 <div class="stats-title">
+
 Categoria dominante
+
 </div>
 
-<div class="stats-text" id="categoriaDominante">
+<div class="stats-small"
+id="categoriaDominante">
+
 -
-</div>
+
 </div>
 
-<div class="stats-box">
+</div>
+
+<div class="stats-card">
+
 <div class="stats-title">
+
 Bairro mais afetado
+
 </div>
 
-<div class="stats-text" id="bairroDominante">
+<div class="stats-small"
+id="bairroDominante">
+
 -
-</div>
+
 </div>
 
-<div class="stats-box">
+</div>
+
+<div class="stats-card">
+
 <div class="stats-title">
+
 Mortes registradas
+
 </div>
 
-<div class="stats-number" id="totalMortes">
+<div class="stats-value"
+id="totalMortes">
+
 0
-</div>
+
 </div>
 
-<div class="stats-box">
+</div>
+
+<div class="stats-card">
+
 <div class="stats-title">
+
 Feridos registrados
+
 </div>
 
-<div class="stats-number" id="totalFeridos">
+<div class="stats-value"
+id="totalFeridos">
+
 0
+
 </div>
+
 </div>
 
 </div>
 
 <script>
 
-mapboxgl.accessToken = 'pk.eyJ1IjoidnBzOTA5MCIsImEiOiJjbW9zcTcxaGowMXlnMnNwcnVzbmU0Y2VnIn0.nhpXVRVOFPbGjy_zBmnV-w';
+mapboxgl.accessToken =
+'pk.eyJ1IjoidnBzOTA5MCIsImEiOiJjbW9zcTcxaGowMXlnMnNwcnVzbmU0Y2VnIn0.nhpXVRVOFPbGjy_zBmnV-w';
 
 const map = new mapboxgl.Map({
+
 container:'map',
+
 style:'mapbox://styles/mapbox/dark-v11',
+
 center:[-41.8034,-22.4060],
+
 zoom:11,
-maxBounds:[
-[-42.3,-22.8],
-[-41.2,-21.8]
-]
+
+pitch:20,
+
+bearing:-10,
+
+antialias:true
+
 });
 
-const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgXkVwHtnAUHymxilLI8PLSIe8vqTC-sZHNNy5RpgGlCCUYku0DDYXyFxXI8OWKQWZNxnhA820PGyA/pub?output=csv';
+const csvUrl =
+'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgXkVwHtnAUHymxilLI8PLSIe8vqTC-sZHNNy5RpgGlCCUYku0DDYXyFxXI8OWKQWZNxnhA820PGyA/pub?output=csv';
 
 let markers = [];
-let dados = [];
 
 let filtrosAtivos = {
+
 Acidente:true,
 Crime:true,
 Afogamento:true,
 Incêndio:true
+
 };
 
 Papa.parse(csvUrl,{
@@ -372,77 +643,89 @@ header:true,
 
 complete:function(results){
 
-dados = results.data;
-
-criarMarcadores();
-atualizarPainel();
-
-}
-
-});
-
-function criarMarcadores(){
-
-dados.forEach(function(item){
+results.data.forEach(function(item){
 
 if(item.Latitude && item.Longitude){
 
-let cor = 'red';
+let cor = '#ff3b30';
 
 if(item.Categoria == 'Crime'){
-cor = 'black';
+cor = '#000';
 }
 
 if(item.Categoria == 'Afogamento'){
-cor = 'blue';
+cor = '#007aff';
 }
 
 if(item.Categoria == 'Incêndio'){
-cor = 'orange';
+cor = '#ff9500';
 }
 
 const popupHTML = `
 
 <div class="popup-title">
+
 ${item.TipoOcorrencia}
+
 </div>
 
-<div class="popup-text">
+<div class="popup-content">
 
 📍 ${item.Bairro}<br>
+
 🕒 ${item.Hora}<br>
+
 ⚠️ ${item.Gravidade}<br><br>
 
 ${item.Descricao}<br><br>
 
 Feridos: ${item.VitimasFeridas}<br>
+
 Mortos: ${item.VitimasMortas}<br>
 
-<a class="popup-link" href="${item.Link}" target="_blank">
+<a class="popup-button"
+href="${item.Link}"
+target="_blank">
+
 Ver fonte
+
 </a>
 
 </div>
 
 `;
 
-const marker = new mapboxgl.Marker({
+const marker =
+new mapboxgl.Marker({
+
 color:cor
+
 })
 
 .setLngLat([
+
 parseFloat(item.Longitude),
 parseFloat(item.Latitude)
+
 ])
 
 .setPopup(
-new mapboxgl.Popup({offset:25})
+
+new mapboxgl.Popup({
+
+offset:25
+
+})
+
 .setHTML(popupHTML)
+
 )
 
 .addTo(map);
 
-marker.categoria = item.Categoria;
+marker.categoria =
+item.Categoria;
+
 marker.item = item;
 
 markers.push(marker);
@@ -451,15 +734,22 @@ markers.push(marker);
 
 });
 
+atualizarPainel();
+
 }
+
+});
 
 function atualizarPainel(){
 
 let total = 0;
+
 let mortes = 0;
+
 let feridos = 0;
 
 let categorias = {};
+
 let bairros = {};
 
 markers.forEach(marker=>{
@@ -478,8 +768,11 @@ categorias[item.Categoria] =
 bairros[item.Bairro] =
 (bairros[item.Bairro] || 0) + 1;
 
-mortes += parseInt(item.VitimasMortas || 0);
-feridos += parseInt(item.VitimasFeridas || 0);
+mortes +=
+parseInt(item.VitimasMortas || 0);
+
+feridos +=
+parseInt(item.VitimasFeridas || 0);
 
 }else{
 
@@ -489,71 +782,95 @@ marker.getElement().style.display = 'none';
 
 });
 
-document.getElementById('totalOcorrencias').innerText = total;
-document.getElementById('totalMortes').innerText = mortes;
-document.getElementById('totalFeridos').innerText = feridos;
+document.getElementById('totalOcorrencias')
+.innerText = total;
+
+document.getElementById('totalMortes')
+.innerText = mortes;
+
+document.getElementById('totalFeridos')
+.innerText = feridos;
 
 let maiorCategoria = '-';
+
 let maiorCategoriaValor = 0;
 
 for(let categoria in categorias){
 
-if(categorias[categoria] > maiorCategoriaValor){
+if(categorias[categoria] >
+maiorCategoriaValor){
 
-maiorCategoriaValor = categorias[categoria];
-maiorCategoria = categoria;
+maiorCategoriaValor =
+categorias[categoria];
+
+maiorCategoria =
+categoria;
 
 }
 
 }
 
-document.getElementById('categoriaDominante').innerText = maiorCategoria;
+document.getElementById('categoriaDominante')
+.innerText = maiorCategoria;
 
 let maiorBairro = '-';
+
 let maiorBairroValor = 0;
 
 for(let bairro in bairros){
 
-if(bairros[bairro] > maiorBairroValor){
+if(bairros[bairro] >
+maiorBairroValor){
 
-maiorBairroValor = bairros[bairro];
-maiorBairro = bairro;
+maiorBairroValor =
+bairros[bairro];
+
+maiorBairro =
+bairro;
 
 }
 
 }
 
-document.getElementById('bairroDominante').innerText = maiorBairro;
+document.getElementById('bairroDominante')
+.innerText = maiorBairro;
 
-document.getElementById('count-Acidente').innerText =
-categorias['Acidente'] || 0;
+document.getElementById('count-Acidente')
+.innerText = categorias['Acidente'] || 0;
 
-document.getElementById('count-Crime').innerText =
-categorias['Crime'] || 0;
+document.getElementById('count-Crime')
+.innerText = categorias['Crime'] || 0;
 
-document.getElementById('count-Afogamento').innerText =
-categorias['Afogamento'] || 0;
+document.getElementById('count-Afogamento')
+.innerText = categorias['Afogamento'] || 0;
 
-document.getElementById('count-Incêndio').innerText =
-categorias['Incêndio'] || 0;
+document.getElementById('count-Incêndio')
+.innerText = categorias['Incêndio'] || 0;
 
 }
 
 function toggleCategoria(categoria){
 
-filtrosAtivos[categoria] = !filtrosAtivos[categoria];
+filtrosAtivos[categoria] =
+!filtrosAtivos[categoria];
 
 const checkbox =
-document.getElementById('check-' + categoria);
+document.getElementById(
+'check-' + categoria
+);
 
 if(filtrosAtivos[categoria]){
 
-checkbox.style.background = '#00c853';
+checkbox.style.background =
+'#00c853';
+
 checkbox.innerText = '✓';
 
 }else{
 
-checkbox.style.background = '#555';
+checkbox.style.background =
+'#555';
+
 checkbox.innerText = '';
 
 }
@@ -562,8 +879,10 @@ atualizarPainel();
 
 }
 
-document.getElementById('city-search')
-.addEventListener('keypress',function(e){
+document.getElementById('search')
+.addEventListener('keypress',
+
+function(e){
 
 if(e.key === 'Enter'){
 
@@ -574,12 +893,18 @@ if(cidade.includes('macae') ||
 cidade.includes('macaé')){
 
 map.flyTo({
+
 center:[-41.8034,-22.4060],
-zoom:11
+
+zoom:11,
+
+speed:1.2
+
 });
 
-document.getElementById('cidadeAtual')
-.innerText = 'Macaé';
+document.getElementById(
+'cidadeAtual'
+).innerText = 'Macaé';
 
 }
 
