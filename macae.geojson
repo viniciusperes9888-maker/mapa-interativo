@@ -1,0 +1,21 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Macaé"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-41.95, -22.45],
+          [-41.95, -22.20],
+          [-41.70, -22.20],
+          [-41.70, -22.45],
+          [-41.95, -22.45]
+        ]]
+      }
+    }
+  ]
+}

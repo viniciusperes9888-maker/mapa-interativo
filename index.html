@@ -610,15 +610,71 @@ container:'map',
 
 style:'mapbox://styles/mapbox/dark-v11',
 
-center:[-41.8034,-22.4060],
+center:[-41.79,-22.37],
 
-zoom:11,
+zoom:11.5,
 
 pitch:20,
 
 bearing:-10,
 
 antialias:true
+
+});
+
+/* DELIMITAÇÃO DE MACAÉ */
+
+map.on('load', () => {
+
+map.addSource('macae', {
+
+type:'geojson',
+
+data:'macae.geojson'
+
+});
+
+/* ÁREA SOMBREADA */
+
+map.addLayer({
+
+id:'macae-fill',
+
+type:'fill',
+
+source:'macae',
+
+paint:{
+
+'fill-color':'#ff0000',
+
+'fill-opacity':0.08
+
+}
+
+});
+
+/* BORDA DA CIDADE */
+
+map.addLayer({
+
+id:'macae-border',
+
+type:'line',
+
+source:'macae',
+
+paint:{
+
+'line-color':'#ff3b3b',
+
+'line-width':3,
+
+'line-opacity':0.9
+
+}
+
+});
 
 });
 
@@ -894,9 +950,9 @@ cidade.includes('macaé')){
 
 map.flyTo({
 
-center:[-41.8034,-22.4060],
+center:[-41.79,-22.37],
 
-zoom:11,
+zoom:11.5,
 
 speed:1.2
 
