@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -15,6 +16,7 @@
 
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+
 </head>
 
 <body>
@@ -24,6 +26,7 @@
 <header id="topbar">
 
 <div class="logo">
+
 <div class="logo__emblem">
 🦉
 </div>
@@ -32,14 +35,17 @@
 <div class="logo__name">Coruja Presente</div>
 <div class="logo__sub">INTELIGÊNCIA URBANA</div>
 </div>
+
 </div>
 
 <div class="topbar__div"></div>
 
 <div class="topbar__search">
+
 <div class="search-wrap">
 <input type="text" placeholder="Onde você mora?">
 </div>
+
 </div>
 
 <div class="topbar__live">
@@ -72,13 +78,18 @@ Estatísticas
 <div id="map"></div>
 
 <div id="map-loading">
+
 <div class="loading-ring"></div>
+
 <div class="loading-text">
 CARREGANDO MAPA
 </div>
+
 </div>
 
+<!-- HUD -->
 <div class="hud hud--bl">
+
 <div class="hud-panel hud-legend">
 
 <div class="hud-legend__title">
@@ -101,51 +112,85 @@ Natureza
 </div>
 
 </div>
+
 </div>
 
 <div class="hud hud--bc">
+
 <div class="hud-panel hud-coords">
 LAT <span>-22.52</span>
 LNG <span>-41.94</span>
 ZOOM <span>12</span>
 </div>
+
 </div>
 
 <div class="hud hud--br">
+
 <div class="hud-panel hud-timestamp">
 ✓ Atualizado <time id="map-updated"></time>
 </div>
-</div>
 
 </div>
 
+</div>
+
+<!-- SIDEBAR ESQUERDA -->
 <aside class="sidebar" id="sidebar-left">
 
 <div class="sidebar__header">
+
 <div class="sidebar__title">
 FILTROS
 </div>
+
 </div>
 
 <div class="sidebar__body">
 
-<div>
+<!-- PERÍODO -->
+<section class="filter-section">
 
 <div class="section-label">
-CATEGORIAS
+PERÍODO
+</div>
+
+<div class="period-grid">
+
+<button class="period-btn active">24h</button>
+<button class="period-btn">7d</button>
+<button class="period-btn">30d</button>
+<button class="period-btn">3m</button>
+<button class="period-btn">1a</button>
+<button class="period-btn">Tudo</button>
+
+</div>
+
+</section>
+
+<!-- CRIMES -->
+<section class="filter-section">
+
+<div class="section-label">
+CRIMES
 </div>
 
 <div class="cat-group active">
 
 <div class="cat-group__header">
 
-<div class="cat-check">
-✓
-</div>
+<div class="cat-check">✓</div>
 
 <div class="cat-info">
-<div class="cat-name">Crimes</div>
-<div class="cat-meta">Ocorrências urbanas</div>
+
+<div class="cat-name">
+Crimes
+</div>
+
+<div class="cat-meta">
+Segurança urbana
+</div>
+
 </div>
 
 <div class="cat-badge">
@@ -154,19 +199,53 @@ CATEGORIAS
 
 </div>
 
+<div class="subcats">
+
+<div class="subcat-item">
+<span>Roubos</span>
+<span>91</span>
 </div>
+
+<div class="subcat-item">
+<span>Assassinatos</span>
+<span>17</span>
+</div>
+
+<div class="subcat-item">
+<span>Latrocínios</span>
+<span>5</span>
+</div>
+
+<div class="subcat-item">
+<span>Tráfico</span>
+<span>74</span>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ACIDENTES -->
+<section class="filter-section">
 
 <div class="cat-group active">
 
 <div class="cat-group__header">
 
-<div class="cat-check">
-✓
-</div>
+<div class="cat-check">✓</div>
 
 <div class="cat-info">
-<div class="cat-name">Acidentes</div>
-<div class="cat-meta">Trânsito e vias</div>
+
+<div class="cat-name">
+Acidentes
+</div>
+
+<div class="cat-meta">
+Trânsito e vias
+</div>
+
 </div>
 
 <div class="cat-badge">
@@ -175,15 +254,234 @@ CATEGORIAS
 
 </div>
 
+<div class="subcats">
+
+<div class="subcat-item">
+<span>Colisões</span>
+<span>81</span>
+</div>
+
+<div class="subcat-item">
+<span>Atropelamentos</span>
+<span>22</span>
+</div>
+
+<div class="subcat-item">
+<span>Capotamentos</span>
+<span>11</span>
 </div>
 
 </div>
+
+</div>
+
+</section>
+
+<!-- CRIMES CONTRA MULHER -->
+<section class="filter-section">
+
+<div class="cat-group">
+
+<div class="cat-group__header">
+
+<div class="cat-check"></div>
+
+<div class="cat-info">
+
+<div class="cat-name">
+Crimes contra mulheres
+</div>
+
+<div class="cat-meta">
+Violência doméstica
+</div>
+
+</div>
+
+<div class="cat-badge">
+48
+</div>
+
+</div>
+
+<div class="subcats">
+
+<div class="subcat-item">
+<span>Assédio</span>
+<span>19</span>
+</div>
+
+<div class="subcat-item">
+<span>Estupro</span>
+<span>4</span>
+</div>
+
+<div class="subcat-item">
+<span>Ameaças</span>
+<span>25</span>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- NATUREZA -->
+<section class="filter-section">
+
+<div class="cat-group active">
+
+<div class="cat-group__header">
+
+<div class="cat-check">✓</div>
+
+<div class="cat-info">
+
+<div class="cat-name">
+Acidentes Naturais
+</div>
+
+<div class="cat-meta">
+Clima e ambiente
+</div>
+
+</div>
+
+<div class="cat-badge">
+61
+</div>
+
+</div>
+
+<div class="subcats">
+
+<div class="subcat-item">
+<span>Afogamentos</span>
+<span>21</span>
+</div>
+
+<div class="subcat-item">
+<span>Enchentes</span>
+<span>7</span>
+</div>
+
+<div class="subcat-item">
+<span>Raios</span>
+<span>2</span>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- FACÇÕES -->
+<section class="filter-section">
+
+<div class="cat-group">
+
+<div class="cat-group__header">
+
+<div class="cat-check"></div>
+
+<div class="cat-info">
+
+<div class="cat-name">
+Facções Criminosas
+</div>
+
+<div class="cat-meta">
+Áreas monitoradas
+</div>
+
+</div>
+
+<div class="cat-badge">
+12
+</div>
+
+</div>
+
+<div class="subcats">
+
+<div class="subcat-item">
+<span>CV</span>
+<span>5 áreas</span>
+</div>
+
+<div class="subcat-item">
+<span>ADA</span>
+<span>2 áreas</span>
+</div>
+
+<div class="subcat-item">
+<span>TCP</span>
+<span>1 área</span>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- FORÇAS -->
+<section class="filter-section">
+
+<div class="cat-group">
+
+<div class="cat-group__header">
+
+<div class="cat-check"></div>
+
+<div class="cat-info">
+
+<div class="cat-name">
+Forças Policiais
+</div>
+
+<div class="cat-meta">
+Estimativas locais
+</div>
+
+</div>
+
+<div class="cat-badge">
+125
+</div>
+
+</div>
+
+<div class="subcats">
+
+<div class="subcat-item">
+<span>PM Ativa</span>
+<span>84</span>
+</div>
+
+<div class="subcat-item">
+<span>Civil</span>
+<span>23</span>
+</div>
+
+<div class="subcat-item">
+<span>Criminosos</span>
+<span>340</span>
+</div>
+
+</div>
+
+</div>
+
+</section>
 
 </div>
 
 <div class="sidebar__footer">
 
-<div class="city-selector" data-action="open-city-dropdown">
+<div class="city-selector">
 
 <div class="city-info">
 
@@ -191,7 +489,7 @@ CATEGORIAS
 Cidade ativa
 </div>
 
-<div class="city-info__name" id="active-city">
+<div class="city-info__name">
 Rio das Ostras, RJ
 </div>
 
@@ -203,17 +501,21 @@ Rio das Ostras, RJ
 
 </aside>
 
+<!-- SIDEBAR DIREITA -->
 <aside class="sidebar" id="sidebar-right">
 
 <div class="sidebar__header">
+
 <div class="sidebar__title">
 ESTATÍSTICAS
 </div>
+
 </div>
 
 <div class="sidebar__body">
 
 <div class="stat-card">
+
 <div class="stat-card__label">
 OCORRÊNCIAS TOTAIS
 </div>
@@ -221,72 +523,132 @@ OCORRÊNCIAS TOTAIS
 <div class="stat-card__value">
 522
 </div>
+
 </div>
 
 <div class="stat-card">
+
 <div class="stat-card__label">
 CIDADE MONITORADA
 </div>
 
-<div class="stat-card__value stat-card__value--sm" id="stat-city-name">
+<div class="stat-card__value stat-card__value--sm">
 Rio das Ostras
 </div>
+
+</div>
+
+<div class="stat-card">
+
+<div class="stat-card__label">
+CATEGORIA DOMINANTE
+</div>
+
+<div class="stat-card__value stat-card__value--danger">
+Crimes
+</div>
+
+<div class="progress-line">
+<div class="progress-fill" style="width:58%"></div>
+</div>
+
+</div>
+
+<div class="stat-card">
+
+<div class="stat-card__label">
+BAIRROS MAIS AFETADOS
+</div>
+
+<div class="ranking-list">
+
+<div class="ranking-item">
+<span>1. Centro</span>
+<strong>89</strong>
+</div>
+
+<div class="ranking-item">
+<span>2. Operário</span>
+<strong>67</strong>
+</div>
+
+<div class="ranking-item">
+<span>3. Nova Cidade</span>
+<strong>42</strong>
+</div>
+
+</div>
+
+</div>
+
+<div class="stat-card">
+
+<div class="stat-card__label">
+MORTES REGISTRADAS
+</div>
+
+<div class="stat-card__value stat-card__value--danger">
+18
+</div>
+
+</div>
+
+<div class="stat-card">
+
+<div class="stat-card__label">
+FERIDOS REGISTRADOS
+</div>
+
+<div class="stat-card__value">
+93
+</div>
+
+</div>
+
+<div class="stat-card premium-card">
+
+<div class="premium-title">
+IA DE ANÁLISE TERRITORIAL
+</div>
+
+<p class="premium-text">
+Detectamos aumento de roubos no eixo central nas últimas 72h.
+</p>
+
 </div>
 
 </div>
 
 </aside>
 
+<!-- BOTÕES -->
 <button class="sidebar-toggle" id="toggle-left">
-<svg id="toggle-left-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-<polyline points="15,18 9,12 15,6"/>
-</svg>
+‹
 </button>
 
 <button class="sidebar-toggle" id="toggle-right">
-<svg id="toggle-right-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-<polyline points="9,18 15,12 9,6"/>
-</svg>
+›
 </button>
 
 </div>
 
 </div>
 
-<div id="city-dropdown" aria-hidden="true">
+<!-- DROPDOWN -->
+<div id="city-dropdown"></div>
 
-<div class="city-drop__list">
-
-<div class="city-opt current" data-city="rio-das-ostras">
-<div>
-<div class="city-opt__name">Rio das Ostras</div>
-<div class="city-opt__state">RJ</div>
-</div>
-</div>
-
-<div class="city-opt" data-city="macae">
-<div>
-<div class="city-opt__name">Macaé</div>
-<div class="city-opt__state">RJ</div>
-</div>
-</div>
-
-</div>
-
-</div>
-
+<!-- TOAST -->
 <div id="toasts"></div>
 
+<!-- MODAL SOBRE -->
 <div class="modal-backdrop" id="about-modal">
 
 <div class="modal modal--md">
 
 <div class="modal__header">
 
-<div>
 <div class="modal__title">
 Sobre o Coruja Presente
-</div>
 </div>
 
 <button class="modal__close" data-close-modal="about-modal">
@@ -307,16 +669,15 @@ Plataforma de inteligência urbana e territorial.
 
 </div>
 
+<!-- MODAL RELATÓRIOS -->
 <div class="modal-backdrop" id="reports-modal">
 
 <div class="modal modal--lg">
 
 <div class="modal__header">
 
-<div>
 <div class="modal__title">
 Relatórios
-</div>
 </div>
 
 <button class="modal__close" data-close-modal="reports-modal">
@@ -328,7 +689,7 @@ Relatórios
 <div class="modal__body">
 
 <p>
-Sistema de relatórios urbanos.
+Sistema avançado de relatórios urbanos.
 </p>
 
 </div>
