@@ -459,3 +459,365 @@ navButtons.forEach(button => {
 // ========================================
 
 console.log('Coruja Presente iniciado com sucesso');
+
+// ========================================
+// FILTROS INTERATIVOS AVANÇADOS
+// COLE NO FINAL DO APP.JS
+// ========================================
+
+// ========================================
+// BOTÕES DE PERÍODO
+// ========================================
+
+const periodButtons = document.querySelectorAll('.period-button');
+
+// ========================================
+// CLICK PERÍODO
+// ========================================
+
+periodButtons.forEach(button => {
+
+    button.addEventListener('click', () => {
+
+        // REMOVER ACTIVE
+        periodButtons.forEach(btn => {
+
+            btn.classList.remove('active');
+
+        });
+
+        // ADICIONAR ACTIVE
+        button.classList.add('active');
+
+        // DEBUG
+        console.log(
+            'Período selecionado:',
+            button.innerText
+        );
+
+    });
+
+});
+
+// ========================================
+// SUBCATEGORIAS
+// ========================================
+
+const subItems = document.querySelectorAll('.subcategory-item');
+
+// ========================================
+// CLICK SUBCATEGORIA
+// ========================================
+
+subItems.forEach(item => {
+
+    item.addEventListener('click', (e) => {
+
+        // EVITAR PROPAGAÇÃO
+        e.stopPropagation();
+
+        // TOGGLE
+        item.classList.toggle('selected');
+
+        // VISUAL
+        if (item.classList.contains('selected')) {
+
+            item.style.background =
+                'rgba(59,130,246,0.12)';
+
+            item.style.border =
+                '1px solid rgba(59,130,246,0.22)';
+
+        }
+
+        else {
+
+            item.style.background = '';
+
+            item.style.border = '';
+
+        }
+
+        // PEGAR TEXTO
+        const texto =
+            item.querySelector('span').innerText;
+
+        console.log(
+            'Subcategoria:',
+            texto
+        );
+
+    });
+
+});
+
+// ========================================
+// EXPANDIR / RECOLHER
+// ========================================
+
+categoryCards.forEach(card => {
+
+    const top = card.querySelector('.category-top');
+
+    if (!top) return;
+
+    top.addEventListener('click', () => {
+
+        card.classList.toggle('active');
+
+    });
+
+});
+
+// ========================================
+// EFEITO CHECKBOX
+// ========================================
+
+categoryCards.forEach(card => {
+
+    card.addEventListener('mouseenter', () => {
+
+        card.style.transform = 'translateY(-2px)';
+
+    });
+
+    card.addEventListener('mouseleave', () => {
+
+        card.style.transform = '';
+
+    });
+
+});
+
+// ========================================
+// FILTRO REAL DE MARKERS
+// ========================================
+
+function atualizarMarkers() {
+
+    // PEGAR CATEGORIAS ATIVAS
+    const ativos = [];
+
+    categoryCards.forEach(card => {
+
+        if (card.classList.contains('active')) {
+
+            const titulo = card
+                .querySelector('h3')
+                .innerText
+                .toLowerCase();
+
+            ativos.push(titulo);
+
+        }
+
+    });
+
+    // LOOP MARKERS
+    markers.forEach(item => {
+
+        const el =
+            item.marker.getElement();
+
+        let mostrar = false;
+
+        // CRIMES
+        if (
+
+            ativos.includes('crimes') &&
+            item.categoria === 'crime'
+
+        ) {
+
+            mostrar = true;
+
+        }
+
+        // ACIDENTES
+        if (
+
+            ativos.includes('acidentes') &&
+            item.categoria === 'acidente'
+
+        ) {
+
+            mostrar = true;
+
+        }
+
+        // MULHERES
+        if (
+
+            ativos.includes('crimes contra mulheres') &&
+            item.categoria === 'mulheres'
+
+        ) {
+
+            mostrar = true;
+
+        }
+
+        // NATUREZA
+        if (
+
+            ativos.includes('acidentes naturais') &&
+            item.categoria === 'natureza'
+
+        ) {
+
+            mostrar = true;
+
+        }
+
+        // MOSTRAR / ESCONDER
+        el.style.display =
+            mostrar ? 'block' : 'none';
+
+    });
+
+}
+
+// ========================================
+// ATUALIZAR AO CLICAR
+// ========================================
+
+categoryCards.forEach(card => {
+
+    card.addEventListener('click', () => {
+
+        atualizarMarkers();
+
+    });
+
+});
+
+// ========================================
+// ESTATÍSTICAS DINÂMICAS
+// ========================================
+
+function atualizarEstatisticas() {
+
+    let total = 0;
+
+    let mortes = 0;
+
+    let feridos = 0;
+
+    markers.forEach(item => {
+
+        const el =
+            item.marker.getElement();
+
+        if (el.style.display !== 'none') {
+
+            total++;
+
+        }
+
+    });
+
+    ocorrencias.forEach(item => {
+
+        mortes += item.mortes;
+
+        feridos += item.feridos;
+
+    });
+
+    // TOTAL
+    const totalCard =
+        document.querySelector(
+            '.stats-card strong'
+        );
+
+    if (totalCard) {
+
+        totalCard.innerText = total;
+
+    }
+
+}
+
+// ========================================
+// CHAMAR ESTATÍSTICAS
+// ========================================
+
+categoryCards.forEach(card => {
+
+    card.addEventListener('click', () => {
+
+        atualizarEstatisticas();
+
+    });
+
+});
+
+// ========================================
+// SEARCH AVANÇADA
+// ========================================
+
+searchInput.addEventListener('input', () => {
+
+    const valor =
+        searchInput.value.toLowerCase();
+
+    markers.forEach((item, index) => {
+
+        const dados =
+            ocorrencias[index];
+
+        const el =
+            item.marker.getElement();
+
+        const encontrou =
+
+            dados.titulo
+                .toLowerCase()
+                .includes(valor)
+
+            ||
+
+            dados.bairro
+                .toLowerCase()
+                .includes(valor)
+
+            ||
+
+            dados.subcategoria
+                .toLowerCase()
+                .includes(valor);
+
+        el.style.display =
+            encontrou ? 'block' : 'none';
+
+    });
+
+});
+
+// ========================================
+// EFEITO MAPA
+// ========================================
+
+map.on('load', () => {
+
+    map.setFog({
+
+        color: 'rgb(10,10,18)',
+
+        'high-color': 'rgb(36,92,223)',
+
+        'space-color': 'rgb(4,6,12)',
+
+        'star-intensity': 0.2
+
+    });
+
+});
+
+// ========================================
+// MENSAGEM SISTEMA
+// ========================================
+
+console.log(
+    'Filtros avançados ativados'
+);
