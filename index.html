@@ -1,3004 +1,331 @@
+```html
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="dark">
-
+<html lang="pt-BR">
 <head>
-  <!-- ═══════════════════════════════════════════════════════════
-       CORUJA PRESENTE — Plataforma de Inteligência Urbana
-       Versão: 1.0.0 | Estrutura HTML Base
-  ═══════════════════════════════════════════════════════════ -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Coruja Presente — Plataforma de inteligência urbana e monitoramento geográfico em tempo real." />
-  <meta name="theme-color" content="#0a0d14" />
-  <meta name="application-name" content="Coruja Presente" />
+  <meta name="description" content="Coruja Presente — Inteligência urbana e monitoramento geográfico em tempo real." />
+  <meta name="theme-color" content="#0B0F17" />
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="Coruja Presente" />
-  <meta property="og:description" content="Inteligência urbana e monitoramento geográfico." />
-  <meta property="og:type" content="website" />
+  <title>Coruja Presente · Inteligência Urbana</title>
 
-  <title>Coruja Presente — Inteligência Urbana</title>
-
-  <!-- ── Fontes ───────────────────────────────────────────── -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
-    rel="stylesheet"
-  />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
 
-  <!-- ── Mapbox GL JS ──────────────────────────────────────── -->
+  <!-- Mapbox -->
   <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet" />
   <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js" defer></script>
 
-  <!-- ── Ícones: Lucide ────────────────────────────────────── -->
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
-
-  <!-- ════════════════════════════════════════════════════════
-       ESTILOS INLINE — Base System
-  ════════════════════════════════════════════════════════ -->
-  <style>
-    /* ── Design Tokens ──────────────────────────────────────── */
-    :root {
-      /* Palette */
-      --bg-void:        #070a10;
-      --bg-base:        #0a0d14;
-      --bg-surface:     #0f1420;
-      --bg-elevated:    #151b2a;
-      --bg-overlay:     #1c2438;
-      --bg-glass:       rgba(15, 20, 32, 0.72);
-      --bg-glass-light: rgba(255, 255, 255, 0.03);
-
-      --border-subtle:  rgba(255, 255, 255, 0.05);
-      --border-dim:     rgba(255, 255, 255, 0.08);
-      --border-mid:     rgba(255, 255, 255, 0.12);
-
-      /* Brand accent */
-      --accent-primary:   #00d4ff;
-      --accent-secondary: #0099cc;
-      --accent-glow:      rgba(0, 212, 255, 0.15);
-      --accent-glow-hard: rgba(0, 212, 255, 0.35);
-
-      /* Category colors */
-      --cat-accident:  #f59e0b;
-      --cat-crime:     #ef4444;
-      --cat-drowning:  #3b82f6;
-      --cat-fire:      #f97316;
-
-      /* Text */
-      --text-primary:   #e8edf5;
-      --text-secondary: #8b95a8;
-      --text-muted:     #4d5666;
-      --text-accent:    #00d4ff;
-
-      /* Typography */
-      --font-display: 'Syne', sans-serif;
-      --font-body:    'DM Sans', sans-serif;
-      --font-mono:    'JetBrains Mono', monospace;
-
-      /* Spacing */
-      --space-xs:  4px;
-      --space-sm:  8px;
-      --space-md:  16px;
-      --space-lg:  24px;
-      --space-xl:  32px;
-
-      /* Layout */
-      --topbar-h:        56px;
-      --sidebar-left-w:  280px;
-      --sidebar-right-w: 300px;
-      --sidebar-collapsed: 52px;
-
-      /* Radius */
-      --radius-sm: 4px;
-      --radius-md: 8px;
-      --radius-lg: 12px;
-      --radius-xl: 16px;
-
-      /* Shadows */
-      --shadow-sm:    0 1px 4px rgba(0,0,0,0.4);
-      --shadow-md:    0 4px 16px rgba(0,0,0,0.5);
-      --shadow-lg:    0 8px 32px rgba(0,0,0,0.6);
-      --shadow-glow:  0 0 20px var(--accent-glow);
-
-      /* Motion */
-      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-      --duration-fast:   120ms;
-      --duration-normal: 220ms;
-      --duration-slow:   360ms;
-    }
-
-    /* ── Reset ──────────────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html, body {
-      height: 100%;
-      overflow: hidden;
-      background: var(--bg-void);
-      color: var(--text-primary);
-      font-family: var(--font-body);
-      font-size: 14px;
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* ── App Shell ──────────────────────────────────────────── */
-    #app {
-      display: grid;
-      grid-template-rows: var(--topbar-h) 1fr;
-      grid-template-columns: auto 1fr auto;
-      grid-template-areas:
-        "topbar  topbar  topbar"
-        "sidebar-left  map  sidebar-right";
-      height: 100dvh;
-      width: 100vw;
-    }
-
-    /* ── Topbar ─────────────────────────────────────────────── */
-    #topbar {
-      grid-area: topbar;
-      display: flex;
-      align-items: center;
-      gap: var(--space-md);
-      padding: 0 var(--space-lg);
-      background: var(--bg-glass);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border-bottom: 1px solid var(--border-subtle);
-      box-shadow: var(--shadow-md);
-      position: relative;
-      z-index: 100;
-    }
-
-    /* ── Logo ───────────────────────────────────────────────── */
-    .topbar__logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-      flex-shrink: 0;
-    }
-
-    .logo__emblem {
-      width: 34px;
-      height: 34px;
-      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-      border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 12px var(--accent-glow-hard);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .logo__emblem::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
-    }
-
-    .logo__emblem svg {
-      width: 20px;
-      height: 20px;
-      color: #fff;
-      position: relative;
-      z-index: 1;
-    }
-
-    .logo__text {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.1;
-    }
-
-    .logo__name {
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 15px;
-      letter-spacing: 0.04em;
-      color: var(--text-primary);
-    }
-
-    .logo__tagline {
-      font-family: var(--font-mono);
-      font-size: 9px;
-      font-weight: 400;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--accent-primary);
-      opacity: 0.8;
-    }
-
-    /* ── Divisor logo ───────────────────────────────────────── */
-    .topbar__divider {
-      width: 1px;
-      height: 28px;
-      background: var(--border-mid);
-      flex-shrink: 0;
-    }
-
-    /* ── Search ─────────────────────────────────────────────── */
-    .topbar__search {
-      flex: 1;
-      max-width: 480px;
-      position: relative;
-    }
-
-    .search__input-wrapper {
-      display: flex;
-      align-items: center;
-      background: var(--bg-elevated);
-      border: 1px solid var(--border-dim);
-      border-radius: var(--radius-lg);
-      padding: 0 var(--space-md);
-      gap: var(--space-sm);
-      height: 36px;
-      transition: border-color var(--duration-normal) var(--ease-out),
-                  box-shadow var(--duration-normal) var(--ease-out);
-    }
-
-    .search__input-wrapper:focus-within {
-      border-color: var(--accent-primary);
-      box-shadow: 0 0 0 3px var(--accent-glow);
-    }
-
-    .search__icon {
-      color: var(--text-muted);
-      flex-shrink: 0;
-      width: 15px;
-      height: 15px;
-    }
-
-    .search__input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: var(--text-primary);
-      font-family: var(--font-body);
-      font-size: 13px;
-      width: 100%;
-    }
-
-    .search__input::placeholder { color: var(--text-muted); }
-
-    .search__kbd {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      color: var(--text-muted);
-      background: var(--bg-overlay);
-      border: 1px solid var(--border-subtle);
-      border-radius: 3px;
-      padding: 1px 5px;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    /* ── Top nav ────────────────────────────────────────────── */
-    .topbar__nav {
-      display: flex;
-      align-items: center;
-      gap: var(--space-xs);
-      margin-left: auto;
-    }
-
-    .nav__btn {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 14px;
-      background: transparent;
-      border: 1px solid transparent;
-      border-radius: var(--radius-md);
-      color: var(--text-secondary);
-      font-family: var(--font-body);
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      text-decoration: none;
-      white-space: nowrap;
-      transition: all var(--duration-normal) var(--ease-out);
-    }
-
-    .nav__btn:hover {
-      background: var(--bg-glass-light);
-      border-color: var(--border-dim);
-      color: var(--text-primary);
-    }
-
-    .nav__btn--primary {
-      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-      border-color: transparent;
-      color: #000;
-      font-weight: 600;
-      box-shadow: 0 0 12px var(--accent-glow);
-    }
-
-    .nav__btn--primary:hover {
-      opacity: 0.9;
-      color: #000;
-    }
-
-    .nav__btn svg { width: 14px; height: 14px; }
-
-    /* ── Indicador de status ao vivo ───────────────────────── */
-    .topbar__live {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-family: var(--font-mono);
-      font-size: 10px;
-      color: var(--text-muted);
-      letter-spacing: 0.08em;
-      flex-shrink: 0;
-    }
-
-    .live__dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #22c55e;
-      animation: pulse-dot 2s ease-in-out infinite;
-    }
-
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50%       { opacity: 0.5; transform: scale(0.8); }
-    }
-
-    /* ── Status bar (sub-topbar) ────────────────────────────── */
-    #status-bar {
-      display: none; /* Ativado via JS quando há alertas */
-      align-items: center;
-      gap: var(--space-sm);
-      padding: 0 var(--space-lg);
-      height: 28px;
-      background: rgba(239, 68, 68, 0.08);
-      border-bottom: 1px solid rgba(239, 68, 68, 0.2);
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: #fca5a5;
-      letter-spacing: 0.06em;
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       SIDEBAR ESQUERDA — Filtros e Categorias
-    ══════════════════════════════════════════════════════════ */
-    #sidebar-left {
-      grid-area: sidebar-left;
-      width: var(--sidebar-left-w);
-      height: 100%;
-      background: var(--bg-glass);
-      backdrop-filter: blur(20px) saturate(160%);
-      -webkit-backdrop-filter: blur(20px) saturate(160%);
-      border-right: 1px solid var(--border-subtle);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      transition: width var(--duration-slow) var(--ease-out);
-      position: relative;
-      z-index: 50;
-    }
-
-    #sidebar-left.is-collapsed {
-      width: var(--sidebar-collapsed);
-    }
-
-    /* Botão de colapso */
-    .sidebar__toggle {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 24px;
-      height: 24px;
-      background: var(--bg-elevated);
-      border: 1px solid var(--border-dim);
-      border-radius: 50%;
-      cursor: pointer;
-      position: absolute;
-      right: -12px;
-      top: 20px;
-      z-index: 10;
-      color: var(--text-secondary);
-      transition: all var(--duration-normal) var(--ease-out);
-    }
-
-    .sidebar__toggle:hover {
-      background: var(--bg-overlay);
-      color: var(--accent-primary);
-      border-color: var(--accent-primary);
-      box-shadow: var(--shadow-glow);
-    }
-
-    .sidebar__toggle svg { width: 12px; height: 12px; }
-
-    /* Header do sidebar */
-    .sidebar__header {
-      display: flex;
-      align-items: center;
-      gap: var(--space-sm);
-      padding: var(--space-md) var(--space-md) var(--space-sm);
-      border-bottom: 1px solid var(--border-subtle);
-      flex-shrink: 0;
-    }
-
-    .sidebar__header-icon {
-      width: 28px;
-      height: 28px;
-      background: var(--bg-elevated);
-      border: 1px solid var(--border-dim);
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .sidebar__header-icon svg { width: 14px; height: 14px; color: var(--accent-primary); }
-
-    .sidebar__title {
-      font-family: var(--font-display);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-secondary);
-      white-space: nowrap;
-      overflow: hidden;
-    }
-
-    /* Scrollable content */
-    .sidebar__body {
-      flex: 1;
-      overflow-y: auto;
-      overflow-x: hidden;
-      padding: var(--space-md);
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-lg);
-      scrollbar-width: thin;
-      scrollbar-color: var(--bg-overlay) transparent;
-    }
-
-    /* Seção de filtros */
-    .filter-section { display: flex; flex-direction: column; gap: var(--space-sm); }
-
-    .filter-section__label {
-      font-family: var(--font-mono);
-      font-size: 9px;
-      font-weight: 500;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      padding: 0 2px;
-    }
-
-    /* Card de categoria */
-    .category-card {
-      display: flex;
-      align-items: center;
-      gap: var(--space-sm);
-      padding: 10px 12px;
-      background: var(--bg-glass-light);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      transition: all var(--duration-normal) var(--ease-out);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .category-card::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 3px;
-      border-radius: 0 2px 2px 0;
-      background: var(--cat-color);
-      opacity: 0;
-      transition: opacity var(--duration-normal) var(--ease-out);
-    }
-
-    .category-card:hover,
-    .category-card.is-active {
-      background: rgba(255,255,255,0.04);
-      border-color: var(--border-dim);
-    }
-
-    .category-card.is-active::before { opacity: 1; }
-
-    /* Ícone da categoria */
-    .category__icon {
-      width: 30px;
-      height: 30px;
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      background: rgba(var(--cat-color-rgb), 0.12);
-    }
-
-    .category__icon svg { width: 15px; height: 15px; color: var(--cat-color); }
-
-    .category__info { flex: 1; min-width: 0; }
-
-    .category__name {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-primary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .category__meta {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      color: var(--text-muted);
-    }
-
-    /* Badge contador */
-    .category__badge {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--cat-color);
-      background: rgba(var(--cat-color-rgb), 0.12);
-      border: 1px solid rgba(var(--cat-color-rgb), 0.2);
-      border-radius: 20px;
-      padding: 2px 8px;
-      flex-shrink: 0;
-    }
-
-    /* Checkbox custom */
-    .category__checkbox {
-      width: 16px;
-      height: 16px;
-      border: 1.5px solid var(--border-mid);
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: all var(--duration-fast) var(--ease-out);
-    }
-
-    .category-card.is-active .category__checkbox {
-      background: var(--cat-color);
-      border-color: var(--cat-color);
-    }
-
-    .category__checkbox svg { width: 10px; height: 10px; color: #000; display: none; }
-    .category-card.is-active .category__checkbox svg { display: block; }
-
-    /* ── Filtros de período ──────────────────────────────────── */
-    .period-selector {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 4px;
-      background: var(--bg-elevated);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      padding: 4px;
-    }
-
-    .period-btn {
-      padding: 6px 4px;
-      background: transparent;
-      border: none;
-      border-radius: var(--radius-sm);
-      color: var(--text-muted);
-      font-family: var(--font-mono);
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.06em;
-      cursor: pointer;
-      text-align: center;
-      transition: all var(--duration-normal) var(--ease-out);
-    }
-
-    .period-btn:hover { color: var(--text-primary); background: var(--bg-glass-light); }
-
-    .period-btn.is-active {
-      background: var(--accent-primary);
-      color: #000;
-      font-weight: 600;
-    }
-
-    /* ── Seletor de visualização de mapa ────────────────────── */
-    .map-view-options { display: flex; flex-direction: column; gap: 4px; }
-
-    .map-view-btn {
-      display: flex;
-      align-items: center;
-      gap: var(--space-sm);
-      padding: 8px 10px;
-      background: transparent;
-      border: 1px solid transparent;
-      border-radius: var(--radius-sm);
-      color: var(--text-secondary);
-      font-family: var(--font-body);
-      font-size: 12px;
-      cursor: pointer;
-      transition: all var(--duration-normal) var(--ease-out);
-      text-align: left;
-    }
-
-    .map-view-btn:hover { background: var(--bg-glass-light); color: var(--text-primary); }
-
-    .map-view-btn.is-active {
-      background: var(--accent-glow);
-      border-color: rgba(0, 212, 255, 0.2);
-      color: var(--accent-primary);
-    }
-
-    .map-view-btn svg { width: 13px; height: 13px; }
-
-    /* Footer do sidebar */
-    .sidebar__footer {
-      padding: var(--space-md);
-      border-top: 1px solid var(--border-subtle);
-      flex-shrink: 0;
-    }
-
-    .sidebar__city-selector {
-      display: flex;
-      align-items: center;
-      gap: var(--space-sm);
-      padding: 8px 10px;
-      background: var(--bg-elevated);
-      border: 1px solid var(--border-dim);
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      transition: all var(--duration-normal) var(--ease-out);
-    }
-
-    .sidebar__city-selector:hover { border-color: var(--accent-primary); }
-
-    .city-selector__info { flex: 1; min-width: 0; }
-
-    .city-selector__label {
-      font-family: var(--font-mono);
-      font-size: 9px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-    }
-
-    .city-selector__name {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-primary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .city-selector__chevron { width: 14px; height: 14px; color: var(--text-muted); }
-
-    /* ══════════════════════════════════════════════════════════
-       ÁREA DO MAPA
-    ══════════════════════════════════════════════════════════ */
-    #map-area {
-      grid-area: map;
-      position: relative;
-      overflow: hidden;
-      background: var(--bg-void);
-    }
-
-    /* Container do mapa Mapbox */
-    #map {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    /* ── HUD: Controles flutuantes sobre o mapa ─────────────── */
-    .map-hud {
-      position: absolute;
-      z-index: 10;
-      pointer-events: none;
-    }
-
-    .map-hud > * { pointer-events: all; }
-
-    /* HUD top-left: breadcrumb / cidade */
-    .hud--top-left {
-      top: var(--space-md);
-      left: var(--space-md);
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-sm);
-    }
-
-    .hud-breadcrumb {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--bg-glass);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      padding: 6px 12px;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--text-secondary);
-    }
-
-    .hud-breadcrumb__city {
-      color: var(--text-primary);
-      font-weight: 500;
-    }
-
-    .hud-breadcrumb__sep { color: var(--text-muted); }
-
-    /* HUD top-right: controles de mapa */
-    .hud--top-right {
-      top: var(--space-md);
-      right: var(--space-md);
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-xs);
-    }
-
-    .map-control-group {
-      display: flex;
-      flex-direction: column;
-      background: var(--bg-glass);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-    }
-
-    .map-control-btn {
-      width: 36px;
-      height: 36px;
-      background: transparent;
-      border: none;
-      border-bottom: 1px solid var(--border-subtle);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-secondary);
-      transition: all var(--duration-fast) var(--ease-out);
-    }
-
-    .map-control-btn:last-child { border-bottom: none; }
-
-    .map-control-btn:hover {
-      background: var(--bg-glass-light);
-      color: var(--accent-primary);
-    }
-
-    .map-control-btn svg { width: 15px; height: 15px; }
-
-    /* HUD bottom-left: legenda */
-    .hud--bottom-left {
-      bottom: var(--space-lg);
-      left: var(--space-md);
-    }
-
-    .map-legend {
-      background: var(--bg-glass);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      padding: 10px 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .legend__title {
-      font-family: var(--font-mono);
-      font-size: 9px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 2px;
-    }
-
-    .legend__item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 11px;
-      color: var(--text-secondary);
-    }
-
-    .legend__dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-
-    /* HUD bottom-center: escala + coordenadas */
-    .hud--bottom-center {
-      bottom: var(--space-lg);
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
-    .hud-coords {
-      background: var(--bg-glass);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      padding: 6px 12px;
-      font-family: var(--font-mono);
-      font-size: 10px;
-      color: var(--text-muted);
-      display: flex;
-      gap: var(--space-md);
-    }
-
-    .hud-coords span { color: var(--text-secondary); }
-
-    /* HUD bottom-right: atualizado em */
-    .hud--bottom-right {
-      bottom: var(--space-lg);
-      right: var(--space-md);
-    }
-
-    .hud-timestamp {
-      background: var(--bg-glass);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      padding: 6px 12px;
-      font-family: var(--font-mono);
-      font-size: 10px;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    /* Loading overlay do mapa */
-    #map-loading {
-      position: absolute;
-      inset: 0;
-      background: var(--bg-void);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: var(--space-md);
-      z-index: 20;
-    }
-
-    .map-loading__spinner {
-      width: 40px;
-      height: 40px;
-      border: 2px solid var(--border-dim);
-      border-top-color: var(--accent-primary);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .map-loading__text {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      color: var(--text-muted);
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       SIDEBAR DIREITA — Estatísticas
-    ══════════════════════════════════════════════════════════ */
-    #sidebar-right {
-      grid-area: sidebar-right;
-      width: var(--sidebar-right-w);
-      height: 100%;
-      background: var(--bg-glass);
-      backdrop-filter: blur(20px) saturate(160%);
-      -webkit-backdrop-filter: blur(20px) saturate(160%);
-      border-left: 1px solid var(--border-subtle);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      transition: width var(--duration-slow) var(--ease-out);
-      position: relative;
-      z-index: 50;
-    }
-
-    #sidebar-right.is-collapsed { width: var(--sidebar-collapsed); }
-
-    /* Cards de estatísticas */
-    .stat-card {
-      background: var(--bg-glass-light);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      padding: 12px 14px;
-      transition: all var(--duration-normal) var(--ease-out);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .stat-card:hover { border-color: var(--border-dim); }
-
-    .stat-card--highlight {
-      border-color: rgba(0, 212, 255, 0.15);
-      background: var(--accent-glow);
-    }
-
-    .stat-card__label {
-      font-family: var(--font-mono);
-      font-size: 9px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .stat-card__label svg { width: 10px; height: 10px; }
-
-    .stat-card__value {
-      font-family: var(--font-display);
-      font-size: 26px;
-      font-weight: 700;
-      color: var(--text-primary);
-      line-height: 1;
-      margin-bottom: 4px;
-    }
-
-    .stat-card__value--accent { color: var(--accent-primary); }
-    .stat-card__value--danger { color: var(--cat-crime); }
-    .stat-card__value--warning { color: var(--cat-accident); }
-
-    .stat-card__sub {
-      font-size: 11px;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .stat-card__trend {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      font-weight: 600;
-      padding: 1px 5px;
-      border-radius: 3px;
-    }
-
-    .stat-card__trend--up {
-      color: #ef4444;
-      background: rgba(239, 68, 68, 0.1);
-    }
-
-    .stat-card__trend--down {
-      color: #22c55e;
-      background: rgba(34, 197, 94, 0.1);
-    }
-
-    /* Mini sparkline placeholder */
-    .stat-card__sparkline {
-      height: 28px;
-      margin-top: 8px;
-      background: var(--bg-elevated);
-      border-radius: var(--radius-sm);
-      overflow: hidden;
-      position: relative;
-    }
-
-    /* Barra de dominância de categoria */
-    .category-dominance {
-      margin-top: 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .dominance-bar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .dominance-bar__label {
-      font-size: 11px;
-      color: var(--text-secondary);
-      width: 70px;
-      flex-shrink: 0;
-    }
-
-    .dominance-bar__track {
-      flex: 1;
-      height: 4px;
-      background: var(--bg-elevated);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-
-    .dominance-bar__fill {
-      height: 100%;
-      border-radius: 2px;
-      background: var(--cat-color);
-      transition: width 0.8s var(--ease-out);
-    }
-
-    .dominance-bar__pct {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      color: var(--text-muted);
-      width: 28px;
-      text-align: right;
-      flex-shrink: 0;
-    }
-
-    /* Seção de bairros */
-    .neighborhood-list { display: flex; flex-direction: column; gap: 3px; }
-
-    .neighborhood-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 6px 8px;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      transition: background var(--duration-fast) var(--ease-out);
-    }
-
-    .neighborhood-item:hover { background: var(--bg-glass-light); }
-
-    .neighborhood-item__rank {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      color: var(--text-muted);
-      width: 16px;
-      flex-shrink: 0;
-    }
-
-    .neighborhood-item__name {
-      flex: 1;
-      font-size: 12px;
-      color: var(--text-secondary);
-      padding: 0 8px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .neighborhood-item__count {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--text-primary);
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       MODAIS
-    ══════════════════════════════════════════════════════════ */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(7, 10, 16, 0.85);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      z-index: 200;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: var(--space-lg);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity var(--duration-slow) var(--ease-out);
-    }
-
-    .modal-backdrop.is-open {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .modal {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-mid);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-lg), 0 0 60px rgba(0,0,0,0.5);
-      width: 100%;
-      overflow: hidden;
-      transform: translateY(12px) scale(0.98);
-      transition: transform var(--duration-slow) var(--ease-out);
-    }
-
-    .modal-backdrop.is-open .modal { transform: translateY(0) scale(1); }
-
-    .modal--sm  { max-width: 480px; }
-    .modal--md  { max-width: 680px; }
-    .modal--lg  { max-width: 900px; }
-    .modal--xl  { max-width: 1100px; }
-
-    /* Header do modal */
-    .modal__header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: var(--space-lg);
-      border-bottom: 1px solid var(--border-subtle);
-    }
-
-    .modal__header-left { display: flex; align-items: center; gap: var(--space-md); }
-
-    .modal__icon {
-      width: 38px;
-      height: 38px;
-      border-radius: var(--radius-md);
-      background: var(--accent-glow);
-      border: 1px solid rgba(0, 212, 255, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .modal__icon svg { width: 18px; height: 18px; color: var(--accent-primary); }
-
-    .modal__title {
-      font-family: var(--font-display);
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--text-primary);
-    }
-
-    .modal__subtitle {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    .modal__close {
-      width: 32px;
-      height: 32px;
-      background: transparent;
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: var(--text-muted);
-      transition: all var(--duration-fast) var(--ease-out);
-    }
-
-    .modal__close:hover { background: var(--bg-elevated); color: var(--text-primary); }
-    .modal__close svg { width: 16px; height: 16px; }
-
-    /* Body do modal */
-    .modal__body {
-      padding: var(--space-lg);
-      max-height: calc(100vh - 240px);
-      overflow-y: auto;
-      scrollbar-width: thin;
-      scrollbar-color: var(--bg-overlay) transparent;
-    }
-
-    /* Footer do modal */
-    .modal__footer {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: var(--space-sm);
-      padding: var(--space-md) var(--space-lg);
-      border-top: 1px solid var(--border-subtle);
-    }
-
-    /* Botões do modal */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 18px;
-      border-radius: var(--radius-md);
-      font-family: var(--font-body);
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      border: 1px solid transparent;
-      transition: all var(--duration-normal) var(--ease-out);
-    }
-
-    .btn svg { width: 14px; height: 14px; }
-
-    .btn--ghost {
-      background: transparent;
-      border-color: var(--border-dim);
-      color: var(--text-secondary);
-    }
-
-    .btn--ghost:hover { background: var(--bg-elevated); color: var(--text-primary); }
-
-    .btn--primary {
-      background: var(--accent-primary);
-      color: #000;
-      font-weight: 600;
-    }
-
-    .btn--primary:hover { opacity: 0.85; }
-
-    .btn--danger {
-      background: rgba(239,68,68,0.1);
-      border-color: rgba(239,68,68,0.2);
-      color: #ef4444;
-    }
-
-    .btn--danger:hover { background: rgba(239,68,68,0.2); }
-
-    /* ── Tabs (usada nos modais) ─────────────────────────────── */
-    .tabs {
-      display: flex;
-      gap: 2px;
-      border-bottom: 1px solid var(--border-subtle);
-      margin-bottom: var(--space-lg);
-    }
-
-    .tab-btn {
-      padding: 8px 16px;
-      background: transparent;
-      border: none;
-      border-bottom: 2px solid transparent;
-      margin-bottom: -1px;
-      cursor: pointer;
-      font-family: var(--font-body);
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-muted);
-      transition: all var(--duration-normal) var(--ease-out);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .tab-btn svg { width: 13px; height: 13px; }
-    .tab-btn:hover { color: var(--text-primary); }
-
-    .tab-btn.is-active {
-      color: var(--accent-primary);
-      border-bottom-color: var(--accent-primary);
-    }
-
-    /* Painel de tab */
-    .tab-panel { display: none; }
-    .tab-panel.is-active { display: block; }
-
-    /* ── Conteúdo: Sobre Nós ────────────────────────────────── */
-    .about-hero {
-      background: linear-gradient(135deg, var(--bg-elevated), var(--bg-overlay));
-      border: 1px solid var(--border-dim);
-      border-radius: var(--radius-lg);
-      padding: var(--space-xl);
-      margin-bottom: var(--space-lg);
-      text-align: center;
-    }
-
-    .about-hero__logo {
-      width: 64px;
-      height: 64px;
-      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-      border-radius: var(--radius-xl);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto var(--space-md);
-      box-shadow: 0 0 30px var(--accent-glow-hard);
-    }
-
-    .about-hero__logo svg { width: 32px; height: 32px; color: #000; }
-
-    .about-hero__title {
-      font-family: var(--font-display);
-      font-size: 24px;
-      font-weight: 800;
-      color: var(--text-primary);
-      margin-bottom: 8px;
-    }
-
-    .about-hero__desc {
-      font-size: 14px;
-      color: var(--text-secondary);
-      max-width: 400px;
-      margin: 0 auto;
-      line-height: 1.6;
-    }
-
-    .about-features {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--space-md);
-    }
-
-    .about-feature {
-      background: var(--bg-glass-light);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      padding: var(--space-md);
-    }
-
-    .about-feature__icon {
-      width: 32px;
-      height: 32px;
-      background: var(--accent-glow);
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 10px;
-    }
-
-    .about-feature__icon svg { width: 16px; height: 16px; color: var(--accent-primary); }
-
-    .about-feature__title {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 4px;
-    }
-
-    .about-feature__desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
-
-    /* ── Conteúdo: Relatórios ───────────────────────────────── */
-    .report-filter-row {
-      display: flex;
-      gap: var(--space-sm);
-      margin-bottom: var(--space-lg);
-      flex-wrap: wrap;
-    }
-
-    .report-select {
-      flex: 1;
-      min-width: 140px;
-      background: var(--bg-elevated);
-      border: 1px solid var(--border-dim);
-      border-radius: var(--radius-md);
-      padding: 8px 12px;
-      color: var(--text-primary);
-      font-family: var(--font-body);
-      font-size: 13px;
-      outline: none;
-      cursor: pointer;
-    }
-
-    .report-table-wrapper {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-    }
-
-    .report-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .report-table th {
-      background: var(--bg-overlay);
-      padding: 10px 14px;
-      text-align: left;
-      font-family: var(--font-mono);
-      font-size: 9px;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      border-bottom: 1px solid var(--border-subtle);
-    }
-
-    .report-table td {
-      padding: 10px 14px;
-      font-size: 12px;
-      color: var(--text-secondary);
-      border-bottom: 1px solid var(--border-subtle);
-    }
-
-    .report-table tr:last-child td { border-bottom: none; }
-
-    .report-table tr:hover td { background: var(--bg-glass-light); }
-
-    /* Badge de tipo de ocorrência */
-    .occurrence-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 2px 8px;
-      border-radius: 20px;
-      font-family: var(--font-mono);
-      font-size: 10px;
-      font-weight: 500;
-    }
-
-    .occurrence-badge--accident  { color: var(--cat-accident); background: rgba(245,158,11,0.1); }
-    .occurrence-badge--crime     { color: var(--cat-crime);    background: rgba(239,68,68,0.1); }
-    .occurrence-badge--drowning  { color: var(--cat-drowning); background: rgba(59,130,246,0.1); }
-    .occurrence-badge--fire      { color: var(--cat-fire);     background: rgba(249,115,22,0.1); }
-
-    /* ── Conteúdo: Estatísticas ─────────────────────────────── */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-md);
-      margin-bottom: var(--space-lg);
-    }
-
-    /* Placeholder de gráfico */
-    .chart-placeholder {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      padding: var(--space-md);
-    }
-
-    .chart-placeholder__title {
-      font-family: var(--font-display);
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-secondary);
-      margin-bottom: var(--space-sm);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .chart-placeholder__area {
-      height: 140px;
-      background: var(--bg-surface);
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-muted);
-      font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: 0.08em;
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       DROPDOWN DE SELEÇÃO DE CIDADE
-    ══════════════════════════════════════════════════════════ */
-    .city-dropdown {
-      position: fixed;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-mid);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-lg);
-      z-index: 300;
-      min-width: 260px;
-      overflow: hidden;
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(-8px);
-      transition: all var(--duration-normal) var(--ease-out);
-    }
-
-    .city-dropdown.is-open {
-      opacity: 1;
-      pointer-events: all;
-      transform: translateY(0);
-    }
-
-    .city-dropdown__search {
-      padding: var(--space-sm) var(--space-md);
-      border-bottom: 1px solid var(--border-subtle);
-    }
-
-    .city-dropdown__list {
-      max-height: 280px;
-      overflow-y: auto;
-      scrollbar-width: thin;
-      scrollbar-color: var(--bg-overlay) transparent;
-    }
-
-    .city-option {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px var(--space-md);
-      cursor: pointer;
-      transition: background var(--duration-fast) var(--ease-out);
-      border-bottom: 1px solid var(--border-subtle);
-    }
-
-    .city-option:last-child { border-bottom: none; }
-    .city-option:hover { background: var(--bg-glass-light); }
-
-    .city-option.is-current { color: var(--accent-primary); }
-
-    .city-option__info { display: flex; flex-direction: column; }
-
-    .city-option__name { font-size: 13px; font-weight: 500; color: inherit; }
-
-    .city-option__state {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      color: var(--text-muted);
-    }
-
-    .city-option__badge {
-      font-family: var(--font-mono);
-      font-size: 9px;
-      padding: 2px 7px;
-      border-radius: 10px;
-      background: var(--accent-glow);
-      color: var(--accent-primary);
-      border: 1px solid rgba(0,212,255,0.15);
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       TOOLTIP de ponto no mapa (futuro)
-    ══════════════════════════════════════════════════════════ */
-    .map-tooltip {
-      position: fixed;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-mid);
-      border-radius: var(--radius-md);
-      padding: 10px 14px;
-      box-shadow: var(--shadow-md);
-      z-index: 150;
-      pointer-events: none;
-      max-width: 240px;
-      opacity: 0;
-      transition: opacity var(--duration-fast) var(--ease-out);
-    }
-
-    .map-tooltip.is-visible { opacity: 1; }
-
-    .map-tooltip__type {
-      font-family: var(--font-mono);
-      font-size: 9px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-    }
-
-    .map-tooltip__title {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 4px;
-    }
-
-    .map-tooltip__meta {
-      font-size: 11px;
-      color: var(--text-secondary);
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       RESPONSIVIDADE
-    ══════════════════════════════════════════════════════════ */
-    @media (max-width: 1280px) {
-      :root {
-        --sidebar-right-w: 260px;
-      }
-    }
-
-    @media (max-width: 1024px) {
-      /* Notebook: sidebar direita recolhida por padrão */
-      #sidebar-right { width: var(--sidebar-collapsed); }
-      .logo__tagline { display: none; }
-    }
-
-    @media (max-width: 768px) {
-      /* Tablet: ambas sidebars como overlays */
-      #app {
-        grid-template-columns: 1fr;
-        grid-template-areas:
-          "topbar"
-          "map";
-      }
-
-      #sidebar-left,
-      #sidebar-right {
-        position: fixed;
-        top: var(--topbar-h);
-        height: calc(100dvh - var(--topbar-h));
-        width: var(--sidebar-left-w);
-        z-index: 80;
-        transform: translateX(-110%);
-        transition: transform var(--duration-slow) var(--ease-out);
-      }
-
-      #sidebar-left  { left: 0; }
-      #sidebar-right { right: 0; width: var(--sidebar-right-w); transform: translateX(110%); }
-
-      #sidebar-left.is-mobile-open  { transform: translateX(0); }
-      #sidebar-right.is-mobile-open { transform: translateX(0); }
-
-      .topbar__search { max-width: 200px; }
-      .search__kbd    { display: none; }
-
-      .nav__btn--text { display: none; }
-
-      .modal--lg,
-      .modal--xl { max-width: 100%; }
-
-      .about-features { grid-template-columns: 1fr; }
-      .stats-grid     { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    @media (max-width: 480px) {
-      :root { --topbar-h: 52px; }
-
-      .topbar__search { display: none; }
-      .stats-grid     { grid-template-columns: 1fr; }
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       UTILITÁRIOS
-    ══════════════════════════════════════════════════════════ */
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip: rect(0,0,0,0);
-      white-space: nowrap;
-    }
-
-    .hidden { display: none !important; }
-
-    /* Skeleton loader */
-    .skeleton {
-      background: linear-gradient(90deg, var(--bg-elevated) 25%, var(--bg-overlay) 50%, var(--bg-elevated) 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
-      border-radius: var(--radius-sm);
-    }
-
-    @keyframes shimmer {
-      0%   { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-
-    /* Notificação toast */
-    #toast-container {
-      position: fixed;
-      bottom: var(--space-xl);
-      right: var(--space-xl);
-      z-index: 500;
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-sm);
-      pointer-events: none;
-    }
-
-    .toast {
-      display: flex;
-      align-items: center;
-      gap: var(--space-sm);
-      padding: 10px 14px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-mid);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-md);
-      font-size: 12px;
-      color: var(--text-primary);
-      pointer-events: all;
-      animation: toast-in 0.3s var(--ease-out);
-    }
-
-    @keyframes toast-in {
-      from { opacity: 0; transform: translateX(20px); }
-      to   { opacity: 1; transform: translateX(0); }
-    }
-
-    .toast svg { width: 14px; height: 14px; flex-shrink: 0; }
-    .toast--info    { border-left: 3px solid var(--accent-primary); }
-    .toast--success { border-left: 3px solid #22c55e; }
-    .toast--warning { border-left: 3px solid var(--cat-accident); }
-    .toast--error   { border-left: 3px solid var(--cat-crime); }
-  </style>
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
 
-<!-- ╔══════════════════════════════════════════════════════════╗
-     ║              CORUJA PRESENTE — APP SHELL               ║
-     ╚══════════════════════════════════════════════════════════╝ -->
-<div id="app" role="application" aria-label="Coruja Presente — Plataforma de Inteligência Urbana">
+<div id="app" role="application" aria-label="Coruja Presente">
 
-  <!-- ════════════════════════════════════════════════════════
-       1. BARRA SUPERIOR
-  ════════════════════════════════════════════════════════ -->
-  <header id="topbar" role="banner" aria-label="Barra de navegação principal">
+  <!-- TOPBAR -->
+  <header id="topbar" role="banner">
 
-    <!-- Logo -->
-    <a href="#" class="topbar__logo" aria-label="Coruja Presente — Página inicial">
+    <a href="#" class="logo" aria-label="Coruja Presente — Início">
       <div class="logo__emblem" aria-hidden="true">
-        <!-- Ícone coruja (SVG inline) -->
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="8" cy="9" r="2"/>
-          <circle cx="16" cy="9" r="2"/>
-          <path d="M12 3C7 3 3 7 3 12s4 9 9 9 9-4 9-9-4-9-9-9z"/>
-          <path d="M8 16s1.5 2 4 2 4-2 4-2"/>
-          <path d="M9 3 7 1M15 3l2-2"/>
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 28C10 28 6 23.5 6 18C6 12 9 8.5 13 7L16 4L19 7C23 8.5 26 12 26 18C26 23.5 22 28 16 28Z"
+                fill="#1A2332" stroke="rgba(107,142,204,0.4)" stroke-width="1"/>
+          <path d="M11 15L13 13L15 15L13 17Z" fill="#6B8ECC" opacity=".9"/>
+          <path d="M17 15L19 13L21 15L19 17Z" fill="#6B8ECC" opacity=".9"/>
+          <circle cx="13" cy="15" r="1" fill="#A8C0E8"/>
+          <circle cx="19" cy="15" r="1" fill="#A8C0E8"/>
+          <path d="M15 18H17L16 20Z" fill="#9CA3AF"/>
+          <path d="M10 8L13 7L11 11Z" fill="#101826" stroke="rgba(107,142,204,0.3)" stroke-width=".5"/>
+          <path d="M22 8L19 7L21 11Z" fill="#101826" stroke="rgba(107,142,204,0.3)" stroke-width=".5"/>
         </svg>
       </div>
-      <div class="logo__text">
+
+      <div class="logo__wordmark">
         <span class="logo__name">Coruja Presente</span>
-        <span class="logo__tagline">Inteligência Urbana</span>
+        <span class="logo__sub">Inteligência Urbana</span>
       </div>
     </a>
 
-    <div class="topbar__divider" aria-hidden="true"></div>
+    <div class="topbar__div" aria-hidden="true"></div>
 
-    <!-- Pesquisa de localização -->
+    <!-- SEARCH -->
     <div class="topbar__search" role="search">
-      <label for="location-search" class="sr-only">Buscar localização</label>
-      <div class="search__input-wrapper">
-        <svg class="search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      <label for="loc-search" class="sr-only">Buscar localização</label>
+
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.35-4.35"/>
         </svg>
+
         <input
-          id="location-search"
+          id="loc-search"
           type="search"
-          class="search__input"
           placeholder="Onde você mora?"
-          autocomplete="street-address"
-          aria-label="Buscar por cidade, bairro ou CEP"
-          data-action="location-search"
+          autocomplete="off"
+          aria-label="Buscar cidade, bairro ou endereço"
         />
-        <kbd class="search__kbd" aria-label="Tecla de atalho">⌘K</kbd>
+
+        <kbd class="search-kbd">⌘K</kbd>
       </div>
     </div>
 
-    <!-- Indicador ao vivo -->
-    <div class="topbar__live" aria-live="polite" aria-label="Status da plataforma">
-      <div class="live__dot" aria-hidden="true"></div>
-      <span>AO VIVO</span>
+    <!-- LIVE -->
+    <div class="topbar__live">
+      <span class="live-dot"></span>
+      AO VIVO
     </div>
 
-    <!-- Navegação principal -->
-    <nav class="topbar__nav" aria-label="Menu principal">
+    <!-- NAV -->
+    <nav class="topbar__nav">
 
-      <!-- Botão Sobre Nós -->
-      <button
-        type="button"
-        class="nav__btn"
-        data-modal="modal-about"
-        data-action="open-modal"
-        aria-haspopup="dialog"
-        aria-controls="modal-about"
-      >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+      <button type="button"
+              class="nav-btn"
+              data-open-modal="modal-about">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 16v-4M12 8h.01"/>
         </svg>
-        <span class="nav__btn--text">Sobre Nós</span>
+
+        <span class="nav-btn-text">Sobre Nós</span>
       </button>
 
-      <!-- Botão Relatórios -->
-      <button
-        type="button"
-        class="nav__btn"
-        data-modal="modal-reports"
-        data-action="open-modal"
-        aria-haspopup="dialog"
-        aria-controls="modal-reports"
-      >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <button type="button"
+              class="nav-btn"
+              data-open-modal="modal-reports">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-          <polyline points="14,2 14,8 20,8"/>
-          <line x1="16" y1="13" x2="8" y2="13"/>
-          <line x1="16" y1="17" x2="8" y2="17"/>
-          <line x1="10" y1="9"  x2="8" y2="9"/>
         </svg>
-        <span class="nav__btn--text">Relatórios</span>
+
+        <span class="nav-btn-text">Relatórios</span>
       </button>
 
-      <!-- Botão Estatísticas -->
-      <button
-        type="button"
-        class="nav__btn nav__btn--primary"
-        data-modal="modal-stats"
-        data-action="open-modal"
-        aria-haspopup="dialog"
-        aria-controls="modal-stats"
-      >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <button type="button"
+              class="nav-btn nav-btn--accent"
+              data-open-modal="modal-stats">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="18" y1="20" x2="18" y2="10"/>
           <line x1="12" y1="20" x2="12" y2="4"/>
-          <line x1="6"  y1="20" x2="6"  y2="14"/>
+          <line x1="6" y1="20" x2="6" y2="14"/>
         </svg>
-        <span class="nav__btn--text">Estatísticas</span>
+
+        <span class="nav-btn-text">Estatísticas</span>
       </button>
 
     </nav>
+
   </header>
 
-  <!-- Barra de alertas / status crítico (oculta por padrão) -->
-  <div id="status-bar" role="alert" aria-live="assertive">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" aria-hidden="true">
-      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
-      <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
-    </svg>
-    <span id="status-bar-message">ALERTA: Múltiplas ocorrências registradas na Zona Norte — Atualização em andamento</span>
-  </div>
+  <!-- CONTENT -->
+  <main id="content">
 
+    <!-- MAP -->
+    <section id="map-area">
+      <div id="map"></div>
 
-  <!-- ════════════════════════════════════════════════════════
-       2. SIDEBAR ESQUERDA — Filtros e Categorias
-  ════════════════════════════════════════════════════════ -->
-  <aside
-    id="sidebar-left"
-    role="complementary"
-    aria-label="Filtros e categorias de ocorrências"
-    data-collapsed="false"
-  >
-
-    <!-- Botão de colapso -->
-    <button
-      class="sidebar__toggle"
-      type="button"
-      data-action="toggle-sidebar-left"
-      aria-expanded="true"
-      aria-controls="sidebar-left"
-      aria-label="Recolher painel de filtros"
-    >
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <polyline points="15,18 9,12 15,6"/>
-      </svg>
-    </button>
-
-    <!-- Header -->
-    <div class="sidebar__header">
-      <div class="sidebar__header-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="4" y1="6"  x2="20" y2="6"/>
-          <line x1="8" y1="12" x2="20" y2="12"/>
-          <line x1="12" y1="18" x2="20" y2="18"/>
-        </svg>
-      </div>
-      <span class="sidebar__title">Filtros</span>
-    </div>
-
-    <!-- Conteúdo rolável -->
-    <div class="sidebar__body">
-
-      <!-- ── Seletor de período ──── -->
-      <div class="filter-section">
-        <p class="filter-section__label">Período</p>
-        <div class="period-selector" role="group" aria-label="Selecionar período de tempo">
-          <button type="button" class="period-btn" data-period="24h" aria-pressed="false">24h</button>
-          <button type="button" class="period-btn is-active" data-period="7d" aria-pressed="true">7d</button>
-          <button type="button" class="period-btn" data-period="30d" aria-pressed="false">30d</button>
-          <button type="button" class="period-btn" data-period="90d" aria-pressed="false">3m</button>
-          <button type="button" class="period-btn" data-period="1y" aria-pressed="false">1a</button>
-          <button type="button" class="period-btn" data-period="all" aria-pressed="false">Tudo</button>
-        </div>
+      <!-- LOADING -->
+      <div id="map-loading">
+        <div class="loading-ring"></div>
+        <div class="loading-text">Carregando mapa...</div>
       </div>
 
-      <!-- ── Categorias de ocorrência ──── -->
-      <div class="filter-section">
-        <p class="filter-section__label">Categorias</p>
+      <!-- TOOLTIP -->
+      <div id="map-tooltip"></div>
+    </section>
 
-        <!-- Acidentes -->
-        <div
-          class="category-card is-active"
-          role="checkbox"
-          aria-checked="true"
-          tabindex="0"
-          data-category="accidents"
-          data-action="toggle-category"
-          style="--cat-color: var(--cat-accident); --cat-color-rgb: 245,158,11;"
-        >
-          <div class="category__checkbox" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg>
-          </div>
-          <div class="category__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
-              <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
-            </svg>
-          </div>
-          <div class="category__info">
-            <div class="category__name">Acidentes</div>
-            <div class="category__meta">Trânsito · Vias públicas</div>
-          </div>
-          <span class="category__badge" aria-label="143 ocorrências">143</span>
-        </div>
+    <!-- SIDEBAR LEFT -->
+    <aside id="sidebar-left" class="sidebar">
 
-        <!-- Crimes -->
-        <div
-          class="category-card is-active"
-          role="checkbox"
-          aria-checked="true"
-          tabindex="0"
-          data-category="crimes"
-          data-action="toggle-category"
-          style="--cat-color: var(--cat-crime); --cat-color-rgb: 239,68,68;"
-        >
-          <div class="category__checkbox" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg>
-          </div>
-          <div class="category__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            </svg>
-          </div>
-          <div class="category__info">
-            <div class="category__name">Crimes</div>
-            <div class="category__meta">Segurança · Ocorrências</div>
-          </div>
-          <span class="category__badge" aria-label="287 ocorrências">287</span>
-        </div>
-
-        <!-- Afogamentos -->
-        <div
-          class="category-card"
-          role="checkbox"
-          aria-checked="false"
-          tabindex="0"
-          data-category="drownings"
-          data-action="toggle-category"
-          style="--cat-color: var(--cat-drowning); --cat-color-rgb: 59,130,246;"
-        >
-          <div class="category__checkbox" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg>
-          </div>
-          <div class="category__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M2 12h20M2 17c2.67-1.33 5.33-1.33 8 0s5.33 1.33 8 0M2 7c2.67-1.33 5.33-1.33 8 0s5.33 1.33 8 0"/>
-            </svg>
-          </div>
-          <div class="category__info">
-            <div class="category__name">Afogamentos</div>
-            <div class="category__meta">Praias · Rios · Lagos</div>
-          </div>
-          <span class="category__badge" aria-label="34 ocorrências">34</span>
-        </div>
-
-        <!-- Incêndios -->
-        <div
-          class="category-card is-active"
-          role="checkbox"
-          aria-checked="true"
-          tabindex="0"
-          data-category="fires"
-          data-action="toggle-category"
-          style="--cat-color: var(--cat-fire); --cat-color-rgb: 249,115,22;"
-        >
-          <div class="category__checkbox" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg>
-          </div>
-          <div class="category__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
-            </svg>
-          </div>
-          <div class="category__info">
-            <div class="category__name">Incêndios</div>
-            <div class="category__meta">Estrutural · Vegetal</div>
-          </div>
-          <span class="category__badge" aria-label="61 ocorrências">61</span>
-        </div>
-
-      </div>
-
-      <!-- ── Visualização do mapa ──── -->
-      <div class="filter-section">
-        <p class="filter-section__label">Visualização</p>
-        <div class="map-view-options" role="group" aria-label="Tipo de visualização do mapa">
-          <button type="button" class="map-view-btn is-active" data-view="markers" aria-pressed="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Marcadores
-          </button>
-          <button type="button" class="map-view-btn" data-view="heatmap" aria-pressed="false">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-            Mapa de Calor
-            <span style="margin-left:auto;font-family:var(--font-mono);font-size:9px;color:var(--accent-primary);background:var(--accent-glow);padding:1px 5px;border-radius:3px;">BETA</span>
-          </button>
-          <button type="button" class="map-view-btn" data-view="clusters" aria-pressed="false">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-            Clusters
-          </button>
-        </div>
-      </div>
-
-      <!-- ── Preparação: IA (futuro) ──── -->
-      <div class="filter-section">
-        <p class="filter-section__label">IA &amp; Análise <span style="font-family:var(--font-mono);color:var(--text-muted);font-size:8px;letter-spacing:0.1em;margin-left:4px;">EM BREVE</span></p>
-        <div style="padding:10px 12px;background:var(--bg-glass-light);border:1px dashed var(--border-dim);border-radius:var(--radius-md);display:flex;align-items:center;gap:var(--space-sm);opacity:0.5;cursor:not-allowed;" aria-disabled="true">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a10 10 0 0 1 10 10c0 5-3.5 9.5-8.5 10a10 10 0 0 1-11-11A10 10 0 0 1 12 2z"/><path d="M12 6v6l4 2"/></svg>
-          <span style="font-size:12px;color:var(--text-secondary);">Predição por IA</span>
-        </div>
-      </div>
-
-    </div><!-- /sidebar__body -->
-
-    <!-- Footer: seletor de cidade -->
-    <div class="sidebar__footer">
-      <button
-        type="button"
-        class="sidebar__city-selector"
-        data-action="open-city-dropdown"
-        aria-haspopup="listbox"
-        aria-label="Cidade atual: Rio das Ostras. Clique para trocar."
-      >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-        </svg>
-        <div class="city-selector__info">
-          <div class="city-selector__label">Cidade ativa</div>
-          <div class="city-selector__name" id="active-city-name">Rio das Ostras, RJ</div>
-        </div>
-        <svg class="city-selector__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <polyline points="6,9 12,15 18,9"/>
-        </svg>
-      </button>
-    </div>
-
-  </aside><!-- /sidebar-left -->
-
-
-  <!-- ════════════════════════════════════════════════════════
-       3. ÁREA DO MAPA
-  ════════════════════════════════════════════════════════ -->
-  <main id="map-area" role="main" aria-label="Mapa interativo de ocorrências urbanas">
-
-    <!-- Container do mapa Mapbox -->
-    <div
-      id="map"
-      role="img"
-      aria-label="Mapa interativo mostrando ocorrências urbanas"
-      data-mapbox-token=""
-    ></div>
-
-    <!-- Loading do mapa -->
-    <div id="map-loading" aria-label="Carregando mapa" role="status">
-      <div class="map-loading__spinner" aria-hidden="true"></div>
-      <span class="map-loading__text">INICIALIZANDO MAPA</span>
-    </div>
-
-    <!-- HUD: breadcrumb top-left -->
-    <div class="map-hud hud--top-left" aria-hidden="true">
-      <div class="hud-breadcrumb">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        <span>Brasil</span>
-        <span class="hud-breadcrumb__sep">›</span>
-        <span>Rio de Janeiro</span>
-        <span class="hud-breadcrumb__sep">›</span>
-        <span class="hud-breadcrumb__city" id="map-city-label">Rio das Ostras</span>
-      </div>
-    </div>
-
-    <!-- HUD: controles top-right -->
-    <div class="map-hud hud--top-right" role="group" aria-label="Controles do mapa">
-      <div class="map-control-group">
-        <button type="button" class="map-control-btn" data-action="map-zoom-in" aria-label="Aproximar">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-        </button>
-        <button type="button" class="map-control-btn" data-action="map-zoom-out" aria-label="Afastar">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-        </button>
-      </div>
-      <div class="map-control-group">
-        <button type="button" class="map-control-btn" data-action="map-locate-me" aria-label="Minha localização">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
-        </button>
-        <button type="button" class="map-control-btn" data-action="map-fullscreen" aria-label="Tela cheia">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
-        </button>
-      </div>
-    </div>
-
-    <!-- HUD: legenda bottom-left -->
-    <div class="map-hud hud--bottom-left" aria-label="Legenda do mapa">
-      <div class="map-legend" role="list">
-        <p class="legend__title">Legenda</p>
-        <div class="legend__item" role="listitem">
-          <div class="legend__dot" style="background:var(--cat-accident);" aria-hidden="true"></div>
-          <span>Acidentes</span>
-        </div>
-        <div class="legend__item" role="listitem">
-          <div class="legend__dot" style="background:var(--cat-crime);" aria-hidden="true"></div>
-          <span>Crimes</span>
-        </div>
-        <div class="legend__item" role="listitem">
-          <div class="legend__dot" style="background:var(--cat-drowning);" aria-hidden="true"></div>
-          <span>Afogamentos</span>
-        </div>
-        <div class="legend__item" role="listitem">
-          <div class="legend__dot" style="background:var(--cat-fire);" aria-hidden="true"></div>
-          <span>Incêndios</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- HUD: coordenadas bottom-center -->
-    <div class="map-hud hud--bottom-center" aria-hidden="true">
-      <div class="hud-coords">
-        <span>LAT <span id="map-lat">-22.5297</span></span>
-        <span>LNG <span id="map-lng">-41.9441</span></span>
-        <span>ZOOM <span id="map-zoom">12</span></span>
-      </div>
-    </div>
-
-    <!-- HUD: timestamp bottom-right -->
-    <div class="map-hud hud--bottom-right" aria-label="Última atualização do mapa">
-      <div class="hud-timestamp">
-        <div class="live__dot" aria-hidden="true"></div>
-        <span>Atualizado <time id="map-updated" datetime="">agora mesmo</time></span>
-      </div>
-    </div>
-
-    <!-- Tooltip de marcador (posicionado via JS) -->
-    <div
-      id="map-tooltip"
-      class="map-tooltip"
-      role="tooltip"
-      aria-hidden="true"
-    >
-      <div class="map-tooltip__type" id="tooltip-type">CRIME</div>
-      <div class="map-tooltip__title" id="tooltip-title">Roubo a transeunte</div>
-      <div class="map-tooltip__meta">
-        <span id="tooltip-neighborhood">Centro</span>
-        <span id="tooltip-datetime">Hoje às 14h32</span>
-      </div>
-    </div>
-
-  </main><!-- /map-area -->
-
-
-  <!-- ════════════════════════════════════════════════════════
-       4. SIDEBAR DIREITA — Estatísticas
-  ════════════════════════════════════════════════════════ -->
-  <aside
-    id="sidebar-right"
-    role="complementary"
-    aria-label="Painel de estatísticas e resumos"
-    data-collapsed="false"
-  >
-
-    <!-- Botão de colapso -->
-    <button
-      class="sidebar__toggle"
-      type="button"
-      style="right:auto;left:-12px;"
-      data-action="toggle-sidebar-right"
-      aria-expanded="true"
-      aria-controls="sidebar-right"
-      aria-label="Recolher painel de estatísticas"
-    >
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <polyline points="9,18 15,12 9,6"/>
-      </svg>
-    </button>
-
-    <!-- Header -->
-    <div class="sidebar__header">
-      <div class="sidebar__header-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
-        </svg>
-      </div>
-      <span class="sidebar__title">Estatísticas</span>
-    </div>
-
-    <!-- Conteúdo rolável -->
-    <div class="sidebar__body">
-
-      <!-- ── Card: Cidade atual ──── -->
-      <section class="stat-card stat-card--highlight" aria-labelledby="stat-city-label">
-        <div class="stat-card__label" id="stat-city-label">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          Cidade Monitorada
-        </div>
-        <div class="stat-card__value stat-card__value--accent" id="stat-city-name" style="font-size:18px;">Rio das Ostras</div>
-        <div class="stat-card__sub">Rio de Janeiro · Brasil</div>
-      </section>
-
-      <!-- ── Card: Ocorrências filtradas ──── -->
-      <section class="stat-card" aria-labelledby="stat-total-label">
-        <div class="stat-card__label" id="stat-total-label">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          Ocorrências Filtradas
-        </div>
-        <div class="stat-card__value" id="stat-total-count">491</div>
-        <div class="stat-card__sub">
-          <span class="stat-card__trend stat-card__trend--up" aria-label="Aumento de 12% esta semana">▲ 12%</span>
-          <span>vs. semana anterior</span>
-        </div>
-        <div class="stat-card__sparkline skeleton" aria-hidden="true" title="Gráfico de tendência (disponível em breve)"></div>
-      </section>
-
-      <!-- ── Card: Categoria dominante ──── -->
-      <section class="stat-card" aria-labelledby="stat-dom-label">
-        <div class="stat-card__label" id="stat-dom-label">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/></svg>
-          Categoria Dominante
-        </div>
-        <div class="stat-card__value stat-card__value--danger" id="stat-dom-cat" style="font-size:18px;">Crimes</div>
-        <div class="category-dominance" role="list" aria-label="Distribuição por categoria">
-          <div class="dominance-bar" role="listitem" aria-label="Crimes: 58%">
-            <span class="dominance-bar__label">Crimes</span>
-            <div class="dominance-bar__track"><div class="dominance-bar__fill" style="width:58%;--cat-color:var(--cat-crime);" role="progressbar" aria-valuenow="58" aria-valuemin="0" aria-valuemax="100"></div></div>
-            <span class="dominance-bar__pct">58%</span>
-          </div>
-          <div class="dominance-bar" role="listitem" aria-label="Acidentes: 29%">
-            <span class="dominance-bar__label">Acidentes</span>
-            <div class="dominance-bar__track"><div class="dominance-bar__fill" style="width:29%;--cat-color:var(--cat-accident);" role="progressbar" aria-valuenow="29" aria-valuemin="0" aria-valuemax="100"></div></div>
-            <span class="dominance-bar__pct">29%</span>
-          </div>
-          <div class="dominance-bar" role="listitem" aria-label="Incêndios: 12%">
-            <span class="dominance-bar__label">Incêndios</span>
-            <div class="dominance-bar__track"><div class="dominance-bar__fill" style="width:12%;--cat-color:var(--cat-fire);" role="progressbar" aria-valuenow="12" aria-valuemin="0" aria-valuemax="100"></div></div>
-            <span class="dominance-bar__pct">12%</span>
-          </div>
-          <div class="dominance-bar" role="listitem" aria-label="Afogamentos: 7%">
-            <span class="dominance-bar__label">Afogamentos</span>
-            <div class="dominance-bar__track"><div class="dominance-bar__fill" style="width:7%;--cat-color:var(--cat-drowning);" role="progressbar" aria-valuenow="7" aria-valuemin="0" aria-valuemax="100"></div></div>
-            <span class="dominance-bar__pct">7%</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- ── Card: Bairro mais afetado ──── -->
-      <section class="stat-card" aria-labelledby="stat-nbhd-label">
-        <div class="stat-card__label" id="stat-nbhd-label">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M3 9h6M3 15h6M15 3v18M15 9h6M15 15h6"/></svg>
-          Bairros Mais Afetados
-        </div>
-        <nav class="neighborhood-list" aria-label="Ranking de bairros por número de ocorrências">
-          <div class="neighborhood-item" tabindex="0" data-action="focus-neighborhood" data-neighborhood="centro" role="button" aria-label="1. Centro: 89 ocorrências">
-            <span class="neighborhood-item__rank">1.</span>
-            <span class="neighborhood-item__name">Centro</span>
-            <span class="neighborhood-item__count">89</span>
-          </div>
-          <div class="neighborhood-item" tabindex="0" data-action="focus-neighborhood" data-neighborhood="operario" role="button" aria-label="2. Operário: 67 ocorrências">
-            <span class="neighborhood-item__rank">2.</span>
-            <span class="neighborhood-item__name">Operário</span>
-            <span class="neighborhood-item__count">67</span>
-          </div>
-          <div class="neighborhood-item" tabindex="0" data-action="focus-neighborhood" data-neighborhood="cajueiro" role="button" aria-label="3. Cajueiro: 54 ocorrências">
-            <span class="neighborhood-item__rank">3.</span>
-            <span class="neighborhood-item__name">Cajueiro</span>
-            <span class="neighborhood-item__count">54</span>
-          </div>
-          <div class="neighborhood-item" tabindex="0" data-action="focus-neighborhood" data-neighborhood="miramar" role="button" aria-label="4. Miramar: 41 ocorrências">
-            <span class="neighborhood-item__rank">4.</span>
-            <span class="neighborhood-item__name">Miramar</span>
-            <span class="neighborhood-item__count">41</span>
-          </div>
-          <div class="neighborhood-item" tabindex="0" data-action="focus-neighborhood" data-neighborhood="costa-azul" role="button" aria-label="5. Costa Azul: 33 ocorrências">
-            <span class="neighborhood-item__rank">5.</span>
-            <span class="neighborhood-item__name">Costa Azul</span>
-            <span class="neighborhood-item__count">33</span>
-          </div>
-        </nav>
-      </section>
-
-      <!-- ── Card: Mortes registradas ──── -->
-      <section class="stat-card" aria-labelledby="stat-deaths-label">
-        <div class="stat-card__label" id="stat-deaths-label">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
-          Mortes Registradas
-        </div>
-        <div class="stat-card__value stat-card__value--danger" id="stat-deaths">18</div>
-        <div class="stat-card__sub">
-          <span class="stat-card__trend stat-card__trend--up" aria-label="Aumento de 3 casos vs período anterior">▲ 3</span>
-          <span>vs. período anterior</span>
-        </div>
-      </section>
-
-      <!-- ── Card: Feridos registrados ──── -->
-      <section class="stat-card" aria-labelledby="stat-injured-label">
-        <div class="stat-card__label" id="stat-injured-label">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5M15 9h6M18 6v6"/></svg>
-          Feridos Registrados
-        </div>
-        <div class="stat-card__value stat-card__value--warning" id="stat-injured">134</div>
-        <div class="stat-card__sub">
-          <span class="stat-card__trend stat-card__trend--down" aria-label="Redução de 8% vs período anterior">▼ 8%</span>
-          <span>vs. período anterior</span>
-        </div>
-      </section>
-
-      <!-- ── Preparação: Login / Premium (futuro) ──── -->
-      <div
-        style="padding:12px;background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(0,153,204,0.03));border:1px dashed rgba(0,212,255,0.15);border-radius:var(--radius-md);text-align:center;opacity:0.7;"
-        aria-label="Funcionalidade premium em breve"
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 8px;display:block;" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-        <p style="font-size:11px;color:var(--text-muted);line-height:1.4;">Acesse relatórios avançados<br>e análises por IA com o plano<br><strong style="color:var(--accent-primary);">Coruja Premium</strong></p>
-      </div>
-
-    </div><!-- /sidebar__body -->
-
-  </aside><!-- /sidebar-right -->
-
-</div><!-- /app -->
-
-
-<!-- ════════════════════════════════════════════════════════════
-     5. MODAIS
-════════════════════════════════════════════════════════════ -->
-
-<!-- ── Modal: Sobre Nós ───────────────────────────────────── -->
-<div
-  id="modal-about"
-  class="modal-backdrop"
-  role="dialog"
-  aria-modal="true"
-  aria-labelledby="modal-about-title"
-  aria-hidden="true"
-  data-action="close-modal-backdrop"
->
-  <div class="modal modal--md" role="document">
-
-    <div class="modal__header">
-      <div class="modal__header-left">
-        <div class="modal__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+      <div class="sidebar__header">
+        <div class="sidebar__header-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 12h18"/>
           </svg>
         </div>
-        <div>
-          <h2 class="modal__title" id="modal-about-title">Sobre o Coruja Presente</h2>
-          <p class="modal__subtitle">Plataforma de inteligência urbana e monitoramento geográfico</p>
+
+        <div class="sidebar__title">
+          Filtros
         </div>
       </div>
-      <button type="button" class="modal__close" data-action="close-modal" data-modal="modal-about" aria-label="Fechar modal Sobre Nós">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
 
-    <div class="modal__body">
-      <div class="about-hero">
-        <div class="about-hero__logo" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="8" cy="9" r="2"/><circle cx="16" cy="9" r="2"/>
-            <path d="M12 3C7 3 3 7 3 12s4 9 9 9 9-4 9-9-4-9-9-9z"/>
-            <path d="M8 16s1.5 2 4 2 4-2 4-2"/>
-            <path d="M9 3 7 1M15 3l2-2"/>
+      <div class="sidebar__body">
+
+        <section>
+          <div class="section-label">Categorias</div>
+
+          <!-- categorias aqui -->
+        </section>
+
+      </div>
+
+    </aside>
+
+    <!-- SIDEBAR RIGHT -->
+    <aside id="sidebar-right" class="sidebar">
+
+      <div class="sidebar__header">
+        <div class="sidebar__header-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"/>
           </svg>
         </div>
-        <h3 class="about-hero__title">Coruja Presente</h3>
-        <p class="about-hero__desc">
-          Plataforma de inteligência pública que agrega e visualiza dados de ocorrências urbanas
-          em tempo real, auxiliando cidadãos, gestores e órgãos de segurança.
-        </p>
+
+        <div class="sidebar__title">
+          Estatísticas
+        </div>
       </div>
 
-      <div class="about-features" role="list">
-        <div class="about-feature" role="listitem">
-          <div class="about-feature__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <div class="sidebar__body">
+
+        <section class="stat-card">
+          <div class="stat-card__label">
+            Ocorrências Totais
           </div>
-          <h4 class="about-feature__title">Monitoramento Geográfico</h4>
-          <p class="about-feature__desc">Visualize ocorrências em mapas interativos com dados atualizados em tempo real.</p>
-        </div>
-        <div class="about-feature" role="listitem">
-          <div class="about-feature__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+
+          <div class="stat-card__value">
+            522
           </div>
-          <h4 class="about-feature__title">Estatísticas Avançadas</h4>
-          <p class="about-feature__desc">Análise de tendências, categorias e bairros com dashboards completos.</p>
-        </div>
-        <div class="about-feature" role="listitem">
-          <div class="about-feature__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
-          </div>
-          <h4 class="about-feature__title">Relatórios em PDF</h4>
-          <p class="about-feature__desc">Exporte relatórios detalhados para uso por órgãos e gestores públicos.</p>
-        </div>
-        <div class="about-feature" role="listitem">
-          <div class="about-feature__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83"/></svg>
-          </div>
-          <h4 class="about-feature__title">Análise por IA</h4>
-          <p class="about-feature__desc">Predição de padrões e alertas inteligentes com modelos de aprendizado de máquina.</p>
-        </div>
+        </section>
+
       </div>
-    </div>
 
-    <div class="modal__footer">
-      <button type="button" class="btn btn--ghost" data-action="close-modal" data-modal="modal-about">Fechar</button>
-      <button type="button" class="btn btn--primary">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        Saiba mais
-      </button>
-    </div>
+    </aside>
 
-  </div>
+  </main>
+
 </div>
 
+<!-- CITY DROPDOWN -->
+<div id="city-dropdown">
 
-<!-- ── Modal: Relatórios ──────────────────────────────────── -->
-<div
-  id="modal-reports"
-  class="modal-backdrop"
-  role="dialog"
-  aria-modal="true"
-  aria-labelledby="modal-reports-title"
-  aria-hidden="true"
-  data-action="close-modal-backdrop"
->
-  <div class="modal modal--lg" role="document">
-
-    <div class="modal__header">
-      <div class="modal__header-left">
-        <div class="modal__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/>
-          </svg>
-        </div>
-        <div>
-          <h2 class="modal__title" id="modal-reports-title">Relatórios de Ocorrências</h2>
-          <p class="modal__subtitle">Listagem detalhada e exportação de dados</p>
-        </div>
-      </div>
-      <button type="button" class="modal__close" data-action="close-modal" data-modal="modal-reports" aria-label="Fechar modal de Relatórios">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-
-    <div class="modal__body">
-
-      <!-- Tabs de relatório -->
-      <div class="tabs" role="tablist" aria-label="Categorias de relatório">
-        <button type="button" class="tab-btn is-active" role="tab" aria-selected="true" aria-controls="tab-all" id="tab-btn-all">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
-          Todos
-        </button>
-        <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-accidents" id="tab-btn-accidents">Acidentes</button>
-        <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-crimes" id="tab-btn-crimes">Crimes</button>
-        <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-fires" id="tab-btn-fires">Incêndios</button>
-        <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-drownings" id="tab-btn-drownings">Afogamentos</button>
-      </div>
-
-      <!-- Filtros de relatório -->
-      <div class="report-filter-row">
-        <label for="report-city" class="sr-only">Filtrar por cidade</label>
-        <select id="report-city" class="report-select" aria-label="Filtrar por cidade">
-          <option value="">Todas as cidades</option>
-          <option value="rio-das-ostras" selected>Rio das Ostras</option>
-          <option value="macae">Macaé</option>
-          <option value="cabo-frio">Cabo Frio</option>
-          <option value="arraial-do-cabo">Arraial do Cabo</option>
-        </select>
-
-        <label for="report-period" class="sr-only">Filtrar por período</label>
-        <select id="report-period" class="report-select" aria-label="Filtrar por período">
-          <option value="7d" selected>Últimos 7 dias</option>
-          <option value="30d">Últimos 30 dias</option>
-          <option value="90d">Últimos 3 meses</option>
-          <option value="1y">Último ano</option>
-        </select>
-
-        <label for="report-category" class="sr-only">Filtrar por categoria</label>
-        <select id="report-category" class="report-select" aria-label="Filtrar por categoria">
-          <option value="">Todas as categorias</option>
-          <option value="accidents">Acidentes</option>
-          <option value="crimes">Crimes</option>
-          <option value="fires">Incêndios</option>
-          <option value="drownings">Afogamentos</option>
-        </select>
-      </div>
-
-      <!-- Tabela de ocorrências -->
-      <div class="report-table-wrapper">
-        <table class="report-table" aria-label="Tabela de ocorrências" id="tab-all" role="tabpanel" aria-labelledby="tab-btn-all">
-          <thead>
-            <tr>
-              <th scope="col">ID</th>
-              <th scope="col">Tipo</th>
-              <th scope="col">Descrição</th>
-              <th scope="col">Bairro</th>
-              <th scope="col">Data / Hora</th>
-              <th scope="col">Vítimas</th>
-            </tr>
-          </thead>
-          <tbody id="reports-table-body">
-            <!-- Linhas de exemplo — serão substituídas por JS -->
-            <tr>
-              <td><code style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);">#0487</code></td>
-              <td><span class="occurrence-badge occurrence-badge--crime">● Crime</span></td>
-              <td>Roubo a transeunte</td>
-              <td>Centro</td>
-              <td><time datetime="2025-05-10T14:32:00">10/05 14h32</time></td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <td><code style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);">#0486</code></td>
-              <td><span class="occurrence-badge occurrence-badge--accident">● Acidente</span></td>
-              <td>Colisão traseira na RJ-106</td>
-              <td>Operário</td>
-              <td><time datetime="2025-05-10T13:15:00">10/05 13h15</time></td>
-              <td>2 feridos</td>
-            </tr>
-            <tr>
-              <td><code style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);">#0485</code></td>
-              <td><span class="occurrence-badge occurrence-badge--fire">● Incêndio</span></td>
-              <td>Incêndio em vegetação</td>
-              <td>Cajueiro</td>
-              <td><time datetime="2025-05-10T11:47:00">10/05 11h47</time></td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <td><code style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);">#0484</code></td>
-              <td><span class="occurrence-badge occurrence-badge--drowning">● Afogamento</span></td>
-              <td>Afogamento na Praia de Costazul</td>
-              <td>Costa Azul</td>
-              <td><time datetime="2025-05-09T09:20:00">09/05 09h20</time></td>
-              <td>1 óbito</td>
-            </tr>
-            <tr>
-              <td><code style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);">#0483</code></td>
-              <td><span class="occurrence-badge occurrence-badge--crime">● Crime</span></td>
-              <td>Furto de veículo</td>
-              <td>Miramar</td>
-              <td><time datetime="2025-05-09T22:05:00">09/05 22h05</time></td>
-              <td>—</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-    </div>
-
-    <div class="modal__footer">
-      <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);margin-right:auto;">491 ocorrências · Página 1 de 50</span>
-      <button type="button" class="btn btn--ghost" data-action="close-modal" data-modal="modal-reports">Fechar</button>
-      <button type="button" class="btn btn--primary">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Exportar PDF
-      </button>
-    </div>
-
-  </div>
-</div>
-
-
-<!-- ── Modal: Estatísticas ────────────────────────────────── -->
-<div
-  id="modal-stats"
-  class="modal-backdrop"
-  role="dialog"
-  aria-modal="true"
-  aria-labelledby="modal-stats-title"
-  aria-hidden="true"
-  data-action="close-modal-backdrop"
->
-  <div class="modal modal--xl" role="document">
-
-    <div class="modal__header">
-      <div class="modal__header-left">
-        <div class="modal__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
-          </svg>
-        </div>
-        <div>
-          <h2 class="modal__title" id="modal-stats-title">Painel de Estatísticas</h2>
-          <p class="modal__subtitle">Análise completa de ocorrências por período e categoria</p>
-        </div>
-      </div>
-      <button type="button" class="modal__close" data-action="close-modal" data-modal="modal-stats" aria-label="Fechar modal de Estatísticas">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-
-    <div class="modal__body">
-
-      <!-- KPI strip -->
-      <div class="stats-grid" role="list" aria-label="Indicadores chave de desempenho">
-        <div class="stat-card" role="listitem">
-          <div class="stat-card__label">Total de Ocorrências</div>
-          <div class="stat-card__value">491</div>
-          <div class="stat-card__sub"><span class="stat-card__trend stat-card__trend--up">▲ 12%</span> vs 7d ant.</div>
-        </div>
-        <div class="stat-card" role="listitem">
-          <div class="stat-card__label">Média Diária</div>
-          <div class="stat-card__value">70.1</div>
-          <div class="stat-card__sub">ocorrências / dia</div>
-        </div>
-        <div class="stat-card" role="listitem">
-          <div class="stat-card__label">Mortes</div>
-          <div class="stat-card__value stat-card__value--danger">18</div>
-          <div class="stat-card__sub"><span class="stat-card__trend stat-card__trend--up">▲ 3</span> vs período ant.</div>
-        </div>
-        <div class="stat-card" role="listitem">
-          <div class="stat-card__label">Feridos</div>
-          <div class="stat-card__value stat-card__value--warning">134</div>
-          <div class="stat-card__sub"><span class="stat-card__trend stat-card__trend--down">▼ 8%</span> vs período ant.</div>
-        </div>
-        <div class="stat-card" role="listitem">
-          <div class="stat-card__label">Bairros Afetados</div>
-          <div class="stat-card__value">23</div>
-          <div class="stat-card__sub">de 38 no município</div>
-        </div>
-        <div class="stat-card" role="listitem">
-          <div class="stat-card__label">Taxa de Resolução</div>
-          <div class="stat-card__value stat-card__value--accent">41%</div>
-          <div class="stat-card__sub">casos encerrados</div>
-        </div>
-      </div>
-
-      <!-- Gráficos placeholder -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md);margin-bottom:var(--space-md);">
-        <div class="chart-placeholder" aria-label="Gráfico de ocorrências por dia">
-          <div class="chart-placeholder__title">
-            Ocorrências por Dia
-            <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);">7 DIAS</span>
-          </div>
-          <div class="chart-placeholder__area" id="chart-daily" aria-label="Gráfico será renderizado aqui">
-            <!-- Chart.js / Recharts será inserido aqui -->
-            GRÁFICO DIÁRIO
-          </div>
-        </div>
-        <div class="chart-placeholder" aria-label="Gráfico de distribuição por categoria">
-          <div class="chart-placeholder__title">
-            Distribuição por Categoria
-            <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);">%</span>
-          </div>
-          <div class="chart-placeholder__area" id="chart-category" aria-label="Gráfico será renderizado aqui">
-            <!-- Donut chart será inserido aqui -->
-            GRÁFICO PIZZA
-          </div>
-        </div>
-      </div>
-
-      <div class="chart-placeholder" aria-label="Gráfico de ocorrências por hora do dia">
-        <div class="chart-placeholder__title">
-          Ocorrências por Hora do Dia (Heatmap)
-          <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);">MÉDIA 7 DIAS</span>
-        </div>
-        <div class="chart-placeholder__area" id="chart-heatmap" aria-label="Heatmap temporal será renderizado aqui" style="height:80px;">
-          HEATMAP TEMPORAL — Seg ▸ Dom × 00h ▸ 23h
-        </div>
-      </div>
-
-    </div>
-
-    <div class="modal__footer">
-      <button type="button" class="btn btn--ghost" data-action="close-modal" data-modal="modal-stats">Fechar</button>
-      <button type="button" class="btn btn--ghost">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Exportar CSV
-      </button>
-      <button type="button" class="btn btn--primary">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Gerar Relatório PDF
-      </button>
-    </div>
-
-  </div>
-</div>
-
-
-<!-- ════════════════════════════════════════════════════════════
-     DROPDOWN: Seleção de Cidade
-════════════════════════════════════════════════════════════ -->
-<div
-  id="city-dropdown"
-  class="city-dropdown"
-  role="listbox"
-  aria-label="Selecionar cidade monitorada"
-  aria-hidden="true"
->
-  <div class="city-dropdown__search">
-    <label for="city-search" class="sr-only">Buscar cidade</label>
+  <div class="city-drop__search">
     <input
       id="city-search"
       type="search"
       placeholder="Buscar cidade…"
-      style="width:100%;background:transparent;border:none;outline:none;color:var(--text-primary);font-family:var(--font-body);font-size:12px;"
-      aria-label="Buscar cidade"
     />
   </div>
-  <div class="city-dropdown__list" role="group">
-    <div class="city-option is-current" role="option" aria-selected="true" tabindex="0" data-city="rio-das-ostras">
-      <div class="city-option__info">
-        <span class="city-option__name">Rio das Ostras</span>
-        <span class="city-option__state">Rio de Janeiro</span>
+
+  <div class="city-drop__list">
+
+    <div class="city-opt current">
+      <div>
+        <div class="city-opt__name">Rio das Ostras</div>
+        <div class="city-opt__state">Rio de Janeiro</div>
       </div>
-      <span class="city-option__badge">ATIVO</span>
+
+      <span class="city-opt__tag">ATIVO</span>
     </div>
-    <div class="city-option" role="option" aria-selected="false" tabindex="0" data-city="macae">
-      <div class="city-option__info">
-        <span class="city-option__name">Macaé</span>
-        <span class="city-option__state">Rio de Janeiro</span>
-      </div>
-    </div>
-    <div class="city-option" role="option" aria-selected="false" tabindex="0" data-city="cabo-frio">
-      <div class="city-option__info">
-        <span class="city-option__name">Cabo Frio</span>
-        <span class="city-option__state">Rio de Janeiro</span>
-      </div>
-    </div>
-    <div class="city-option" role="option" aria-selected="false" tabindex="0" data-city="arraial-do-cabo">
-      <div class="city-option__info">
-        <span class="city-option__name">Arraial do Cabo</span>
-        <span class="city-option__state">Rio de Janeiro</span>
-      </div>
-    </div>
-    <div class="city-option" role="option" aria-selected="false" tabindex="0" data-city="buzios">
-      <div class="city-option__info">
-        <span class="city-option__name">Búzios</span>
-        <span class="city-option__state">Rio de Janeiro</span>
-      </div>
-    </div>
-    <!-- Futuro: mais cidades via API -->
+
   </div>
+
 </div>
 
+<!-- TOASTS -->
+<div id="toasts"></div>
 
-<!-- ════════════════════════════════════════════════════════════
-     NOTIFICAÇÕES TOAST
-════════════════════════════════════════════════════════════ -->
-<div id="toast-container" role="region" aria-label="Notificações" aria-live="polite">
-  <!-- Toasts gerados dinamicamente via JS -->
+<!-- MODAL ABOUT -->
+<div id="modal-about" class="modal-backdrop">
+
+  <div class="modal modal--lg">
+
+    <div class="modal__header">
+      <h2 class="modal__title">Sobre Nós</h2>
+    </div>
+
+    <div class="modal__body">
+      <p>
+        Plataforma de inteligência pública e monitoramento urbano.
+      </p>
+    </div>
+
+  </div>
+
 </div>
 
+<!-- MODAL REPORTS -->
+<div id="modal-reports" class="modal-backdrop">
 
-<!-- ════════════════════════════════════════════════════════════
-     JAVASCRIPT BASE (interações essenciais de estrutura)
-════════════════════════════════════════════════════════════ -->
-<script>
-  /* ──────────────────────────────────────────────────────────
-     Coruja Presente — Bootstrap de interações estruturais
-     Propósito: apenas lógica de abertura/fechamento de UI.
-     Lógica de mapa, dados e IA: arquivos JS separados futuros.
-  ────────────────────────────────────────────────────────── */
+  <div class="modal modal--xl">
 
-  document.addEventListener('DOMContentLoaded', () => {
+    <div class="modal__header">
+      <h2 class="modal__title">Relatórios</h2>
+    </div>
 
-    // ── Inicializa ícones Lucide ────────────────────────────
-    if (window.lucide) lucide.createIcons();
+    <div class="modal__body">
 
-    // ── Utilitário: dispatch de ação ────────────────────────
-    const $ = (sel, ctx = document) => ctx.querySelector(sel);
-    const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
+      <table class="reports-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Categoria</th>
+            <th>Ocorrência</th>
+            <th>Bairro</th>
+            <th>Data</th>
+          </tr>
+        </thead>
 
-    /* ── Modais ─────────────────────────────────────────── */
-    function openModal(id) {
-      const el = $('#' + id);
-      if (!el) return;
-      el.classList.add('is-open');
-      el.setAttribute('aria-hidden', 'false');
-      document.body.style.overflow = 'hidden';
-      // Foca primeiro elemento focável
-      const firstFocusable = el.querySelector('button, [tabindex="0"], input, select');
-      if (firstFocusable) setTimeout(() => firstFocusable.focus(), 50);
-    }
+        <tbody>
+          <tr>
+            <td>#0483</td>
+            <td>Crime</td>
+            <td>Furto de veículo</td>
+            <td>Cajueiro</td>
+            <td>09/05 18h40</td>
+          </tr>
+        </tbody>
 
-    function closeModal(id) {
-      const el = $('#' + id);
-      if (!el) return;
-      el.classList.remove('is-open');
-      el.setAttribute('aria-hidden', 'true');
-      document.body.style.overflow = '';
-    }
+      </table>
 
-    // Abre modal por botão
-    $$('[data-action="open-modal"]').forEach(btn => {
-      btn.addEventListener('click', () => openModal(btn.dataset.modal));
-    });
+    </div>
 
-    // Fecha modal por botão interno
-    $$('[data-action="close-modal"]').forEach(btn => {
-      btn.addEventListener('click', () => closeModal(btn.dataset.modal));
-    });
+  </div>
 
-    // Fecha modal ao clicar no backdrop
-    $$('[data-action="close-modal-backdrop"]').forEach(backdrop => {
-      backdrop.addEventListener('click', e => {
-        if (e.target === backdrop) closeModal(backdrop.id);
-      });
-    });
+</div>
 
-    // Fecha com Escape
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') {
-        $$('.modal-backdrop.is-open').forEach(m => closeModal(m.id));
-        closeCityDropdown();
-      }
-    });
+<!-- MODAL STATS -->
+<div id="modal-stats" class="modal-backdrop">
 
-    /* ── Sidebars ───────────────────────────────────────── */
-    function toggleSidebar(sidebarId, btnSelector) {
-      const sidebar = $('#' + sidebarId);
-      const btn = $('[data-action="' + btnSelector + '"]');
-      if (!sidebar) return;
-      const isCollapsed = sidebar.classList.toggle('is-collapsed');
-      sidebar.dataset.collapsed = isCollapsed ? 'true' : 'false';
-      if (btn) btn.setAttribute('aria-expanded', (!isCollapsed).toString());
-    }
+  <div class="modal modal--xl">
 
-    const btnLeft = $('[data-action="toggle-sidebar-left"]');
-    if (btnLeft) btnLeft.addEventListener('click', () => toggleSidebar('sidebar-left', 'toggle-sidebar-left'));
+    <div class="modal__header">
+      <h2 class="modal__title">
+        Painel de Estatísticas
+      </h2>
+    </div>
 
-    const btnRight = $('[data-action="toggle-sidebar-right"]');
-    if (btnRight) btnRight.addEventListener('click', () => toggleSidebar('sidebar-right', 'toggle-sidebar-right'));
+    <div class="modal__body">
 
-    /* ── Categorias ─────────────────────────────────────── */
-    $$('[data-action="toggle-category"]').forEach(card => {
-      card.addEventListener('click', () => {
-        const isActive = card.classList.toggle('is-active');
-        card.setAttribute('aria-checked', isActive.toString());
-        // TODO: disparar evento de atualização do mapa
-      });
-      card.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          card.click();
-        }
-      });
-    });
+      <div class="kpi-grid">
 
-    /* ── Período ────────────────────────────────────────── */
-    $$('.period-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        $$('.period-btn').forEach(b => { b.classList.remove('is-active'); b.setAttribute('aria-pressed', 'false'); });
-        btn.classList.add('is-active');
-        btn.setAttribute('aria-pressed', 'true');
-        // TODO: disparar evento de filtro de período
-      });
-    });
+        <div class="kpi-card">
+          <div class="kpi-value">522</div>
+          <div class="kpi-label">Ocorrências</div>
+        </div>
 
-    /* ── Visualização do mapa ───────────────────────────── */
-    $$('.map-view-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        $$('.map-view-btn').forEach(b => { b.classList.remove('is-active'); b.setAttribute('aria-pressed', 'false'); });
-        btn.classList.add('is-active');
-        btn.setAttribute('aria-pressed', 'true');
-        // TODO: disparar evento de mudança de visualização
-      });
-    });
+        <div class="kpi-card">
+          <div class="kpi-value">18</div>
+          <div class="kpi-label">Mortes</div>
+        </div>
 
-    /* ── Dropdown de cidade ─────────────────────────────── */
-    const cityDropdown = $('#city-dropdown');
-    const citySelector = $('[data-action="open-city-dropdown"]');
+      </div>
 
-    function openCityDropdown() {
-      if (!cityDropdown || !citySelector) return;
-      const rect = citySelector.getBoundingClientRect();
-      cityDropdown.style.top  = (rect.top - cityDropdown.offsetHeight - 8) + 'px';
-      cityDropdown.style.left = rect.left + 'px';
-      cityDropdown.classList.add('is-open');
-      cityDropdown.setAttribute('aria-hidden', 'false');
-      const search = $('#city-search');
-      if (search) setTimeout(() => search.focus(), 50);
-    }
+    </div>
 
-    function closeCityDropdown() {
-      if (!cityDropdown) return;
-      cityDropdown.classList.remove('is-open');
-      cityDropdown.setAttribute('aria-hidden', 'true');
-    }
+  </div>
 
-    if (citySelector) citySelector.addEventListener('click', (e) => {
-      e.stopPropagation();
-      cityDropdown.classList.contains('is-open') ? closeCityDropdown() : openCityDropdown();
-    });
+</div>
 
-    document.addEventListener('click', e => {
-      if (!cityDropdown?.contains(e.target) && e.target !== citySelector) {
-        closeCityDropdown();
-      }
-    });
-
-    // Seleção de cidade
-    $$('.city-option').forEach(opt => {
-      opt.addEventListener('click', () => {
-        $$('.city-option').forEach(o => { o.classList.remove('is-current'); o.setAttribute('aria-selected', 'false'); o.$('.city-option__badge')?.remove(); });
-        opt.classList.add('is-current');
-        opt.setAttribute('aria-selected', 'true');
-        const name = opt.querySelector('.city-option__name')?.textContent;
-        const state = opt.querySelector('.city-option__state')?.textContent;
-        if (name) {
-          const activeEl = $('#active-city-name');
-          if (activeEl) activeEl.textContent = name + (state ? ', ' + state.substring(0,2) : '');
-          const mapLabel = $('#map-city-label');
-          if (mapLabel) mapLabel.textContent = name;
-        }
-        closeCityDropdown();
-        // TODO: disparar evento de troca de cidade (recarrega dados do mapa)
-      });
-    });
-
-    /* ── Loading do mapa ────────────────────────────────── */
-    // Simula carregamento: esconde overlay após inicialização do Mapbox
-    // No futuro: esconder dentro do callback map.on('load', ...)
-    const mapLoading = $('#map-loading');
-    function hideMapLoading() {
-      if (mapLoading) {
-        mapLoading.style.transition = 'opacity 0.5s ease';
-        mapLoading.style.opacity = '0';
-        setTimeout(() => { mapLoading.style.display = 'none'; }, 500);
-      }
-    }
-    // Placeholder: esconde após 1.5s se o Mapbox não estiver configurado
-    setTimeout(hideMapLoading, 1500);
-
-    /* ── Tabs nos modais ────────────────────────────────── */
-    $$('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const tabGroup = btn.closest('.modal__body, [role="tablist"]')?.querySelectorAll('.tab-btn');
-        tabGroup?.forEach(b => { b.classList.remove('is-active'); b.setAttribute('aria-selected', 'false'); });
-        btn.classList.add('is-active');
-        btn.setAttribute('aria-selected', 'true');
-        // TODO: mostrar painel de tab correspondente
-      });
-    });
-
-    /* ── Focus de bairro no mapa ────────────────────────── */
-    $$('[data-action="focus-neighborhood"]').forEach(item => {
-      item.addEventListener('click', () => {
-        const neighborhood = item.dataset.neighborhood;
-        // TODO: centralizar mapa no bairro selecionado
-        console.info('[Coruja Presente] Focus neighborhood:', neighborhood);
-      });
-      item.addEventListener('keydown', e => {
-        if (e.key === 'Enter') item.click();
-      });
-    });
-
-    /* ── Atualiza timestamp ─────────────────────────────── */
-    function updateTimestamp() {
-      const el = $('#map-updated');
-      if (!el) return;
-      const now = new Date();
-      el.setAttribute('datetime', now.toISOString());
-      el.textContent = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-    }
-    updateTimestamp();
-    setInterval(updateTimestamp, 60_000);
-
-    /* ── Toast helper (API pública) ─────────────────────── */
-    window.CorujaPresente = {
-      toast(message, type = 'info') {
-        const container = $('#toast-container');
-        if (!container) return;
-        const icons = {
-          info:    '<svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>',
-          success: '<svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg>',
-          warning: '<svg viewBox="0 0 24 24" fill="none" stroke="var(--cat-accident)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/></svg>',
-          error:   '<svg viewBox="0 0 24 24" fill="none" stroke="var(--cat-crime)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
-        };
-        const toast = document.createElement('div');
-        toast.className = `toast toast--${type}`;
-        toast.setAttribute('role', 'alert');
-        toast.innerHTML = (icons[type] || icons.info) + `<span>${message}</span>`;
-        container.appendChild(toast);
-        setTimeout(() => {
-          toast.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-          toast.style.opacity = '0';
-          toast.style.transform = 'translateX(20px)';
-          setTimeout(() => toast.remove(), 300);
-        }, 4000);
-      },
-      openModal,
-      closeModal,
-    };
-
-    // Toast de boas-vindas
-    setTimeout(() => {
-      window.CorujaPresente.toast('Plataforma inicializada · Rio das Ostras, RJ', 'success');
-    }, 2000);
-
-  }); // DOMContentLoaded
-</script>
+<!-- JS -->
+<script src="app.js"></script>
 
 </body>
 </html>
+```
