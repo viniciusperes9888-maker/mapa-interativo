@@ -4,13 +4,13 @@
 // ========================================
 
 // ========================================
-// MAPBOX TOKEN
+// TOKEN MAPBOX
 // ========================================
 
-mapboxgl.accessToken = 'COLE_SEU_TOKEN_MAPBOX_AQUI';
+mapboxgl.accessToken = 'pk.eyJ1IjoidnBzOTA5MCIsImEiOiJjbW9zcTcxaGowMXlnMnNwcnVzbmU0Y2VnIn0.nhpXVRVOFPbGjy_zBmnV-w';
 
 // ========================================
-// MAPA
+// INICIAR MAPA
 // ========================================
 
 const map = new mapboxgl.Map({
@@ -39,12 +39,12 @@ map.addControl(
 );
 
 // ========================================
-// LOADING
+// REMOVER LOADING
 // ========================================
 
 map.on('load', () => {
 
-    console.log('Mapa carregado');
+    console.log('Mapa carregado com sucesso');
 
     const loading = document.getElementById('map-loading');
 
@@ -55,7 +55,7 @@ map.on('load', () => {
 });
 
 // ========================================
-// MARKERS TESTE
+// DADOS TESTE
 // ========================================
 
 const ocorrencias = [
@@ -65,7 +65,7 @@ const ocorrencias = [
         titulo: 'Roubo no Centro',
         bairro: 'Centro',
         coords: [-41.944, -22.529],
-        cor: '#E05252'
+        cor: '#ff5a5a'
     },
 
     {
@@ -73,7 +73,7 @@ const ocorrencias = [
         titulo: 'Colisão traseira',
         bairro: 'Operário',
         coords: [-41.923, -22.515],
-        cor: '#D4853A'
+        cor: '#ffb347'
     },
 
     {
@@ -81,7 +81,7 @@ const ocorrencias = [
         titulo: 'Afogamento',
         bairro: 'Costazul',
         coords: [-41.960, -22.540],
-        cor: '#4B9FD4'
+        cor: '#5aa9ff'
     },
 
     {
@@ -89,28 +89,30 @@ const ocorrencias = [
         titulo: 'Tráfico monitorado',
         bairro: 'Nova Cidade',
         coords: [-41.931, -22.501],
-        cor: '#E05252'
+        cor: '#ff5a5a'
     }
 
 ];
 
 // ========================================
-// CRIAR MARKERS
+// ADICIONAR MARKERS
 // ========================================
 
 ocorrencias.forEach(item => {
 
     const popup = new mapboxgl.Popup({
         offset: 25
-    }).setHTML(`
+    })
+
+    .setHTML(`
 
         <div style="
             background:#0f1724;
             color:white;
-            padding:10px;
+            padding:12px;
             border-radius:12px;
-            font-family:Arial;
             min-width:180px;
+            font-family:Arial;
         ">
 
             <h3 style="
@@ -227,10 +229,7 @@ closeButtons.forEach(button => {
 
 });
 
-// ========================================
-// FECHAR CLICANDO FORA
-// ========================================
-
+// FECHAR AO CLICAR FORA
 document.querySelectorAll('.modal-backdrop').forEach(modal => {
 
     modal.addEventListener('click', (e) => {
@@ -244,7 +243,7 @@ document.querySelectorAll('.modal-backdrop').forEach(modal => {
 });
 
 // ========================================
-// RELÓGIO HUD
+// HORÁRIO HUD
 // ========================================
 
 function atualizarHorario() {
@@ -268,4 +267,8 @@ setInterval(atualizarHorario, 1000);
 
 atualizarHorario();
 
-console.log('Coruja Presente iniciado');
+// ========================================
+// DEBUG
+// ========================================
+
+console.log('Coruja Presente iniciado com sucesso');
