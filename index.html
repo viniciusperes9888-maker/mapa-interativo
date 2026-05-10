@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Mapa Interativo</title>
+
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
+
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+
+<style>
+body {
+margin: 0;
+padding: 0;
+}
+
+#map {
+position: absolute;
+top: 0;
+bottom: 0;
+width: 100%;
+}
+
+.mapboxgl-popup {
+max-width: 300px;
+font-family: Arial, sans-serif;
+}
+
+.mapboxgl-popup-content {
+background: #1e1e1e;
+color: white;
+border-radius: 10px;
+padding: 15px;
+}
+
+h3 {
+margin-top: 0;
+color: #ff4d4d;
+}
+</style>
+</head>
+
+<body>
+
+<div id="map"></div>
+
+<script>
+
+mapboxgl.accessToken = 'pk.eyJ1IjoidnBzOTA5MCIsImEiOiJjbW9zcTcxaGowMXlnMnNwcnVzbmU0Y2VnIn0.nhpXVRVOFPbGjy_zBmnV-w';
+
+const map = new mapboxgl.Map({
+container: 'map',
+style: 'mapbox://styles/mapbox/dark-v11',
+center: [-41.787, -22.374],
+zoom: 12
+});
+
+const locais = [
+
+{
+nome: "Acidente de Moto",
+descricao: "Colisão grave envolvendo motociclista no Centro de Macaé.",
+coords: [-41.7849, -22.3764]
+},
+
+{
+nome: "Capotamento",
+descricao: "Veículo perdeu controle próximo à praia.",
+coords: [-41.7712, -22.3905]
+},
+
+{
+nome: "Homicídio",
+descricao: "Ocorrência fictícia para testes do sistema.",
+coords: [-41.8179, -22.3537]
+},
+
+{
+nome: "Afogamento",
+descricao: "Resgate realizado por salva-vidas.",
+coords: [-41.7750, -22.3872]
+}
+
+];
+
+locais.forEach(local => {
+
+const popup = new mapboxgl.Popup({ offset: 25 })
+.setHTML(`
+<h3>${local.nome}</h3>
+<p>${local.descricao}</p>
+`);
+
+new mapboxgl.Marker({ color: 'red' })
+.setLngLat(local.coords)
+.setPopup(popup)
+.addTo(map);
+
+});
+
+</script>
+
+</body>
+</html>
