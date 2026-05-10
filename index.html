@@ -22,7 +22,7 @@ font-family:Arial;
 }
 
 body{
-background:#0f0f0f;
+background:#111;
 overflow:hidden;
 }
 
@@ -31,73 +31,140 @@ position:absolute;
 top:0;
 left:0;
 right:0;
-height:60px;
+height:70px;
 background:#161616;
 display:flex;
 align-items:center;
-padding:0 20px;
-z-index:10;
+padding:0 25px;
+z-index:20;
 border-bottom:1px solid #2a2a2a;
 }
 
 #logo{
 color:white;
-font-size:22px;
+font-size:32px;
 font-weight:bold;
 }
 
 #sidebar{
 position:absolute;
-top:60px;
+top:70px;
 left:0;
 bottom:0;
-width:260px;
+width:280px;
 background:#181818;
 padding:20px;
-z-index:10;
+z-index:20;
 overflow:auto;
 border-right:1px solid #2a2a2a;
 }
 
+#map{
+position:absolute;
+top:70px;
+left:280px;
+right:320px;
+bottom:0;
+}
+
+#rightpanel{
+position:absolute;
+top:70px;
+right:0;
+bottom:0;
+width:320px;
+background:#181818;
+padding:20px;
+z-index:20;
+border-left:1px solid #2a2a2a;
+overflow:auto;
+}
+
 .menu-title{
-color:#888;
+color:#999;
 font-size:13px;
 margin-bottom:15px;
 text-transform:uppercase;
+letter-spacing:1px;
 }
 
 .menu-item{
 background:#222;
-padding:14px;
-border-radius:10px;
-margin-bottom:10px;
+padding:15px;
+border-radius:12px;
+margin-bottom:12px;
 color:white;
 cursor:pointer;
 transition:0.2s;
-user-select:none;
+display:flex;
+align-items:center;
+justify-content:space-between;
 }
 
 .menu-item:hover{
 background:#333;
 }
 
-#map{
-position:absolute;
-top:60px;
-left:260px;
-right:0;
-bottom:0;
+.menu-left{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.checkbox{
+width:18px;
+height:18px;
+border-radius:4px;
+background:#00c853;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:12px;
+font-weight:bold;
+}
+
+.counter{
+background:#333;
+padding:5px 10px;
+border-radius:20px;
+font-size:13px;
+}
+
+.stats-box{
+background:#222;
+padding:18px;
+border-radius:14px;
+margin-bottom:15px;
+}
+
+.stats-title{
+font-size:14px;
+color:#999;
+margin-bottom:8px;
+text-transform:uppercase;
+}
+
+.stats-number{
+font-size:34px;
+font-weight:bold;
+color:white;
+}
+
+.stats-text{
+color:white;
+font-size:18px;
+font-weight:bold;
 }
 
 .mapboxgl-popup-content{
 background:#1b1b1b;
 color:white;
-border-radius:12px;
-padding:15px;
+border-radius:14px;
+padding:18px;
 }
 
 .popup-title{
-font-size:18px;
+font-size:20px;
 font-weight:bold;
 margin-bottom:10px;
 color:#ff4d4d;
@@ -105,7 +172,17 @@ color:#ff4d4d;
 
 .popup-text{
 font-size:14px;
-line-height:1.5;
+line-height:1.6;
+}
+
+.popup-link{
+display:inline-block;
+margin-top:10px;
+background:#2a2a2a;
+padding:10px 14px;
+border-radius:10px;
+text-decoration:none;
+color:white;
 }
 
 </style>
@@ -120,38 +197,132 @@ line-height:1.5;
 <div id="sidebar">
 
 <div class="menu-title">
-CATEGORIAS
+Categorias
 </div>
 
 <div class="menu-item" onclick="toggleCategoria('Acidente')">
+
+<div class="menu-left">
+<div class="checkbox" id="check-Acidente">✓</div>
 🚗 Acidentes
 </div>
 
+<div class="counter" id="count-Acidente">
+0
+</div>
+
+</div>
+
 <div class="menu-item" onclick="toggleCategoria('Crime')">
+
+<div class="menu-left">
+<div class="checkbox" id="check-Crime">✓</div>
 🔫 Crimes
 </div>
 
+<div class="counter" id="count-Crime">
+0
+</div>
+
+</div>
+
 <div class="menu-item" onclick="toggleCategoria('Afogamento')">
+
+<div class="menu-left">
+<div class="checkbox" id="check-Afogamento">✓</div>
 🌊 Afogamentos
 </div>
 
+<div class="counter" id="count-Afogamento">
+0
+</div>
+
+</div>
+
 <div class="menu-item" onclick="toggleCategoria('Incêndio')">
+
+<div class="menu-left">
+<div class="checkbox" id="check-Incêndio">✓</div>
 🔥 Incêndios
+</div>
+
+<div class="counter" id="count-Incêndio">
+0
+</div>
+
 </div>
 
 </div>
 
 <div id="map"></div>
 
+<div id="rightpanel">
+
+<div class="menu-title">
+Estatísticas
+</div>
+
+<div class="stats-box">
+<div class="stats-title">
+Total de ocorrências
+</div>
+
+<div class="stats-number" id="totalOcorrencias">
+0
+</div>
+</div>
+
+<div class="stats-box">
+<div class="stats-title">
+Categoria dominante
+</div>
+
+<div class="stats-text" id="categoriaDominante">
+-
+</div>
+</div>
+
+<div class="stats-box">
+<div class="stats-title">
+Bairro mais afetado
+</div>
+
+<div class="stats-text" id="bairroDominante">
+-
+</div>
+</div>
+
+<div class="stats-box">
+<div class="stats-title">
+Mortes registradas
+</div>
+
+<div class="stats-number" id="totalMortes">
+0
+</div>
+</div>
+
+<div class="stats-box">
+<div class="stats-title">
+Feridos registrados
+</div>
+
+<div class="stats-number" id="totalFeridos">
+0
+</div>
+</div>
+
+</div>
+
 <script>
 
 mapboxgl.accessToken = 'pk.eyJ1IjoidnBzOTA5MCIsImEiOiJjbW9zcTcxaGowMXlnMnNwcnVzbmU0Y2VnIn0.nhpXVRVOFPbGjy_zBmnV-w';
 
 const map = new mapboxgl.Map({
-container: 'map',
-style: 'mapbox://styles/mapbox/dark-v11',
-center: [-41.8034, -22.4060],
-zoom: 11
+container:'map',
+style:'mapbox://styles/mapbox/dark-v11',
+center:[-41.8034,-22.4060],
+zoom:11
 });
 
 const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgXkVwHtnAUHymxilLI8PLSIe8vqTC-sZHNNy5RpgGlCCUYku0DDYXyFxXI8OWKQWZNxnhA820PGyA/pub?output=csv';
@@ -165,7 +336,19 @@ Afogamento:true,
 Incêndio:true
 };
 
-Papa.parse(csvUrl, {
+let contadores = {
+Acidente:0,
+Crime:0,
+Afogamento:0,
+Incêndio:0
+};
+
+let bairros = {};
+
+let totalMortes = 0;
+let totalFeridos = 0;
+
+Papa.parse(csvUrl,{
 
 download:true,
 header:true,
@@ -176,14 +359,25 @@ results.data.forEach(function(item){
 
 if(item.Latitude && item.Longitude){
 
-let cor = 'red';
+contadores[item.Categoria]++;
 
-if(item.Categoria == 'Afogamento'){
-cor = 'blue';
+if(!bairros[item.Bairro]){
+bairros[item.Bairro] = 0;
 }
+
+bairros[item.Bairro]++;
+
+totalMortes += parseInt(item.VitimasMortas || 0);
+totalFeridos += parseInt(item.VitimasFeridas || 0);
+
+let cor = 'red';
 
 if(item.Categoria == 'Crime'){
 cor = 'black';
+}
+
+if(item.Categoria == 'Afogamento'){
+cor = 'blue';
 }
 
 if(item.Categoria == 'Incêndio'){
@@ -193,21 +387,21 @@ cor = 'orange';
 const popupHTML = `
 
 <div class="popup-title">
-${item.Categoria}
+${item.TipoOcorrencia}
 </div>
 
 <div class="popup-text">
 
-<b>Tipo:</b> ${item.Tipo}<br>
-<b>Cidade:</b> ${item.Cidade}<br>
-<b>Bairro:</b> ${item.Bairro}<br>
-<b>Gravidade:</b> ${item.Gravidade}<br>
-<b>Feridos:</b> ${item.VitimasFeridas}<br>
-<b>Mortos:</b> ${item.VitimasMortas}<br><br>
+📍 ${item.Bairro}<br>
+🕒 ${item.Hora}<br>
+⚠️ ${item.Gravidade}<br><br>
 
 ${item.Descricao}<br><br>
 
-<a href="${item.Link}" target="_blank" style="color:#4da6ff;">
+Feridos: ${item.VitimasFeridas}<br>
+Mortos: ${item.VitimasMortas}<br>
+
+<a class="popup-link" href="${item.Link}" target="_blank">
 Ver fonte
 </a>
 
@@ -239,15 +433,69 @@ markers.push(marker);
 
 });
 
+atualizarPainel();
+
 }
 
 });
+
+function atualizarPainel(){
+
+document.getElementById('count-Acidente').innerText = contadores.Acidente;
+document.getElementById('count-Crime').innerText = contadores.Crime;
+document.getElementById('count-Afogamento').innerText = contadores.Afogamento;
+document.getElementById('count-Incêndio').innerText = contadores.Incêndio;
+
+const total =
+contadores.Acidente +
+contadores.Crime +
+contadores.Afogamento +
+contadores.Incêndio;
+
+document.getElementById('totalOcorrencias').innerText = total;
+
+let maiorCategoria = '';
+let maiorValor = 0;
+
+for(let categoria in contadores){
+
+if(contadores[categoria] > maiorValor){
+
+maiorValor = contadores[categoria];
+maiorCategoria = categoria;
+
+}
+
+}
+
+document.getElementById('categoriaDominante').innerText = maiorCategoria;
+
+let maiorBairro = '';
+let maiorBairroValor = 0;
+
+for(let bairro in bairros){
+
+if(bairros[bairro] > maiorBairroValor){
+
+maiorBairroValor = bairros[bairro];
+maiorBairro = bairro;
+
+}
+
+}
+
+document.getElementById('bairroDominante').innerText = maiorBairro;
+
+document.getElementById('totalMortes').innerText = totalMortes;
+document.getElementById('totalFeridos').innerText = totalFeridos;
+
+}
 
 function toggleCategoria(categoria){
 
 filtrosAtivos[categoria] = !filtrosAtivos[categoria];
 
-markers.forEach(marker => {
+markers.forEach(marker=>{
 
 if(marker.categoria == categoria){
 
@@ -264,6 +512,20 @@ marker.getElement().style.display = 'none';
 }
 
 });
+
+const checkbox = document.getElementById('check-' + categoria);
+
+if(filtrosAtivos[categoria]){
+
+checkbox.style.background = '#00c853';
+checkbox.innerText = '✓';
+
+}else{
+
+checkbox.style.background = '#555';
+checkbox.innerText = '';
+
+}
 
 }
 
