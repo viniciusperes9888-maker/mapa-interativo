@@ -1,43 +1,144 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 <meta charset="utf-8">
-<title>Mapa Interativo</title>
+<title>Coruja Presente</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
-
 <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
 <style>
-body {
-margin: 0;
-padding: 0;
-font-family: Arial;
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
 }
 
-#map {
-position: absolute;
-top: 0;
-bottom: 0;
-width: 100%;
+body{
+background:#0f0f0f;
+overflow:hidden;
 }
 
-.popup {
-font-size: 14px;
+#topbar{
+position:absolute;
+top:0;
+left:0;
+right:0;
+height:60px;
+background:#161616;
+display:flex;
+align-items:center;
+padding:0 20px;
+z-index:10;
+border-bottom:1px solid #2a2a2a;
 }
 
-.popup h3 {
-margin: 0 0 10px;
-color: red;
+#logo{
+color:white;
+font-size:22px;
+font-weight:bold;
 }
+
+#sidebar{
+position:absolute;
+top:60px;
+left:0;
+bottom:0;
+width:260px;
+background:#181818;
+padding:20px;
+z-index:10;
+overflow:auto;
+border-right:1px solid #2a2a2a;
+}
+
+.menu-title{
+color:#888;
+font-size:13px;
+margin-bottom:15px;
+text-transform:uppercase;
+}
+
+.menu-item{
+background:#222;
+padding:14px;
+border-radius:10px;
+margin-bottom:10px;
+color:white;
+cursor:pointer;
+transition:0.2s;
+}
+
+.menu-item:hover{
+background:#333;
+}
+
+#map{
+position:absolute;
+top:60px;
+left:260px;
+right:0;
+bottom:0;
+}
+
+.mapboxgl-popup-content{
+background:#1b1b1b;
+color:white;
+border-radius:12px;
+padding:15px;
+}
+
+.popup-title{
+font-size:18px;
+font-weight:bold;
+margin-bottom:10px;
+color:#ff4d4d;
+}
+
+.popup-text{
+font-size:14px;
+line-height:1.5;
+}
+
 </style>
 </head>
 
 <body>
+
+<div id="topbar">
+<div id="logo">🦉 Coruja Presente</div>
+</div>
+
+<div id="sidebar">
+
+<div class="menu-title">
+Categorias
+</div>
+
+<div class="menu-item">
+🚗 Acidentes
+</div>
+
+<div class="menu-item">
+🔫 Crimes
+</div>
+
+<div class="menu-item">
+🌊 Afogamentos
+</div>
+
+<div class="menu-item">
+🔥 Incêndios
+</div>
+
+</div>
 
 <div id="map"></div>
 
@@ -48,46 +149,68 @@ mapboxgl.accessToken = 'pk.eyJ1IjoidnBzOTA5MCIsImEiOiJjbW9zcTcxaGowMXlnMnNwcnVzb
 const map = new mapboxgl.Map({
 container: 'map',
 style: 'mapbox://styles/mapbox/dark-v11',
-center: [-41.878, -22.376],
+center: [-41.8034, -22.4060],
 zoom: 11
 });
 
 const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgXkVwHtnAUHymxilLI8PLSIe8vqTC-sZHNNy5RpgGlCCUYku0DDYXyFxXI8OWKQWZNxnhA820PGyA/pub?output=csv';
 
 Papa.parse(csvUrl, {
-download: true,
-header: true,
-complete: function(results) {
 
-results.data.forEach(function(item) {
+download:true,
+header:true,
 
-if(item.Latitude && item.Longitude) {
+complete:function(results){
+
+results.data.forEach(function(item){
+
+if(item.Latitude && item.Longitude){
+
+let cor = 'red';
+
+if(item.Categoria == 'Afogamento'){
+cor = 'blue';
+}
+
+if(item.Categoria == 'Crime'){
+cor = 'black';
+}
 
 const popupHTML = `
-<div class="popup">
-<h3>${item.Categoria}</h3>
+
+<div class="popup-title">
+${item.Categoria}
+</div>
+
+<div class="popup-text">
 
 <b>Tipo:</b> ${item.Tipo}<br>
 <b>Cidade:</b> ${item.Cidade}<br>
 <b>Bairro:</b> ${item.Bairro}<br>
-<b>Ocorrência:</b> ${item.TipoOcorrencia}<br>
 <b>Gravidade:</b> ${item.Gravidade}<br>
 <b>Feridos:</b> ${item.VitimasFeridas}<br>
 <b>Mortos:</b> ${item.VitimasMortas}<br><br>
 
 ${item.Descricao}
+
 </div>
+
 `;
 
-new mapboxgl.Marker({ color: 'red' })
+new mapboxgl.Marker({
+color:cor
+})
+
 .setLngLat([
 parseFloat(item.Longitude),
 parseFloat(item.Latitude)
 ])
+
 .setPopup(
-new mapboxgl.Popup({ offset: 25 })
+new mapboxgl.Popup({offset:25})
 .setHTML(popupHTML)
 )
+
 .addTo(map);
 
 }
@@ -95,6 +218,7 @@ new mapboxgl.Popup({ offset: 25 })
 });
 
 }
+
 });
 
 </script>
