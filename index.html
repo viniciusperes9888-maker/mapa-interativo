@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>Coruja Presente</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+</head>
+
+<body>
+
+<div id="app">
+
+<header id="topbar">
+
+<div class="logo">
+<div class="logo__emblem">
+🦉
+</div>
+
+<div class="logo__wordmark">
+<div class="logo__name">Coruja Presente</div>
+<div class="logo__sub">INTELIGÊNCIA URBANA</div>
+</div>
+</div>
+
+<div class="topbar__div"></div>
+
+<div class="topbar__search">
+<div class="search-wrap">
+<input type="text" placeholder="Onde você mora?">
+</div>
+</div>
+
+<div class="topbar__live">
+<div class="live-dot"></div>
+AO VIVO
+</div>
+
+<nav class="topbar__nav">
+
+<button class="nav-btn" data-open-modal="about-modal">
+Sobre Nós
+</button>
+
+<button class="nav-btn" data-open-modal="reports-modal">
+Relatórios
+</button>
+
+<button class="nav-btn nav-btn--accent">
+Estatísticas
+</button>
+
+</nav>
+
+</header>
+
+<div id="content">
+
+<div id="map-area">
+
+<div id="map"></div>
+
+<div id="map-loading">
+<div class="loading-ring"></div>
+<div class="loading-text">
+CARREGANDO MAPA
+</div>
+</div>
+
+<div class="hud hud--bl">
+<div class="hud-panel hud-legend">
+
+<div class="hud-legend__title">
+LEGENDA
+</div>
+
+<div class="hud-legend__item">
+<div class="legend-dot" style="background:#E05252;"></div>
+Crimes
+</div>
+
+<div class="hud-legend__item">
+<div class="legend-dot" style="background:#D4853A;"></div>
+Acidentes
+</div>
+
+<div class="hud-legend__item">
+<div class="legend-dot" style="background:#4B9FD4;"></div>
+Natureza
+</div>
+
+</div>
+</div>
+
+<div class="hud hud--bc">
+<div class="hud-panel hud-coords">
+LAT <span>-22.52</span>
+LNG <span>-41.94</span>
+ZOOM <span>12</span>
+</div>
+</div>
+
+<div class="hud hud--br">
+<div class="hud-panel hud-timestamp">
+✓ Atualizado <time id="map-updated"></time>
+</div>
+</div>
+
+</div>
+
+<aside class="sidebar" id="sidebar-left">
+
+<div class="sidebar__header">
+<div class="sidebar__title">
+FILTROS
+</div>
+</div>
+
+<div class="sidebar__body">
+
+<div>
+
+<div class="section-label">
+CATEGORIAS
+</div>
+
+<div class="cat-group active">
+
+<div class="cat-group__header">
+
+<div class="cat-check">
+✓
+</div>
+
+<div class="cat-info">
+<div class="cat-name">Crimes</div>
+<div class="cat-meta">Ocorrências urbanas</div>
+</div>
+
+<div class="cat-badge">
+287
+</div>
+
+</div>
+
+</div>
+
+<div class="cat-group active">
+
+<div class="cat-group__header">
+
+<div class="cat-check">
+✓
+</div>
+
+<div class="cat-info">
+<div class="cat-name">Acidentes</div>
+<div class="cat-meta">Trânsito e vias</div>
+</div>
+
+<div class="cat-badge">
+143
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="sidebar__footer">
+
+<div class="city-selector" data-action="open-city-dropdown">
+
+<div class="city-info">
+
+<div class="city-info__label">
+Cidade ativa
+</div>
+
+<div class="city-info__name" id="active-city">
+Rio das Ostras, RJ
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</aside>
+
+<aside class="sidebar" id="sidebar-right">
+
+<div class="sidebar__header">
+<div class="sidebar__title">
+ESTATÍSTICAS
+</div>
+</div>
+
+<div class="sidebar__body">
+
+<div class="stat-card">
+<div class="stat-card__label">
+OCORRÊNCIAS TOTAIS
+</div>
+
+<div class="stat-card__value">
+522
+</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-card__label">
+CIDADE MONITORADA
+</div>
+
+<div class="stat-card__value stat-card__value--sm" id="stat-city-name">
+Rio das Ostras
+</div>
+</div>
+
+</div>
+
+</aside>
+
+<button class="sidebar-toggle" id="toggle-left">
+<svg id="toggle-left-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<polyline points="15,18 9,12 15,6"/>
+</svg>
+</button>
+
+<button class="sidebar-toggle" id="toggle-right">
+<svg id="toggle-right-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<polyline points="9,18 15,12 9,6"/>
+</svg>
+</button>
+
+</div>
+
+</div>
+
+<div id="city-dropdown" aria-hidden="true">
+
+<div class="city-drop__list">
+
+<div class="city-opt current" data-city="rio-das-ostras">
+<div>
+<div class="city-opt__name">Rio das Ostras</div>
+<div class="city-opt__state">RJ</div>
+</div>
+</div>
+
+<div class="city-opt" data-city="macae">
+<div>
+<div class="city-opt__name">Macaé</div>
+<div class="city-opt__state">RJ</div>
+</div>
+</div>
+
+</div>
+
+</div>
+
+<div id="toasts"></div>
+
+<div class="modal-backdrop" id="about-modal">
+
+<div class="modal modal--md">
+
+<div class="modal__header">
+
+<div>
+<div class="modal__title">
+Sobre o Coruja Presente
+</div>
+</div>
+
+<button class="modal__close" data-close-modal="about-modal">
+✕
+</button>
+
+</div>
+
+<div class="modal__body">
+
+<p>
+Plataforma de inteligência urbana e territorial.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="modal-backdrop" id="reports-modal">
+
+<div class="modal modal--lg">
+
+<div class="modal__header">
+
+<div>
+<div class="modal__title">
+Relatórios
+</div>
+</div>
+
+<button class="modal__close" data-close-modal="reports-modal">
+✕
+</button>
+
+</div>
+
+<div class="modal__body">
+
+<p>
+Sistema de relatórios urbanos.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>
