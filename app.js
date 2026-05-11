@@ -43,12 +43,15 @@ const CONFIG = {
 let todasOcorrencias = [];   // dados brutos do Sheets
 let todosMarkers     = [];   // markers no mapa
 
-// Categorias ativas (texto do h3 em minúsculo)
-let categoriasAtivas = new Set([
-    'crimes',
-    'acidentes',
-    'acidentes naturais',
+// Categorias ativas — usa os valores EXATOS da coluna Categoria
+// da planilha (singular, com acento, como está no Sheets)
+const categoriasAtivas = new Set([
+    'crime',
+    'acidente',
+    'incêndio',
+    'afogamento',
     'crimes contra mulheres',
+    'acidentes naturais',
     'facções criminosas'
 ]);
 
@@ -254,7 +257,7 @@ function criarMarkers(dados) {
 
         todosMarkers.push({
             marker,
-            categoria: (item.Categoria || '').toLowerCase(),
+            categoria: (item.Categoria || '').toLowerCase().trim(),
             data:       item.Data || '',
             dados:      item
         });
@@ -276,30 +279,45 @@ function limparMarkers() {
 
 // ============================================================
 // FILTRAR MARKERS (categoria + período)
+// A categoria do marker vem direto da planilha (ex: "crime",
+// "acidente"). O filtro compara em minúsculo dos dois lados.
 // ============================================================
 
 function filtrarMarkers() {
+
+    let visiveis = 0;
 
     todosMarkers.forEach(item => {
 
         const el = item.marker.getElement();
 
-        const catAtiva = Array.from(categoriasAtivas).some(cat =>
-            item.categoria.includes(cat)
-        );
+        // Verifica se a categoria está no Set de ativas
+        // Compara a categoria do marker com cada entrada do Set
+        let catAtiva = false;
+        categoriasAtivas.forEach(cat => {
+            if (item.categoria === cat) catAtiva = true;
+        });
 
         const noPeriodo = verificarPeriodo(item.data, periodoAtivo);
 
-        el.style.display = (catAtiva && noPeriodo) ? 'block' : 'none';
+        const mostrar = catAtiva && noPeriodo;
+
+        // Força visibilidade via display E opacity para evitar
+        // o bug onde o marker some e não volta
+        el.style.display  = mostrar ? 'block' : 'none';
+        el.style.opacity  = mostrar ? '1' : '0';
+        el.style.pointerEvents = mostrar ? 'auto' : 'none';
+
+        if (mostrar) visiveis++;
 
     });
 
-    // Recalcula stats com os visíveis
-    const visiveis = todosMarkers
+    // Recalcula stats com os markers visíveis
+    const dadosVisiveis = todosMarkers
         .filter(i => i.marker.getElement().style.display !== 'none')
         .map(i => i.dados);
 
-    atualizarEstatisticas(visiveis);
+    atualizarEstatisticas(dadosVisiveis);
 
 }
 
@@ -423,6 +441,26 @@ function atualizarContadoresCategorias(dados) {
 
 
 // ============================================================
+// MAPEAMENTO: título do card → categoria exata da planilha
+// Chave = texto do h3 em minúsculo
+// Valor = array com os valores exatos da coluna Categoria
+// ============================================================
+
+const MAPA_CATEGORIAS = {
+    'crimes':                  ['crime'],
+    'acidentes':               ['acidente'],
+    'incêndios':               ['incêndio'],
+    'crimes contra mulheres':  ['crimes contra mulheres'],
+    'acidentes naturais':      ['acidentes naturais', 'afogamento'],
+    'facções criminosas':      ['facções criminosas'],
+};
+
+function getCatsDoCard(tituloCard) {
+    return MAPA_CATEGORIAS[tituloCard] || [tituloCard];
+}
+
+
+// ============================================================
 // FILTROS — CATEGORIAS (clique nos cards)
 // ============================================================
 
@@ -438,14 +476,14 @@ document.querySelectorAll('.category-card').forEach(card => {
         const titulo = card.querySelector('h3')
             ?.textContent?.toLowerCase()?.trim() || '';
 
+        const cats = getCatsDoCard(titulo);
+
         if (card.classList.contains('active')) {
-            categoriasAtivas.add(titulo);
-            // Reativa todas as subcategorias ao ativar o card
+            cats.forEach(c => categoriasAtivas.add(c));
             card.querySelectorAll('.subcategory-item')
                 .forEach(sub => sub.classList.add('active'));
         } else {
-            categoriasAtivas.delete(titulo);
-            // Desmarca todas as subcategorias ao desativar o card
+            cats.forEach(c => categoriasAtivas.delete(c));
             card.querySelectorAll('.subcategory-item')
                 .forEach(sub => sub.classList.remove('active'));
         }
@@ -467,24 +505,23 @@ document.querySelectorAll('.subcategory-item').forEach(item => {
 
     item.addEventListener('click', e => {
 
-        // Impede que o clique no subitem ative/desative o card pai
         e.stopPropagation();
 
         item.classList.toggle('active');
 
-        // Se desmarcar todas as subcategorias, desmarca o card pai também
         const card      = item.closest('.category-card');
         const todasSubs = card?.querySelectorAll('.subcategory-item');
         const algumaAtiva = [...(todasSubs || [])].some(s => s.classList.contains('active'));
 
+        const titulo = card?.querySelector('h3')?.textContent?.toLowerCase()?.trim() || '';
+        const cats   = getCatsDoCard(titulo);
+
         if (!algumaAtiva && card) {
             card.classList.remove('active');
-            const titulo = card.querySelector('h3')?.textContent?.toLowerCase()?.trim() || '';
-            categoriasAtivas.delete(titulo);
+            cats.forEach(c => categoriasAtivas.delete(c));
         } else if (card && !card.classList.contains('active')) {
             card.classList.add('active');
-            const titulo = card.querySelector('h3')?.textContent?.toLowerCase()?.trim() || '';
-            categoriasAtivas.add(titulo);
+            cats.forEach(c => categoriasAtivas.add(c));
         }
 
         filtrarMarkers();
