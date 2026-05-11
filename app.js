@@ -40,14 +40,14 @@ const CONFIG = {
 // ESTADO GLOBAL
 // ============================================================
 
-let todasOcorrencias = [];   // dados brutos do Sheets
-let todosMarkers     = [];   // markers no mapa
+let todasOcorrencias = [];
+let todosMarkers     = [];
 
-// Categorias ativas — usa os valores EXATOS da coluna Categoria
-// da planilha (singular, com acento, como está no Sheets)
+// Valores EXATOS da coluna Categoria da planilha
+// A comparação sempre usa .toLowerCase() dos dois lados
 const categoriasAtivas = new Set([
-    'crime',
     'acidente',
+    'crime',
     'incêndio',
     'afogamento',
     'crimes contra mulheres',
@@ -55,7 +55,7 @@ const categoriasAtivas = new Set([
     'facções criminosas'
 ]);
 
-let periodoAtivo = 'Tudo';   // período selecionado
+let periodoAtivo = 'Tudo';
 
 
 // ============================================================
@@ -278,41 +278,32 @@ function limparMarkers() {
 
 
 // ============================================================
-// FILTRAR MARKERS (categoria + período)
-// A categoria do marker vem direto da planilha (ex: "crime",
-// "acidente"). O filtro compara em minúsculo dos dois lados.
+// FILTRAR MARKERS
+// Compara sempre em minúsculo dos dois lados para evitar
+// problemas de maiúscula/minúscula entre planilha e código.
 // ============================================================
 
 function filtrarMarkers() {
-
-    let visiveis = 0;
 
     todosMarkers.forEach(item => {
 
         const el = item.marker.getElement();
 
-        // Verifica se a categoria está no Set de ativas
-        // Compara a categoria do marker com cada entrada do Set
-        let catAtiva = false;
-        categoriasAtivas.forEach(cat => {
-            if (item.categoria === cat) catAtiva = true;
-        });
+        // item.categoria já está em minúsculo (gravado no criarMarkers)
+        // categoriasAtivas também está em minúsculo
+        const catAtiva = categoriasAtivas.has(item.categoria);
 
         const noPeriodo = verificarPeriodo(item.data, periodoAtivo);
 
         const mostrar = catAtiva && noPeriodo;
 
-        // Força visibilidade via display E opacity para evitar
-        // o bug onde o marker some e não volta
-        el.style.display  = mostrar ? 'block' : 'none';
-        el.style.opacity  = mostrar ? '1' : '0';
+        el.style.display       = mostrar ? 'block' : 'none';
+        el.style.opacity       = mostrar ? '1' : '0';
         el.style.pointerEvents = mostrar ? 'auto' : 'none';
-
-        if (mostrar) visiveis++;
 
     });
 
-    // Recalcula stats com os markers visíveis
+    // Recalcula estatísticas com markers visíveis
     const dadosVisiveis = todosMarkers
         .filter(i => i.marker.getElement().style.display !== 'none')
         .map(i => i.dados);
@@ -414,11 +405,14 @@ function definirStat(id, valor) {
 
 function atualizarContadoresCategorias(dados) {
 
+    // Conta por categoria em minúsculo
     const contagem = {};
     dados.forEach(d => {
-        const cat = (d.Categoria || '').toLowerCase();
+        const cat = (d.Categoria || '').toLowerCase().trim();
         contagem[cat] = (contagem[cat] || 0) + 1;
     });
+
+    console.log('Categorias na planilha:', contagem);
 
     document.querySelectorAll('.category-card').forEach(card => {
 
@@ -426,14 +420,11 @@ function atualizarContadoresCategorias(dados) {
         const badge  = card.querySelector('.category-badge');
         if (!badge) return;
 
-        let total = 0;
-        Object.entries(contagem).forEach(([cat, qtd]) => {
-            if (titulo.includes(cat) || cat.includes(titulo.split(' ')[0])) {
-                total += qtd;
-            }
-        });
+        // Usa o MAPA_CATEGORIAS para somar corretamente
+        const cats  = getCatsDoCard(titulo);
+        const total = cats.reduce((acc, cat) => acc + (contagem[cat] || 0), 0);
 
-        if (total > 0) badge.textContent = total;
+        badge.textContent = total > 0 ? total : '—';
 
     });
 
@@ -442,17 +433,19 @@ function atualizarContadoresCategorias(dados) {
 
 // ============================================================
 // MAPEAMENTO: título do card → categoria exata da planilha
-// Chave = texto do h3 em minúsculo
-// Valor = array com os valores exatos da coluna Categoria
+// Chave   = texto do h3 em minúsculo (nome do card na sidebar)
+// Valor   = valores da coluna Categoria em minúsculo
+//
+// Planilha usa: Acidente, Crime, Incêndio, Afogamento
 // ============================================================
 
 const MAPA_CATEGORIAS = {
-    'crimes':                  ['crime'],
-    'acidentes':               ['acidente'],
-    'incêndios':               ['incêndio'],
-    'crimes contra mulheres':  ['crimes contra mulheres'],
-    'acidentes naturais':      ['acidentes naturais', 'afogamento'],
-    'facções criminosas':      ['facções criminosas'],
+    'crimes':                 ['crime'],
+    'acidentes':              ['acidente'],
+    'incêndios':              ['incêndio'],
+    'crimes contra mulheres': ['crimes contra mulheres'],
+    'acidentes naturais':     ['acidentes naturais', 'afogamento'],
+    'facções criminosas':     ['facções criminosas'],
 };
 
 function getCatsDoCard(tituloCard) {
