@@ -440,8 +440,14 @@ document.querySelectorAll('.category-card').forEach(card => {
 
         if (card.classList.contains('active')) {
             categoriasAtivas.add(titulo);
+            // Reativa todas as subcategorias ao ativar o card
+            card.querySelectorAll('.subcategory-item')
+                .forEach(sub => sub.classList.add('active'));
         } else {
             categoriasAtivas.delete(titulo);
+            // Desmarca todas as subcategorias ao desativar o card
+            card.querySelectorAll('.subcategory-item')
+                .forEach(sub => sub.classList.remove('active'));
         }
 
         filtrarMarkers();
@@ -450,6 +456,40 @@ document.querySelectorAll('.category-card').forEach(card => {
 
     card.addEventListener('mouseenter', () => card.style.transform = 'translateY(-2px)');
     card.addEventListener('mouseleave', () => card.style.transform = '');
+
+});
+
+// ============================================================
+// FILTROS — SUBCATEGORIAS (clique nos subitens)
+// ============================================================
+
+document.querySelectorAll('.subcategory-item').forEach(item => {
+
+    item.addEventListener('click', e => {
+
+        // Impede que o clique no subitem ative/desative o card pai
+        e.stopPropagation();
+
+        item.classList.toggle('active');
+
+        // Se desmarcar todas as subcategorias, desmarca o card pai também
+        const card      = item.closest('.category-card');
+        const todasSubs = card?.querySelectorAll('.subcategory-item');
+        const algumaAtiva = [...(todasSubs || [])].some(s => s.classList.contains('active'));
+
+        if (!algumaAtiva && card) {
+            card.classList.remove('active');
+            const titulo = card.querySelector('h3')?.textContent?.toLowerCase()?.trim() || '';
+            categoriasAtivas.delete(titulo);
+        } else if (card && !card.classList.contains('active')) {
+            card.classList.add('active');
+            const titulo = card.querySelector('h3')?.textContent?.toLowerCase()?.trim() || '';
+            categoriasAtivas.add(titulo);
+        }
+
+        filtrarMarkers();
+
+    });
 
 });
 
