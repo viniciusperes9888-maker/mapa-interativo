@@ -5,20 +5,14 @@
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>Coruja Presente</title>
 
-    <!-- FONTES -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-
-    <!-- MAPBOX -->
     <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
 
-    <!-- CSS -->
     <link rel="stylesheet" href="style.css">
 
 </head>
@@ -27,471 +21,194 @@
 
     <div class="app">
 
-        <!-- ======================================== -->
         <!-- TOPO -->
-        <!-- ======================================== -->
-
         <header class="topbar">
 
             <div class="topbar-left">
-
                 <div class="logo">
-
-                    <div class="logo-icon">
-                        🦉
-                    </div>
-
+                    <div class="logo-icon">🦉</div>
                     <div class="logo-text">
-
-                        <h1>
-                            Coruja Presente
-                        </h1>
-
-                        <span>
-                            Inteligência Urbana
-                        </span>
-
+                        <h1>Coruja Presente</h1>
+                        <span>Inteligência Urbana</span>
                     </div>
-
                 </div>
-
             </div>
 
             <div class="topbar-center">
-
                 <div class="search-box">
-
                     <input type="text" placeholder="Onde você mora?">
-
                 </div>
-
             </div>
 
             <div class="topbar-right">
-
-                <button class="nav-button">
-                    Sobre Nós
-                </button>
-
-                <button class="nav-button">
-                    Relatórios
-                </button>
-
-                <button class="nav-button active">
-                    Estatísticas
-                </button>
-
+                <button class="nav-button">Sobre Nós</button>
+                <button class="nav-button">Relatórios</button>
+                <button class="nav-button active">Estatísticas</button>
             </div>
 
         </header>
 
-        <!-- ======================================== -->
         <!-- CONTEÚDO -->
-        <!-- ======================================== -->
-
         <main class="main-layout">
 
-            <!-- ======================================== -->
             <!-- SIDEBAR ESQUERDA -->
-            <!-- ======================================== -->
-
             <aside class="sidebar-left">
 
                 <div class="sidebar-header">
-
-                    <h2>
-                        FILTROS
-                    </h2>
-
+                    <h2>FILTROS</h2>
                 </div>
 
                 <!-- PERÍODO -->
                 <div class="filter-section">
-
-                    <span class="section-title">
-                        PERÍODO
-                    </span>
-
+                    <span class="section-title">PERÍODO</span>
                     <div class="period-grid">
-
-                        <button class="period-button active">24h</button>
+                        <button class="period-button">24h</button>
                         <button class="period-button">7d</button>
                         <button class="period-button">30d</button>
                         <button class="period-button">3m</button>
                         <button class="period-button">1a</button>
-                        <button class="period-button">Tudo</button>
-
+                        <button class="period-button active">Tudo</button>
                     </div>
-
                 </div>
 
                 <!-- CATEGORIAS -->
-
                 <div class="filter-section">
+                    <span class="section-title">CATEGORIAS</span>
 
-                    <span class="section-title">
-                        CATEGORIAS
-                    </span>
-
-                    <!-- CRIMES -->
                     <div class="category-card active">
-
                         <div class="category-top">
-
                             <div>
-
-                                <h3>
-                                    Crimes
-                                </h3>
-
-                                <span>
-                                    Segurança urbana
-                                </span>
-
+                                <h3>Crimes</h3>
+                                <span>Segurança urbana</span>
                             </div>
-
-                            <div class="category-badge">
-                                287
-                            </div>
-
+                            <div class="category-badge">—</div>
                         </div>
-
                         <div class="subcategory-list">
-
-                            <div class="subcategory-item">
-                                <span>Roubos</span>
-                                <strong>91</strong>
-                            </div>
-
-                            <div class="subcategory-item">
-                                <span>Assassinatos</span>
-                                <strong>17</strong>
-                            </div>
-
-                            <div class="subcategory-item">
-                                <span>Latrocínios</span>
-                                <strong>5</strong>
-                            </div>
-
-                            <div class="subcategory-item">
-                                <span>Tráfico</span>
-                                <strong>74</strong>
-                            </div>
-
+                            <div class="subcategory-item"><span>Roubos</span></div>
+                            <div class="subcategory-item"><span>Assassinatos</span></div>
+                            <div class="subcategory-item"><span>Latrocínios</span></div>
+                            <div class="subcategory-item"><span>Tráfico</span></div>
                         </div>
-
                     </div>
 
-                    <!-- ACIDENTES -->
                     <div class="category-card active">
-
                         <div class="category-top">
-
                             <div>
-
-                                <h3>
-                                    Acidentes
-                                </h3>
-
-                                <span>
-                                    Trânsito e vias
-                                </span>
-
+                                <h3>Acidentes</h3>
+                                <span>Trânsito e vias</span>
                             </div>
-
-                            <div class="category-badge">
-                                143
-                            </div>
-
+                            <div class="category-badge">—</div>
                         </div>
-
                         <div class="subcategory-list">
-
-                            <div class="subcategory-item">
-                                <span>Colisões</span>
-                                <strong>81</strong>
-                            </div>
-
-                            <div class="subcategory-item">
-                                <span>Atropelamentos</span>
-                                <strong>22</strong>
-                            </div>
-
-                            <div class="subcategory-item">
-                                <span>Capotamentos</span>
-                                <strong>11</strong>
-                            </div>
-
+                            <div class="subcategory-item"><span>Colisões</span></div>
+                            <div class="subcategory-item"><span>Atropelamentos</span></div>
+                            <div class="subcategory-item"><span>Capotamentos</span></div>
                         </div>
-
                     </div>
 
-                    <!-- CRIMES CONTRA MULHERES -->
-                    <div class="category-card">
-
-                        <div class="category-top">
-
-                            <div>
-
-                                <h3>
-                                    Crimes contra mulheres
-                                </h3>
-
-                                <span>
-                                    Violência doméstica
-                                </span>
-
-                            </div>
-
-                            <div class="category-badge">
-                                48
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <!-- ACIDENTES NATURAIS -->
                     <div class="category-card active">
-
                         <div class="category-top">
-
                             <div>
-
-                                <h3>
-                                    Acidentes naturais
-                                </h3>
-
-                                <span>
-                                    Clima e ambiente
-                                </span>
-
+                                <h3>Crimes contra mulheres</h3>
+                                <span>Violência doméstica</span>
                             </div>
-
-                            <div class="category-badge">
-                                61
-                            </div>
-
+                            <div class="category-badge">—</div>
                         </div>
-
                     </div>
 
-                    <!-- FACÇÕES -->
-                    <div class="category-card">
-
+                    <div class="category-card active">
                         <div class="category-top">
-
                             <div>
-
-                                <h3>
-                                    Facções criminosas
-                                </h3>
-
-                                <span>
-                                    Áreas monitoradas
-                                </span>
-
+                                <h3>Acidentes naturais</h3>
+                                <span>Clima e ambiente</span>
                             </div>
-
-                            <div class="category-badge">
-                                12
-                            </div>
-
+                            <div class="category-badge">—</div>
                         </div>
+                    </div>
 
+                    <div class="category-card active">
+                        <div class="category-top">
+                            <div>
+                                <h3>Facções criminosas</h3>
+                                <span>Áreas monitoradas</span>
+                            </div>
+                            <div class="category-badge">—</div>
+                        </div>
                     </div>
 
                 </div>
 
-                <!-- CIDADE -->
                 <div class="city-box">
-
-                    <span>
-                        CIDADE ATIVA
-                    </span>
-
-                    <strong>
-                        Rio das Ostras, RJ
-                    </strong>
-
+                    <span>CIDADE ATIVA</span>
+                    <strong>Rio das Ostras, RJ</strong>
                 </div>
 
             </aside>
 
-            <!-- ======================================== -->
             <!-- MAPA -->
-            <!-- ======================================== -->
-
             <section class="map-section">
 
                 <div id="map"></div>
 
-                <!-- HUD INFERIOR -->
                 <div class="map-hud">
-
-                    <div class="hud-box">
-                        LAT -22.52
-                    </div>
-
-                    <div class="hud-box">
-                        LNG -41.94
-                    </div>
-
-                    <div class="hud-box">
-                        ZOOM 11
-                    </div>
-
+                    <div class="hud-box">LAT —</div>
+                    <div class="hud-box">LNG —</div>
+                    <div class="hud-box">ZOOM —</div>
                 </div>
 
-                <!-- LEGENDA -->
                 <div class="legend-box">
-
-                    <h3>
-                        LEGENDA
-                    </h3>
-
-                    <div class="legend-item">
-
-                        <div class="legend-color red"></div>
-
-                        <span>
-                            Crimes
-                        </span>
-
-                    </div>
-
-                    <div class="legend-item">
-
-                        <div class="legend-color orange"></div>
-
-                        <span>
-                            Acidentes
-                        </span>
-
-                    </div>
-
-                    <div class="legend-item">
-
-                        <div class="legend-color blue"></div>
-
-                        <span>
-                            Natureza
-                        </span>
-
-                    </div>
-
+                    <h3>LEGENDA</h3>
+                    <div class="legend-item"><div class="legend-color red"></div><span>Crimes</span></div>
+                    <div class="legend-item"><div class="legend-color orange"></div><span>Acidentes</span></div>
+                    <div class="legend-item"><div class="legend-color blue"></div><span>Natureza</span></div>
+                    <div class="legend-item"><div class="legend-color pink"></div><span>Crimes c/ Mulheres</span></div>
+                    <div class="legend-item"><div class="legend-color purple"></div><span>Facções</span></div>
                 </div>
 
             </section>
 
-            <!-- ======================================== -->
             <!-- SIDEBAR DIREITA -->
-            <!-- ======================================== -->
-
             <aside class="sidebar-right">
 
                 <div class="sidebar-header">
-
-                    <h2>
-                        ESTATÍSTICAS
-                    </h2>
-
+                    <h2>ESTATÍSTICAS</h2>
                 </div>
 
                 <div class="stats-card">
-
-                    <span>
-                        OCORRÊNCIAS TOTAIS
-                    </span>
-
-                    <strong>
-                        522
-                    </strong>
-
+                    <span>OCORRÊNCIAS TOTAIS</span>
+                    <strong id="stat-total">—</strong>
                 </div>
 
                 <div class="stats-card">
-
-                    <span>
-                        CIDADE MONITORADA
-                    </span>
-
-                    <strong>
-                        Rio das Ostras
-                    </strong>
-
+                    <span>CIDADE MONITORADA</span>
+                    <strong>Rio das Ostras</strong>
                 </div>
 
                 <div class="stats-card">
-
-                    <span>
-                        CATEGORIA DOMINANTE
-                    </span>
-
-                    <strong class="danger">
-                        Crimes
-                    </strong>
-
+                    <span>CATEGORIA DOMINANTE</span>
+                    <strong id="stat-categoria" class="danger">—</strong>
                 </div>
 
                 <div class="stats-card">
-
-                    <span>
-                        BAIRROS MAIS AFETADOS
-                    </span>
-
-                    <ul>
-
-                        <li>
-                            Centro — 89
-                        </li>
-
-                        <li>
-                            Operário — 67
-                        </li>
-
-                        <li>
-                            Nova Cidade — 42
-                        </li>
-
+                    <span>BAIRROS MAIS AFETADOS</span>
+                    <ul id="stat-bairros">
+                        <li>Carregando...</li>
                     </ul>
-
                 </div>
 
                 <div class="stats-card">
-
-                    <span>
-                        MORTES REGISTRADAS
-                    </span>
-
-                    <strong class="danger">
-                        18
-                    </strong>
-
+                    <span>MORTES REGISTRADAS</span>
+                    <strong id="stat-mortes" class="danger">—</strong>
                 </div>
 
                 <div class="stats-card">
-
-                    <span>
-                        FERIDOS REGISTRADOS
-                    </span>
-
-                    <strong>
-                        93
-                    </strong>
-
+                    <span>FERIDOS REGISTRADOS</span>
+                    <strong id="stat-feridos">—</strong>
                 </div>
 
                 <div class="stats-card premium">
-
-                    <span>
-                        IA DE ANÁLISE TERRITORIAL
-                    </span>
-
-                    <p>
-                        Detectamos aumento de roubos no eixo central nas últimas 72h.
-                    </p>
-
+                    <span>IA DE ANÁLISE TERRITORIAL</span>
+                    <p>Detectamos aumento de roubos no eixo central nas últimas 72h.</p>
                 </div>
 
             </aside>
@@ -500,12 +217,8 @@
 
     </div>
 
-    <!-- MAPBOX -->
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
-
-    <!-- APP -->
     <script src="app.js"></script>
 
 </body>
-
 </html>

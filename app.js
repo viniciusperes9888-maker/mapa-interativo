@@ -1,823 +1,573 @@
-// ========================================
-// CORUJA PRESENTE
-// APP.JS
-// ========================================
+// ============================================================
+// CORUJA PRESENTE · app.js
+// Lê dados reais do Google Sheets e popula o mapa e
+// as estatísticas automaticamente.
+// ============================================================
 
-// ========================================
-// TOKEN MAPBOX
-// ========================================
 
-mapboxgl.accessToken = 'pk.eyJ1IjoidnBzOTA5MCIsImEiOiJjbW9zcTcxaGowMXlnMnNwcnVzbmU0Y2VnIn0.nhpXVRVOFPbGjy_zBmnV-w';
+// ============================================================
+// CONFIGURAÇÃO
+// ============================================================
 
-// ========================================
-// MAPA
-// ========================================
+const CONFIG = {
 
-const map = new mapboxgl.Map({
+    // Token Mapbox
+    mapboxToken: 'pk.eyJ1IjoidnBzOTA5MCIsImEiOiJjbW9zcTcxaGowMXlnMnNwcnVzbmU0Y2VnIn0.nhpXVRVOFPbGjy_zBmnV-w',
 
-    container: 'map',
+    // URL da planilha Google Sheets publicada como CSV
+    sheetsURL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgXkVwHtnAUHymxilLI8PLSIe8vqTC-sZHNNy5RpgGlCCUYku0DDYXyFxXI8OWKQWZNxnhA820PGyA/pub?output=csv',
 
-    style: 'mapbox://styles/mapbox/dark-v11',
+    // Centro inicial do mapa (Rio das Ostras)
+    mapCenter: [-41.944, -22.529],
+    mapZoom:   11.2,
 
-    center: [-41.944, -22.529],
-
-    zoom: 11.2,
-
-    pitch: 0,
-
-    bearing: 0,
-
-    antialias: true
-
-});
-
-// ========================================
-// CONTROLES
-// ========================================
-
-map.addControl(
-
-    new mapboxgl.NavigationControl(),
-
-    'top-right'
-
-);
-
-// ========================================
-// DADOS DAS OCORRÊNCIAS
-// ========================================
-
-const ocorrencias = [
-
-    // ====================================
-    // CRIMES
-    // ====================================
-
-    {
-        categoria: 'crime',
-        subcategoria: 'Roubo',
-        titulo: 'Roubo a pedestre',
-        bairro: 'Centro',
-        mortes: 0,
-        feridos: 1,
-        coordenadas: [-41.944, -22.529],
-        cor: '#ef4444'
-    },
-
-    {
-        categoria: 'crime',
-        subcategoria: 'Tráfico',
-        titulo: 'Área monitorada pelo tráfico',
-        bairro: 'Nova Cidade',
-        mortes: 2,
-        feridos: 0,
-        coordenadas: [-41.931, -22.501],
-        cor: '#ef4444'
-    },
-
-    {
-        categoria: 'crime',
-        subcategoria: 'Latrocínio',
-        titulo: 'Latrocínio registrado',
-        bairro: 'Operário',
-        mortes: 1,
-        feridos: 0,
-        coordenadas: [-41.921, -22.513],
-        cor: '#ef4444'
-    },
-
-    // ====================================
-    // ACIDENTES
-    // ====================================
-
-    {
-        categoria: 'acidente',
-        subcategoria: 'Colisão',
-        titulo: 'Colisão entre veículos',
-        bairro: 'Costazul',
-        mortes: 0,
-        feridos: 3,
-        coordenadas: [-41.960, -22.540],
-        cor: '#f59e0b'
-    },
-
-    {
-        categoria: 'acidente',
-        subcategoria: 'Atropelamento',
-        titulo: 'Atropelamento em cruzamento',
-        bairro: 'Centro',
-        mortes: 0,
-        feridos: 1,
-        coordenadas: [-41.948, -22.524],
-        cor: '#f59e0b'
-    },
-
-    // ====================================
-    // CRIMES CONTRA MULHERES
-    // ====================================
-
-    {
-        categoria: 'mulheres',
-        subcategoria: 'Violência doméstica',
-        titulo: 'Ocorrência doméstica',
-        bairro: 'Nova Esperança',
-        mortes: 0,
-        feridos: 1,
-        coordenadas: [-41.952, -22.517],
-        cor: '#ec4899'
-    },
-
-    // ====================================
-    // NATUREZA
-    // ====================================
-
-    {
-        categoria: 'natureza',
-        subcategoria: 'Afogamento',
-        titulo: 'Afogamento em praia',
-        bairro: 'Praia do Bosque',
-        mortes: 1,
-        feridos: 0,
-        coordenadas: [-41.972, -22.536],
-        cor: '#3b82f6'
-    },
-
-    {
-        categoria: 'natureza',
-        subcategoria: 'Enchente',
-        titulo: 'Alagamento urbano',
-        bairro: 'Cidade Praiana',
-        mortes: 0,
-        feridos: 2,
-        coordenadas: [-41.936, -22.548],
-        cor: '#3b82f6'
+    // Cores por categoria
+    cores: {
+        'Acidente':               '#f59e0b',
+        'Crime':                  '#ef4444',
+        'Incêndio':               '#f97316',
+        'Afogamento':             '#3b82f6',
+        'Crimes contra mulheres': '#ec4899',
+        'Acidentes naturais':     '#06b6d4',
+        'Facções criminosas':     '#a855f7',
+        'default':                '#94a3b8'
     }
 
-];
+};
 
-// ========================================
-// ARRAY DE MARKERS
-// ========================================
 
-const markers = [];
+// ============================================================
+// ESTADO GLOBAL
+// ============================================================
 
-// ========================================
-// CRIAR MARKERS
-// ========================================
+let todasOcorrencias = [];   // dados brutos do Sheets
+let todosMarkers     = [];   // markers no mapa
 
-function criarMarkers() {
+// Categorias ativas (texto do h3 em minúsculo)
+let categoriasAtivas = new Set([
+    'crimes',
+    'acidentes',
+    'acidentes naturais',
+    'crimes contra mulheres',
+    'facções criminosas'
+]);
 
-    ocorrencias.forEach(item => {
+let periodoAtivo = 'Tudo';   // período selecionado
 
-        // POPUP
+
+// ============================================================
+// MAPA
+// ============================================================
+
+mapboxgl.accessToken = CONFIG.mapboxToken;
+
+const map = new mapboxgl.Map({
+    container: 'map',
+    style:     'mapbox://styles/mapbox/dark-v11',
+    center:    CONFIG.mapCenter,
+    zoom:      CONFIG.mapZoom,
+    pitch:     0,
+    bearing:   0,
+    antialias: true
+});
+
+map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+// Atualiza HUD enquanto o mapa move
+map.on('move', () => {
+    const c = map.getCenter();
+    atualizarHUD(c.lat, c.lng, map.getZoom());
+});
+
+
+// ============================================================
+// HUD
+// ============================================================
+
+function atualizarHUD(lat, lng, zoom) {
+    const boxes = document.querySelectorAll('.hud-box');
+    if (boxes[0]) boxes[0].textContent = 'LAT '  + lat.toFixed(3);
+    if (boxes[1]) boxes[1].textContent = 'LNG '  + lng.toFixed(3);
+    if (boxes[2]) boxes[2].textContent = 'ZOOM ' + zoom.toFixed(1);
+}
+
+
+// ============================================================
+// CARREGAR DADOS DO GOOGLE SHEETS
+// ============================================================
+
+async function carregarDados() {
+
+    try {
+
+        console.log('Coruja Presente: carregando planilha...');
+
+        const resposta = await fetch(CONFIG.sheetsURL);
+
+        if (!resposta.ok) throw new Error('Falha ao acessar a planilha.');
+
+        const csv = await resposta.text();
+
+        todasOcorrencias = parseCSV(csv);
+
+        console.log(`Coruja Presente: ${todasOcorrencias.length} registros carregados.`);
+
+        criarMarkers(todasOcorrencias);
+        atualizarEstatisticas(todasOcorrencias);
+        atualizarContadoresCategorias(todasOcorrencias);
+
+    } catch (erro) {
+
+        console.error('Erro ao carregar dados:', erro);
+
+    }
+
+}
+
+
+// ============================================================
+// PARSE CSV → ARRAY DE OBJETOS
+// ============================================================
+
+function parseCSV(texto) {
+
+    const linhas    = texto.trim().split('\n');
+    if (linhas.length < 2) return [];
+
+    const cabecalho = linhas[0]
+        .split(',')
+        .map(c => c.trim().replace(/"/g, ''));
+
+    const dados = [];
+
+    for (let i = 1; i < linhas.length; i++) {
+
+        const valores = splitCSVLinha(linhas[i]);
+        if (valores.length < 2) continue;
+
+        const obj = {};
+        cabecalho.forEach((chave, idx) => {
+            obj[chave] = (valores[idx] || '').trim().replace(/"/g, '');
+        });
+
+        obj.Latitude       = parseFloat(obj.Latitude)       || 0;
+        obj.Longitude      = parseFloat(obj.Longitude)      || 0;
+        obj.VitimasFeridas = parseInt(obj.VitimasFeridas)   || 0;
+        obj.VitimasMortas  = parseInt(obj.VitimasMortas)    || 0;
+
+        // Ignora linhas sem coordenadas
+        if (obj.Latitude === 0 && obj.Longitude === 0) continue;
+
+        dados.push(obj);
+
+    }
+
+    return dados;
+
+}
+
+
+// ============================================================
+// SPLIT DE LINHA CSV (respeita campos com vírgula entre aspas)
+// ============================================================
+
+function splitCSVLinha(linha) {
+
+    const resultado  = [];
+    let   atual      = '';
+    let   dentroAspas = false;
+
+    for (const char of linha) {
+        if (char === '"') {
+            dentroAspas = !dentroAspas;
+        } else if (char === ',' && !dentroAspas) {
+            resultado.push(atual);
+            atual = '';
+        } else {
+            atual += char;
+        }
+    }
+
+    resultado.push(atual);
+    return resultado;
+
+}
+
+
+// ============================================================
+// COR POR CATEGORIA
+// ============================================================
+
+function corPorCategoria(categoria) {
+    return CONFIG.cores[categoria?.trim()] || CONFIG.cores['default'];
+}
+
+
+// ============================================================
+// CRIAR MARKERS NO MAPA
+// ============================================================
+
+function criarMarkers(dados) {
+
+    limparMarkers();
+
+    dados.forEach(item => {
+
+        const cor = corPorCategoria(item.Categoria);
+
         const popup = new mapboxgl.Popup({
-
-            offset: 25,
-
-            closeButton: false
-
+            offset:      25,
+            closeButton: false,
+            maxWidth:    '290px'
         })
-
         .setHTML(`
-
             <div style="
                 background:#0f1724;
                 color:white;
-                padding:14px;
-                border-radius:16px;
-                min-width:220px;
+                padding:16px;
+                border-radius:12px;
                 font-family:Inter,sans-serif;
+                min-width:220px;
             ">
-
-                <div style="
-                    font-size:12px;
-                    opacity:0.7;
-                    margin-bottom:8px;
-                    text-transform:uppercase;
-                ">
-                    ${item.subcategoria}
+                <div style="font-size:10px;opacity:.6;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">
+                    ${item.Tipo || item.TipoOcorrencia || item.Categoria || ''}
                 </div>
-
-                <h3 style="
-                    margin-bottom:12px;
-                    color:${item.cor};
-                    font-size:18px;
-                ">
-                    ${item.titulo}
-                </h3>
-
-                <div style="
-                    display:flex;
-                    flex-direction:column;
-                    gap:6px;
-                    font-size:14px;
-                ">
-
-                    <span>
-                        📍 ${item.bairro}
-                    </span>
-
-                    <span>
-                        ☠ Mortes: ${item.mortes}
-                    </span>
-
-                    <span>
-                        🚑 Feridos: ${item.feridos}
-                    </span>
-
+                <div style="font-size:14px;font-weight:600;color:${cor};margin-bottom:12px;line-height:1.3;">
+                    ${item.Descricao || item.Categoria || 'Ocorrência'}
                 </div>
-
+                <div style="display:flex;flex-direction:column;gap:5px;font-size:12px;opacity:.85;">
+                    ${item.Bairro    ? `<span>📍 ${item.Bairro}${item.Cidade ? ', ' + item.Cidade : ''}</span>`         : ''}
+                    ${item.Data      ? `<span>📅 ${item.Data}${item.Hora ? ' às ' + item.Hora : ''}</span>`             : ''}
+                    ${item.Gravidade ? `<span>⚠️ ${item.Gravidade}</span>`                                               : ''}
+                    ${item.VitimasMortas  > 0 ? `<span style="color:#ef4444">☠ Mortes: ${item.VitimasMortas}</span>`   : ''}
+                    ${item.VitimasFeridas > 0 ? `<span style="color:#f59e0b">🚑 Feridos: ${item.VitimasFeridas}</span>` : ''}
+                    ${item.Fonte     ? `<span style="opacity:.5;font-size:10px;">Fonte: ${item.Fonte}</span>`            : ''}
+                </div>
+                ${item.Link ? `<a href="${item.Link}" target="_blank" style="display:inline-block;margin-top:10px;font-size:10px;color:${cor};opacity:.8;text-decoration:none;">Ver notícia →</a>` : ''}
             </div>
-
         `);
 
-        // MARKER
-        const marker = new mapboxgl.Marker({
+        const marker = new mapboxgl.Marker({ color: cor })
+            .setLngLat([item.Longitude, item.Latitude])
+            .setPopup(popup)
+            .addTo(map);
 
-            color: item.cor
-
-        })
-
-        .setLngLat(item.coordenadas)
-
-        .setPopup(popup)
-
-        .addTo(map);
-
-        // SALVAR
-        markers.push({
-
-            categoria: item.categoria,
-
-            marker
-
+        todosMarkers.push({
+            marker,
+            categoria: (item.Categoria || '').toLowerCase(),
+            data:       item.Data || '',
+            dados:      item
         });
 
     });
 
 }
 
-// ========================================
-// CRIAR MARKERS
-// ========================================
 
-map.on('load', () => {
+// ============================================================
+// LIMPAR MARKERS
+// ============================================================
 
-    criarMarkers();
+function limparMarkers() {
+    todosMarkers.forEach(i => i.marker.remove());
+    todosMarkers = [];
+}
 
-});
 
-// ========================================
-// FILTROS
-// ========================================
+// ============================================================
+// FILTRAR MARKERS (categoria + período)
+// ============================================================
 
-const categoryCards = document.querySelectorAll('.category-card');
+function filtrarMarkers() {
 
-// ========================================
-// FILTRO CLICK
-// ========================================
-
-categoryCards.forEach((card, index) => {
-
-    card.addEventListener('click', () => {
-
-        // TOGGLE VISUAL
-        card.classList.toggle('active');
-
-        atualizarFiltros();
-
-    });
-
-});
-
-// ========================================
-// ATUALIZAR FILTROS
-// ========================================
-
-function atualizarFiltros() {
-
-    const ativos = [];
-
-    // PEGAR ATIVOS
-    categoryCards.forEach(card => {
-
-        if (card.classList.contains('active')) {
-
-            const titulo = card.querySelector('h3')
-                .innerText
-                .toLowerCase();
-
-            ativos.push(titulo);
-
-        }
-
-    });
-
-    // MOSTRAR / ESCONDER
-    markers.forEach(item => {
+    todosMarkers.forEach(item => {
 
         const el = item.marker.getElement();
 
-        if (
+        const catAtiva = Array.from(categoriasAtivas).some(cat =>
+            item.categoria.includes(cat)
+        );
 
-            ativos.includes('crimes') &&
-            item.categoria === 'crime'
+        const noPeriodo = verificarPeriodo(item.data, periodoAtivo);
 
-        ) {
+        el.style.display = (catAtiva && noPeriodo) ? 'block' : 'none';
 
-            el.style.display = 'block';
+    });
 
-        }
+    // Recalcula stats com os visíveis
+    const visiveis = todosMarkers
+        .filter(i => i.marker.getElement().style.display !== 'none')
+        .map(i => i.dados);
 
-        else if (
+    atualizarEstatisticas(visiveis);
 
-            ativos.includes('acidentes') &&
-            item.categoria === 'acidente'
+}
 
-        ) {
 
-            el.style.display = 'block';
+// ============================================================
+// VERIFICAR PERÍODO
+// ============================================================
 
-        }
+function verificarPeriodo(dataStr, periodo) {
 
-        else if (
+    if (periodo === 'Tudo' || !dataStr) return true;
 
-            ativos.includes('crimes contra mulheres') &&
-            item.categoria === 'mulheres'
+    // Aceita DD/MM/AAAA ou AAAA-MM-DD
+    let dataOcorrencia;
+    const partes = dataStr.split('/');
 
-        ) {
+    if (partes.length === 3) {
+        dataOcorrencia = new Date(+partes[2], +partes[1] - 1, +partes[0]);
+    } else {
+        dataOcorrencia = new Date(dataStr);
+    }
 
-            el.style.display = 'block';
+    if (isNaN(dataOcorrencia)) return true;
 
-        }
+    const diffDias = (new Date() - dataOcorrencia) / 86400000;
 
-        else if (
+    if (periodo === '24h') return diffDias <= 1;
+    if (periodo === '7d')  return diffDias <= 7;
+    if (periodo === '30d') return diffDias <= 30;
+    if (periodo === '3m')  return diffDias <= 90;
+    if (periodo === '1a')  return diffDias <= 365;
 
-            ativos.includes('acidentes naturais') &&
-            item.categoria === 'natureza'
+    return true;
 
-        ) {
+}
 
-            el.style.display = 'block';
 
-        }
+// ============================================================
+// ATUALIZAR ESTATÍSTICAS DA SIDEBAR DIREITA
+// ============================================================
 
-        else {
+function atualizarEstatisticas(dados) {
 
-            el.style.display = 'none';
+    const total   = dados.length;
+    const mortes  = dados.reduce((a, d) => a + d.VitimasMortas,  0);
+    const feridos = dados.reduce((a, d) => a + d.VitimasFeridas, 0);
 
-        }
+    // Categoria dominante
+    const contCat = {};
+    dados.forEach(d => {
+        const c = d.Categoria || 'Desconhecido';
+        contCat[c] = (contCat[c] || 0) + 1;
+    });
+    const catDom = Object.entries(contCat).sort((a, b) => b[1] - a[1])[0]?.[0] || '—';
+
+    // Top 3 bairros
+    const contBairro = {};
+    dados.forEach(d => {
+        if (d.Bairro) contBairro[d.Bairro] = (contBairro[d.Bairro] || 0) + 1;
+    });
+    const topBairros = Object.entries(contBairro)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3);
+
+    // Atualiza elementos
+    definirStat('stat-total',    total);
+    definirStat('stat-mortes',   mortes);
+    definirStat('stat-feridos',  feridos);
+    definirStat('stat-categoria', catDom);
+
+    const ulBairros = document.getElementById('stat-bairros');
+    if (ulBairros) {
+        ulBairros.innerHTML = topBairros
+            .map(([b, n]) => `<li>${b} — ${n}</li>`)
+            .join('');
+    }
+
+}
+
+
+// ============================================================
+// DEFINIR ELEMENTO DE STAT POR ID
+// ============================================================
+
+function definirStat(id, valor) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = valor;
+}
+
+
+// ============================================================
+// ATUALIZAR BADGES DE CONTAGEM NAS CATEGORIAS
+// ============================================================
+
+function atualizarContadoresCategorias(dados) {
+
+    const contagem = {};
+    dados.forEach(d => {
+        const cat = (d.Categoria || '').toLowerCase();
+        contagem[cat] = (contagem[cat] || 0) + 1;
+    });
+
+    document.querySelectorAll('.category-card').forEach(card => {
+
+        const titulo = card.querySelector('h3')?.textContent?.toLowerCase()?.trim() || '';
+        const badge  = card.querySelector('.category-badge');
+        if (!badge) return;
+
+        let total = 0;
+        Object.entries(contagem).forEach(([cat, qtd]) => {
+            if (titulo.includes(cat) || cat.includes(titulo.split(' ')[0])) {
+                total += qtd;
+            }
+        });
+
+        if (total > 0) badge.textContent = total;
 
     });
 
 }
 
-// ========================================
-// SEARCH BOX
-// ========================================
 
-const searchInput = document.querySelector('.search-box input');
+// ============================================================
+// FILTROS — CATEGORIAS (clique nos cards)
+// ============================================================
 
-// ========================================
-// BUSCAR CIDADE
-// ========================================
-
-searchInput.addEventListener('keydown', (e) => {
-
-    if (e.key === 'Enter') {
-
-        const cidade = searchInput.value.toLowerCase();
-
-        // RIO DAS OSTRAS
-        if (
-
-            cidade.includes('rio') ||
-            cidade.includes('ostras')
-
-        ) {
-
-            map.flyTo({
-
-                center: [-41.944, -22.529],
-
-                zoom: 11.5,
-
-                speed: 0.8
-
-            });
-
-        }
-
-        // MACAÉ
-        if (
-
-            cidade.includes('macae') ||
-            cidade.includes('macaé')
-
-        ) {
-
-            map.flyTo({
-
-                center: [-41.785, -22.371],
-
-                zoom: 11,
-
-                speed: 0.8
-
-            });
-
-        }
-
-    }
-
-});
-
-// ========================================
-// BOTÕES SUPERIORES
-// ========================================
-
-const navButtons = document.querySelectorAll('.nav-button');
-
-navButtons.forEach(button => {
-
-    button.addEventListener('click', () => {
-
-        navButtons.forEach(btn => {
-
-            btn.classList.remove('active');
-
-        });
-
-        button.classList.add('active');
-
-    });
-
-});
-
-// ========================================
-// DEBUG
-// ========================================
-
-console.log('Coruja Presente iniciado com sucesso');
-
-// ========================================
-// FILTROS INTERATIVOS AVANÇADOS
-// COLE NO FINAL DO APP.JS
-// ========================================
-
-// ========================================
-// BOTÕES DE PERÍODO
-// ========================================
-
-const periodButtons = document.querySelectorAll('.period-button');
-
-// ========================================
-// CLICK PERÍODO
-// ========================================
-
-periodButtons.forEach(button => {
-
-    button.addEventListener('click', () => {
-
-        // REMOVER ACTIVE
-        periodButtons.forEach(btn => {
-
-            btn.classList.remove('active');
-
-        });
-
-        // ADICIONAR ACTIVE
-        button.classList.add('active');
-
-        // DEBUG
-        console.log(
-            'Período selecionado:',
-            button.innerText
-        );
-
-    });
-
-});
-
-// ========================================
-// SUBCATEGORIAS
-// ========================================
-
-const subItems = document.querySelectorAll('.subcategory-item');
-
-// ========================================
-// CLICK SUBCATEGORIA
-// ========================================
-
-subItems.forEach(item => {
-
-    item.addEventListener('click', (e) => {
-
-        // EVITAR PROPAGAÇÃO
-        e.stopPropagation();
-
-        // TOGGLE
-        item.classList.toggle('selected');
-
-        // VISUAL
-        if (item.classList.contains('selected')) {
-
-            item.style.background =
-                'rgba(59,130,246,0.12)';
-
-            item.style.border =
-                '1px solid rgba(59,130,246,0.22)';
-
-        }
-
-        else {
-
-            item.style.background = '';
-
-            item.style.border = '';
-
-        }
-
-        // PEGAR TEXTO
-        const texto =
-            item.querySelector('span').innerText;
-
-        console.log(
-            'Subcategoria:',
-            texto
-        );
-
-    });
-
-});
-
-// ========================================
-// EXPANDIR / RECOLHER
-// ========================================
-
-categoryCards.forEach(card => {
+document.querySelectorAll('.category-card').forEach(card => {
 
     const top = card.querySelector('.category-top');
-
     if (!top) return;
 
     top.addEventListener('click', () => {
 
         card.classList.toggle('active');
 
-    });
-
-});
-
-// ========================================
-// EFEITO CHECKBOX
-// ========================================
-
-categoryCards.forEach(card => {
-
-    card.addEventListener('mouseenter', () => {
-
-        card.style.transform = 'translateY(-2px)';
-
-    });
-
-    card.addEventListener('mouseleave', () => {
-
-        card.style.transform = '';
-
-    });
-
-});
-
-// ========================================
-// FILTRO REAL DE MARKERS
-// ========================================
-
-function atualizarMarkers() {
-
-    // PEGAR CATEGORIAS ATIVAS
-    const ativos = [];
-
-    categoryCards.forEach(card => {
+        const titulo = card.querySelector('h3')
+            ?.textContent?.toLowerCase()?.trim() || '';
 
         if (card.classList.contains('active')) {
-
-            const titulo = card
-                .querySelector('h3')
-                .innerText
-                .toLowerCase();
-
-            ativos.push(titulo);
-
+            categoriasAtivas.add(titulo);
+        } else {
+            categoriasAtivas.delete(titulo);
         }
+
+        filtrarMarkers();
 
     });
 
-    // LOOP MARKERS
-    markers.forEach(item => {
+    card.addEventListener('mouseenter', () => card.style.transform = 'translateY(-2px)');
+    card.addEventListener('mouseleave', () => card.style.transform = '');
 
-        const el =
-            item.marker.getElement();
+});
 
-        let mostrar = false;
 
-        // CRIMES
-        if (
+// ============================================================
+// FILTROS — PERÍODO
+// ============================================================
 
-            ativos.includes('crimes') &&
-            item.categoria === 'crime'
+document.querySelectorAll('.period-button').forEach(btn => {
 
-        ) {
+    btn.addEventListener('click', () => {
 
-            mostrar = true;
+        document.querySelectorAll('.period-button')
+            .forEach(b => b.classList.remove('active'));
 
-        }
+        btn.classList.add('active');
+        periodoAtivo = btn.textContent.trim();
 
-        // ACIDENTES
-        if (
-
-            ativos.includes('acidentes') &&
-            item.categoria === 'acidente'
-
-        ) {
-
-            mostrar = true;
-
-        }
-
-        // MULHERES
-        if (
-
-            ativos.includes('crimes contra mulheres') &&
-            item.categoria === 'mulheres'
-
-        ) {
-
-            mostrar = true;
-
-        }
-
-        // NATUREZA
-        if (
-
-            ativos.includes('acidentes naturais') &&
-            item.categoria === 'natureza'
-
-        ) {
-
-            mostrar = true;
-
-        }
-
-        // MOSTRAR / ESCONDER
-        el.style.display =
-            mostrar ? 'block' : 'none';
-
-    });
-
-}
-
-// ========================================
-// ATUALIZAR AO CLICAR
-// ========================================
-
-categoryCards.forEach(card => {
-
-    card.addEventListener('click', () => {
-
-        atualizarMarkers();
+        filtrarMarkers();
 
     });
 
 });
 
-// ========================================
-// ESTATÍSTICAS DINÂMICAS
-// ========================================
 
-function atualizarEstatisticas() {
+// ============================================================
+// SEARCH BOX
+// ============================================================
 
-    let total = 0;
+const searchInput = document.querySelector('.search-box input');
 
-    let mortes = 0;
+if (searchInput) {
 
-    let feridos = 0;
+    // Enter → voa para a localização encontrada
+    searchInput.addEventListener('keydown', e => {
 
-    markers.forEach(item => {
+        if (e.key !== 'Enter') return;
 
-        const el =
-            item.marker.getElement();
+        const valor = searchInput.value.toLowerCase().trim();
+        if (!valor) return;
 
-        if (el.style.display !== 'none') {
-
-            total++;
-
-        }
-
-    });
-
-    ocorrencias.forEach(item => {
-
-        mortes += item.mortes;
-
-        feridos += item.feridos;
-
-    });
-
-    // TOTAL
-    const totalCard =
-        document.querySelector(
-            '.stats-card strong'
+        const encontrado = todasOcorrencias.find(d =>
+            (d.Cidade  || '').toLowerCase().includes(valor) ||
+            (d.Bairro  || '').toLowerCase().includes(valor) ||
+            (d.Estado  || '').toLowerCase().includes(valor)
         );
 
-    if (totalCard) {
+        if (encontrado?.Latitude && encontrado?.Longitude) {
+            map.flyTo({ center: [encontrado.Longitude, encontrado.Latitude], zoom: 12, speed: 0.9 });
+        } else if (valor.includes('ostras') || valor.includes('rio das')) {
+            map.flyTo({ center: [-41.944, -22.529], zoom: 11.5, speed: 0.9 });
+        } else if (valor.includes('macaé') || valor.includes('macae')) {
+            map.flyTo({ center: [-41.785, -22.371], zoom: 11,   speed: 0.9 });
+        }
 
-        totalCard.innerText = total;
+    });
 
-    }
+    // Digitando → filtra markers em tempo real
+    searchInput.addEventListener('input', () => {
+
+        const valor = searchInput.value.toLowerCase().trim();
+
+        if (!valor) {
+            filtrarMarkers();
+            return;
+        }
+
+        todosMarkers.forEach(item => {
+            const d  = item.dados;
+            const el = item.marker.getElement();
+
+            const bate =
+                (d.Bairro         || '').toLowerCase().includes(valor) ||
+                (d.Cidade         || '').toLowerCase().includes(valor) ||
+                (d.Categoria      || '').toLowerCase().includes(valor) ||
+                (d.Tipo           || '').toLowerCase().includes(valor) ||
+                (d.Descricao      || '').toLowerCase().includes(valor) ||
+                (d.TipoOcorrencia || '').toLowerCase().includes(valor);
+
+            el.style.display = bate ? 'block' : 'none';
+        });
+
+    });
 
 }
 
-// ========================================
-// CHAMAR ESTATÍSTICAS
-// ========================================
 
-categoryCards.forEach(card => {
+// ============================================================
+// BOTÕES DE NAVEGAÇÃO SUPERIORES
+// ============================================================
 
-    card.addEventListener('click', () => {
+document.querySelectorAll('.nav-button').forEach(btn => {
 
-        atualizarEstatisticas();
-
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.nav-button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
     });
 
 });
 
-// ========================================
-// SEARCH AVANÇADA
-// ========================================
 
-searchInput.addEventListener('input', () => {
-
-    const valor =
-        searchInput.value.toLowerCase();
-
-    markers.forEach((item, index) => {
-
-        const dados =
-            ocorrencias[index];
-
-        const el =
-            item.marker.getElement();
-
-        const encontrou =
-
-            dados.titulo
-                .toLowerCase()
-                .includes(valor)
-
-            ||
-
-            dados.bairro
-                .toLowerCase()
-                .includes(valor)
-
-            ||
-
-            dados.subcategoria
-                .toLowerCase()
-                .includes(valor);
-
-        el.style.display =
-            encontrou ? 'block' : 'none';
-
-    });
-
-});
-
-// ========================================
-// EFEITO MAPA
-// ========================================
+// ============================================================
+// INICIALIZAÇÃO — aguarda mapa carregar
+// ============================================================
 
 map.on('load', () => {
 
+    console.log('Coruja Presente: mapa pronto.');
+
     map.setFog({
-
-        color: 'rgb(10,10,18)',
-
-        'high-color': 'rgb(36,92,223)',
-
-        'space-color': 'rgb(4,6,12)',
-
-        'star-intensity': 0.2
-
+        color:            'rgb(10, 10, 18)',
+        'high-color':     'rgb(36, 92, 223)',
+        'space-color':    'rgb(4, 6, 12)',
+        'star-intensity':  0.15
     });
+
+    carregarDados();
 
 });
 
-// ========================================
-// MENSAGEM SISTEMA
-// ========================================
-
-console.log(
-    'Filtros avançados ativados'
-);
+console.log('Coruja Presente: app.js carregado.');
