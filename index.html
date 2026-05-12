@@ -75,7 +75,8 @@
                 <div class="filter-section">
                     <span class="section-title">CATEGORIAS</span>
 
-                    <div class="category-card active">
+                    <!-- CRIMES -->
+                    <div class="category-card active expanded" data-categoria="crimes">
                         <div class="category-top">
                             <div class="category-checkbox"></div>
                             <div class="category-top-text">
@@ -83,28 +84,19 @@
                                 <span>Segurança urbana</span>
                             </div>
                             <div class="category-badge">—</div>
+                            <button class="expand-btn">+</button>
                         </div>
                         <div class="subcategory-list">
-                            <div class="subcategory-item active">
-                                <div class="sub-checkbox"></div>
-                                <span class="sub-label">Roubos</span>
-                            </div>
-                            <div class="subcategory-item active">
-                                <div class="sub-checkbox"></div>
-                                <span class="sub-label">Assassinatos</span>
-                            </div>
-                            <div class="subcategory-item active">
-                                <div class="sub-checkbox"></div>
-                                <span class="sub-label">Latrocínios</span>
-                            </div>
-                            <div class="subcategory-item active">
-                                <div class="sub-checkbox"></div>
-                                <span class="sub-label">Tráfico</span>
-                            </div>
+                            <!-- Tipo exato da coluna Tipo da planilha -->
+                            <div class="subcategory-item active" data-tipo="homicídio"><div class="sub-checkbox"></div><span class="sub-label">Homicídio</span></div>
+                            <div class="subcategory-item active" data-tipo="assalto"><div class="sub-checkbox"></div><span class="sub-label">Assalto / Roubo</span></div>
+                            <div class="subcategory-item active" data-tipo="furto"><div class="sub-checkbox"></div><span class="sub-label">Furto</span></div>
+                            <div class="subcategory-item active" data-tipo="tráfico"><div class="sub-checkbox"></div><span class="sub-label">Tráfico</span></div>
                         </div>
                     </div>
 
-                    <div class="category-card active">
+                    <!-- ACIDENTES -->
+                    <div class="category-card active expanded" data-categoria="acidentes">
                         <div class="category-top">
                             <div class="category-checkbox"></div>
                             <div class="category-top-text">
@@ -112,51 +104,75 @@
                                 <span>Trânsito e vias</span>
                             </div>
                             <div class="category-badge">—</div>
+                            <button class="expand-btn">+</button>
                         </div>
                         <div class="subcategory-list">
-                            <div class="subcategory-item active">
-                                <div class="sub-checkbox"></div>
-                                <span class="sub-label">Colisões</span>
-                            </div>
-                            <div class="subcategory-item active">
-                                <div class="sub-checkbox"></div>
-                                <span class="sub-label">Atropelamentos</span>
-                            </div>
-                            <div class="subcategory-item active">
-                                <div class="sub-checkbox"></div>
-                                <span class="sub-label">Capotamentos</span>
-                            </div>
+                            <!-- Todos os Tipos de acidente de trânsito da planilha -->
+                            <div class="subcategory-item active" data-tipo="carro"><div class="sub-checkbox"></div><span class="sub-label">Automóvel</span></div>
+                            <div class="subcategory-item active" data-tipo="moto"><div class="sub-checkbox"></div><span class="sub-label">Motocicleta</span></div>
+                            <div class="subcategory-item active" data-tipo="caminhão"><div class="sub-checkbox"></div><span class="sub-label">Caminhão</span></div>
+                            <div class="subcategory-item active" data-tipo="ônibus"><div class="sub-checkbox"></div><span class="sub-label">Ônibus</span></div>
+                            <div class="subcategory-item active" data-tipo="atropelamento"><div class="sub-checkbox"></div><span class="sub-label">Atropelamento</span></div>
+                            <div class="subcategory-item active" data-tipo="bicicleta"><div class="sub-checkbox"></div><span class="sub-label">Bicicleta</span></div>
                         </div>
                     </div>
 
-                    <div class="category-card active">
+                    <!-- INCÊNDIOS -->
+                    <div class="category-card active expanded" data-categoria="incendios">
                         <div class="category-top">
                             <div class="category-checkbox"></div>
                             <div class="category-top-text">
-                                <h3>Crimes contra mulheres</h3>
-                                <span>Violência doméstica</span>
+                                <h3>Incêndios</h3>
+                                <span>Estrutural e vegetal</span>
+                            </div>
+                            <div class="category-badge">—</div>
+                            <button class="expand-btn">+</button>
+                        </div>
+                        <div class="subcategory-list">
+                            <div class="subcategory-item active" data-tipo="residência"><div class="sub-checkbox"></div><span class="sub-label">Residencial</span></div>
+                            <div class="subcategory-item active" data-tipo="comércio"><div class="sub-checkbox"></div><span class="sub-label">Comercial</span></div>
+                            <div class="subcategory-item active" data-tipo="veículo"><div class="sub-checkbox"></div><span class="sub-label">Veículo</span></div>
+                        </div>
+                    </div>
+
+                    <!-- CRIMES CONTRA MULHERES -->
+                    <div class="category-card active" data-categoria="crimes contra mulheres">
+                        <div class="category-top">
+                            <div class="category-checkbox"></div>
+                            <div class="category-top-text">
+                                <h3>Crimes c/ Mulheres</h3>
+                                <span>Violência de gênero</span>
                             </div>
                             <div class="category-badge">—</div>
                         </div>
                     </div>
 
-                    <div class="category-card active">
+                    <!-- ACIDENTES NATURAIS / AFOGAMENTOS -->
+                    <div class="category-card active expanded" data-categoria="acidentes naturais">
                         <div class="category-top">
                             <div class="category-checkbox"></div>
                             <div class="category-top-text">
-                                <h3>Acidentes naturais</h3>
+                                <h3>Acidentes Naturais</h3>
                                 <span>Clima e ambiente</span>
                             </div>
                             <div class="category-badge">—</div>
+                            <button class="expand-btn">+</button>
+                        </div>
+                        <div class="subcategory-list">
+                            <div class="subcategory-item active" data-tipo="praia"><div class="sub-checkbox"></div><span class="sub-label">Afogamento (Praia)</span></div>
+                            <div class="subcategory-item active" data-tipo="rio"><div class="sub-checkbox"></div><span class="sub-label">Afogamento (Rio)</span></div>
+                            <div class="subcategory-item active" data-tipo="enchente"><div class="sub-checkbox"></div><span class="sub-label">Enchente</span></div>
+                            <div class="subcategory-item active" data-tipo="deslizamento"><div class="sub-checkbox"></div><span class="sub-label">Deslizamento</span></div>
                         </div>
                     </div>
 
-                    <div class="category-card active">
+                    <!-- FACÇÕES -->
+                    <div class="category-card active" data-categoria="faccoes criminosas">
                         <div class="category-top">
                             <div class="category-checkbox"></div>
                             <div class="category-top-text">
                                 <h3>Facções criminosas</h3>
-                                <span>Áreas monitoradas</span>
+                                <span>Controle territorial</span>
                             </div>
                             <div class="category-badge">—</div>
                         </div>
@@ -166,7 +182,7 @@
 
                 <div class="city-box">
                     <span>CIDADE ATIVA</span>
-                    <strong>Rio das Ostras, RJ</strong>
+                    <strong id="cidade-ativa-label">Carregando...</strong>
                 </div>
 
             </aside>
@@ -176,12 +192,41 @@
 
                 <div id="map"></div>
 
+                <!-- BARRA DE FERRAMENTAS DO MAPA -->
+                <div class="map-toolbar">
+                    <button id="btn-heatmap"      class="toolbar-btn" title="Ativar mapa de calor">🔥 Heatmap</button>
+                    <button id="btn-timeline"     class="toolbar-btn" title="Linha do tempo">⏱️ Timeline</button>
+                    <button id="btn-comparar"     class="toolbar-btn" title="Comparar cidades">📊 Comparar</button>
+                    <button id="btn-satelite"     class="toolbar-btn" title="Modo satélite">🛰️ Satélite</button>
+                    <button id="btn-compartilhar" class="toolbar-btn" title="Compartilhar filtro">🔗 Compartilhar</button>
+                </div>
+
+                <!-- ALERTAS DE CLUSTER -->
+                <div id="cluster-alerts" style="display:none;"></div>
+
+                <!-- PAINEL DA LINHA DO TEMPO -->
+                <div id="timeline-panel" style="display:none;">
+                    <div class="timeline-header">
+                        <span class="timeline-title">⏱️ Linha do Tempo</span>
+                        <span id="timeline-label" class="timeline-date">—</span>
+                    </div>
+                    <div class="timeline-controls">
+                        <button id="timeline-reset" class="timeline-btn" title="Reiniciar">⏮</button>
+                        <button id="timeline-play"  class="timeline-btn timeline-btn--play" title="Reproduzir">▶ Play</button>
+                        <button id="timeline-pause" class="timeline-btn" title="Pausar">⏸ Pause</button>
+                    </div>
+                    <input id="timeline-slider" type="range" class="timeline-slider" min="0" max="100" value="0" />
+                    <div class="timeline-hint">Arraste o slider ou clique em Play para animar as ocorrências ao longo do tempo</div>
+                </div>
+
+                <!-- HUD INFERIOR -->
                 <div class="map-hud">
                     <div class="hud-box">LAT —</div>
                     <div class="hud-box">LNG —</div>
                     <div class="hud-box">ZOOM —</div>
                 </div>
 
+                <!-- LEGENDA -->
                 <div class="legend-box">
                     <h3>LEGENDA</h3>
                     <div class="legend-item"><div class="legend-color" style="background:#ef4444"></div><span>Crimes</span></div>
@@ -208,7 +253,7 @@
 
                 <div class="stats-card">
                     <span>CIDADE MONITORADA</span>
-                    <strong>Rio das Ostras</strong>
+                    <strong id="stat-cidade">—</strong>
                 </div>
 
                 <div class="stats-card">
@@ -242,6 +287,19 @@
 
         </main>
 
+    </div>
+
+    <!-- MODAL COMPARATIVO DE CIDADES -->
+    <div id="modal-comparar" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;align-items:center;justify-content:center;padding:20px;">
+        <div style="background:#0f1724;border:1px solid rgba(255,255,255,.1);border-radius:16px;width:100%;max-width:600px;max-height:80vh;overflow-y:auto;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid rgba(255,255,255,.08);">
+                <h2 style="font-size:16px;font-weight:600;color:white;">📊 Comparativo entre Cidades</h2>
+                <button id="modal-comparar-fechar" style="background:transparent;border:1px solid rgba(255,255,255,.15);color:#9ca3af;border-radius:8px;width:28px;height:28px;cursor:pointer;font-size:14px;">✕</button>
+            </div>
+            <div id="comparar-body" style="padding:20px 24px;display:flex;flex-direction:column;gap:16px;">
+                <p style="color:#6b7280;font-size:13px;">Carregando dados...</p>
+            </div>
+        </div>
     </div>
 
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
