@@ -23,26 +23,28 @@ const CONFIG = {
 
     sheetsURL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgXkVwHtnAUHymxilLI8PLSIe8vqTC-sZHNNy5RpgGlCCUYku0DDYXyFxXI8OWKQWZNxnhA820PGyA/pub?output=csv',
 
-    mapCenter: [-41.785, -22.371],
-    mapZoom:   12,
+    // Zoom menor para mostrar toda a região (Macaé, Rio das Ostras, Quissamã, etc.)
+    mapCenter: [-41.785, -22.380],
+    mapZoom:   10,
 
+    // Cores — valores EXATOS da coluna Categoria na planilha nova
     cores: {
-        'Crime':                  '#ef4444',
-        'Acidente':               '#f59e0b',
-        'Incêndio':               '#f97316',
-        'Afogamento':             '#3b82f6',
-        'Crimes contra mulheres': '#ec4899',
-        'Acidentes naturais':     '#06b6d4',
-        'Facções criminosas':     '#a855f7',
-        'default':                '#94a3b8'
+        'Crime':                 '#ef4444',
+        'Acidente':              '#f59e0b',
+        'Incêndio':              '#f97316',
+        'Afogamento':            '#3b82f6',
+        'Acidente natural':      '#06b6d4',
+        'Crime contra a mulher': '#ec4899',
+        'Facções criminosas':    '#a855f7',
+        'default':               '#94a3b8'
     },
 
     // Velocidade da animação da linha do tempo (ms por dia)
-    timelineVelocidade: 600,
+    timelineVelocidade: 400,
 
     // Alertas: mínimo de ocorrências num bairro em N dias
-    alertaMinOcorrencias: 3,
-    alertaJanelaDias:     2,
+    alertaMinOcorrencias: 5,
+    alertaJanelaDias:     7,
 
 };
 
@@ -55,8 +57,13 @@ let todasOcorrencias = [];
 let todosMarkers     = [];
 
 const categoriasAtivas = new Set([
-    'crime', 'acidente', 'incêndio', 'afogamento',
-    'crimes contra mulheres', 'acidentes naturais', 'facções criminosas'
+    'crime',
+    'acidente',
+    'incêndio',
+    'afogamento',
+    'acidente natural',
+    'crime contra a mulher',
+    'facções criminosas'
 ]);
 
 let periodoAtivo    = 'Tudo';
@@ -120,6 +127,11 @@ async function carregarDados() {
         todasOcorrencias = parseCSV(csv);
 
         console.log(`Coruja Presente: ${todasOcorrencias.length} registros.`);
+
+        // DIAGNÓSTICO — confirma o que chegou do Sheets
+        const catsUnicas = [...new Set(todasOcorrencias.map(d => d.Categoria))];
+        console.log('✅ Categorias na planilha:', catsUnicas);
+        console.log('🔍 Categorias ativas no filtro:', [...categoriasAtivas]);
 
         // Cidade automática
         const cidades = {};
@@ -247,22 +259,29 @@ function criarMarkers(dados) {
 
         const cor = corPorCategoria(item.Categoria);
 
-        const popup = new mapboxgl.Popup({ offset: 25, closeButton: false, maxWidth: '290px' })
+        const popup = new mapboxgl.Popup({ offset: 25, closeButton: false, maxWidth: '300px' })
             .setHTML(`
-                <div style="background:#0f1724;color:white;padding:16px;border-radius:12px;font-family:Inter,sans-serif;min-width:220px;">
-                    <div style="font-size:10px;opacity:.6;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">
-                        ${item.Tipo || item.Categoria || ''}
+                <div style="background:#0f1724;color:white;padding:16px;border-radius:12px;font-family:Inter,sans-serif;min-width:230px;">
+                    <div style="font-size:9px;opacity:.5;letter-spacing:.12em;text-transform:uppercase;margin-bottom:3px;">
+                        ${item.Categoria || ''}
                     </div>
-                    <div style="font-size:14px;font-weight:600;color:${cor};margin-bottom:12px;line-height:1.3;">
-                        ${item.Descricao || item.Categoria || 'Ocorrência'}
+                    <div style="font-size:12px;font-weight:600;color:${cor};margin-bottom:2px;">
+                        ${item.Subcategoria || item.Categoria || ''}
                     </div>
-                    <div style="display:flex;flex-direction:column;gap:5px;font-size:12px;opacity:.85;">
+                    <div style="font-size:11px;opacity:.6;margin-bottom:10px;">
+                        ${item.Detalhe || ''}
+                    </div>
+                    <div style="font-size:13px;color:#e5e7eb;margin-bottom:12px;line-height:1.4;border-left:2px solid ${cor};padding-left:8px;">
+                        ${item.Descricao || 'Ocorrência registrada'}
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:4px;font-size:11.5px;opacity:.85;">
                         ${item.Bairro    ? `<span>📍 ${item.Bairro}${item.Cidade?', '+item.Cidade:''}</span>` : ''}
                         ${item.Data      ? `<span>📅 ${item.Data}${item.Hora?' às '+item.Hora:''}</span>`     : ''}
-                        ${item.Gravidade ? `<span>⚠️ ${item.Gravidade}</span>`                                 : ''}
-                        ${item.VitimasMortas  > 0 ? `<span style="color:#ef4444">☠ Mortes: ${item.VitimasMortas}</span>`   : ''}
+                        ${item.Gravidade ? `<span>⚠️ Gravidade: <strong>${item.Gravidade}</strong></span>`    : ''}
+                        ${item.VitimasMortas  > 0 ? `<span style="color:#ef4444">☠ Mortes: ${item.VitimasMortas}</span>`    : ''}
                         ${item.VitimasFeridas > 0 ? `<span style="color:#f59e0b">🚑 Feridos: ${item.VitimasFeridas}</span>` : ''}
-                        ${item.Fonte     ? `<span style="opacity:.5;font-size:10px;">Fonte: ${item.Fonte}</span>` : ''}
+                        ${item.VitimasIlesas  > 0 ? `<span style="color:#6b7280">👤 Ilesos: ${item.VitimasIlesas}</span>`   : ''}
+                        ${item.Confirmado ? `<span style="opacity:.5;font-size:10px;">✓ ${item.Confirmado} · Fonte: ${item.Fonte||'—'}</span>` : ''}
                     </div>
                     ${item.Link ? `<a href="${item.Link}" target="_blank" style="display:inline-block;margin-top:10px;font-size:10px;color:${cor};opacity:.8;text-decoration:none;">Ver notícia →</a>` : ''}
                 </div>
@@ -388,15 +407,21 @@ function atualizarContadoresCategorias(dados) {
 
 // ════════════════════════════════════════════════════════════
 // MAPEAMENTO CATEGORIAS
+// Chave = data-categoria do card HTML (sem acento, minúsculo)
+// Valor = valores EXATOS da coluna Categoria na planilha
+//
+// Planilha nova usa:
+//   Crime | Acidente | Incêndio | Afogamento |
+//   Acidente natural | Crime contra a mulher | Facções criminosas
 // ════════════════════════════════════════════════════════════
 
 const MAPA_CATEGORIAS = {
-    'crimes':                 ['crime'],
-    'acidentes':              ['acidente'],
-    'incendios':              ['incêndio'],
-    'crimes contra mulheres': ['crimes contra mulheres'],
-    'acidentes naturais':     ['afogamento', 'acidentes naturais'],
-    'faccoes criminosas':     ['facções criminosas'],
+    'crimes':                  ['crime'],
+    'acidentes':               ['acidente'],
+    'incendios':               ['incêndio'],
+    'crimes contra mulheres':  ['crime contra a mulher'],
+    'acidentes naturais':      ['afogamento', 'acidente natural'],
+    'faccoes criminosas':      ['facções criminosas'],
 };
 
 function getCatsDoCard(dataCategoria) {
