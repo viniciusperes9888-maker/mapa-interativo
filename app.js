@@ -197,7 +197,14 @@ function parseCSV(texto) {
         obj.Longitude      = parseFloat(obj.Longitude)    || 0;
         obj.VitimasFeridas = parseInt(obj.VitimasFeridas) || 0;
         obj.VitimasMortas  = parseInt(obj.VitimasMortas)  || 0;
+        obj.VitimasIlesas  = parseInt(obj.VitimasIlesas)  || 0;
 
+        // Valida coordenadas — latitude deve ser entre -90 e 90
+        // longitude entre -180 e 180. Ignora linha se inválido.
+        const latOk = obj.Latitude  >= -90  && obj.Latitude  <= 90;
+        const lngOk = obj.Longitude >= -180 && obj.Longitude <= 180;
+
+        if (!latOk || !lngOk) continue;
         if (obj.Latitude === 0 && obj.Longitude === 0) continue;
 
         dados.push(obj);
@@ -257,6 +264,11 @@ function criarMarkers(dados) {
 
     dados.forEach(item => {
 
+        // Proteção extra: pula se coordenada ainda inválida
+        if (!item.Latitude || !item.Longitude) return;
+        if (item.Latitude < -90 || item.Latitude > 90)   return;
+        if (item.Longitude < -180 || item.Longitude > 180) return;
+
         const cor = corPorCategoria(item.Categoria);
 
         const popup = new mapboxgl.Popup({ offset: 25, closeButton: false, maxWidth: '300px' })
@@ -287,18 +299,22 @@ function criarMarkers(dados) {
                 </div>
             `);
 
-        const marker = new mapboxgl.Marker({ color: cor })
-            .setLngLat([item.Longitude, item.Latitude])
-            .setPopup(popup)
-            .addTo(map);
+        try {
+            const marker = new mapboxgl.Marker({ color: cor })
+                .setLngLat([item.Longitude, item.Latitude])
+                .setPopup(popup)
+                .addTo(map);
 
-        todosMarkers.push({
-            marker,
-            categoria:  (item.Categoria || '').toLowerCase().trim(),
-            data:        item.Data || '',
-            dataISO:     dataParaISO(item.Data),
-            dados:       item
-        });
+            todosMarkers.push({
+                marker,
+                categoria:  (item.Categoria || '').toLowerCase().trim(),
+                data:        item.Data || '',
+                dataISO:     dataParaISO(item.Data),
+                dados:       item
+            });
+        } catch (e) {
+            console.warn('Marker inválido ignorado:', item.ID, e.message);
+        }
 
     });
 
