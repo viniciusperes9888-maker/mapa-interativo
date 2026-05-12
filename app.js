@@ -116,8 +116,10 @@ async function carregarDados() {
         console.log(`Coruja Presente: ${todasOcorrencias.length} registros carregados.`);
 
         criarMarkers(todasOcorrencias);
-        atualizarEstatisticas(todasOcorrencias);
         atualizarContadoresCategorias(todasOcorrencias);
+
+        // Aplica filtros e atualiza stats após criar todos os markers
+        filtrarMarkers();
 
     } catch (erro) {
 
@@ -637,6 +639,34 @@ map.on('load', () => {
     });
 
     carregarDados();
+
+});
+
+// ============================================================
+// SINCRONIZA ESTADO VISUAL DOS CARDS AO CARREGAR A PÁGINA
+// Garante que cards com .active têm o checkbox visualmente
+// marcado e que o Set categoriasAtivas está em sincronia.
+// ============================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    document.querySelectorAll('.category-card').forEach(card => {
+
+        const titulo = card.querySelector('h3')?.textContent?.toLowerCase()?.trim() || '';
+        const cats   = getCatsDoCard(titulo);
+        const isActive = card.classList.contains('active');
+
+        // Sincroniza Set com estado visual do HTML
+        if (isActive) {
+            cats.forEach(c => categoriasAtivas.add(c));
+            // Marca subcategorias também
+            card.querySelectorAll('.subcategory-item')
+                .forEach(sub => sub.classList.add('active'));
+        } else {
+            cats.forEach(c => categoriasAtivas.delete(c));
+        }
+
+    });
 
 });
 
