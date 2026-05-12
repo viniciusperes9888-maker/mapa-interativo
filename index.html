@@ -55,135 +55,208 @@
             <aside class="sidebar-left">
 
                 <div class="sidebar-header">
-                    <h2>FILTROS</h2>
+                    <h2>Filtros</h2>
                 </div>
 
-                <!-- PERÍODO -->
-                <div class="filter-section">
-                    <span class="section-title">PERÍODO</span>
-                    <div class="period-grid">
-                        <button class="period-button">24h</button>
-                        <button class="period-button">7d</button>
-                        <button class="period-button">30d</button>
-                        <button class="period-button">3m</button>
-                        <button class="period-button">1a</button>
-                        <button class="period-button active">Tudo</button>
+                <div class="sidebar-body">
+
+                    <!-- PERÍODO -->
+                    <div class="filter-section">
+                        <span class="section-title">Período</span>
+                        <div class="period-grid">
+                            <button class="period-button">24h</button>
+                            <button class="period-button">7d</button>
+                            <button class="period-button">30d</button>
+                            <button class="period-button">3m</button>
+                            <button class="period-button">1a</button>
+                            <button class="period-button active">Tudo</button>
+                        </div>
                     </div>
-                </div>
 
-                <!-- CATEGORIAS -->
-                <div class="filter-section">
-                    <span class="section-title">CATEGORIAS</span>
+                    <!-- CATEGORIAS -->
+                    <div class="filter-section">
+                        <span class="section-title">Categorias</span>
 
-                    <!-- CRIMES -->
-                    <div class="category-card active expanded" data-categoria="crimes">
-                        <div class="category-top">
-                            <div class="category-checkbox"></div>
-                            <div class="category-top-text">
-                                <h3>Crimes</h3>
-                                <span>Segurança urbana</span>
+                        <!-- CRIMES -->
+                        <div class="category-card active expanded"
+                             data-categoria="crimes"
+                             style="--cat-color: var(--c-crime)">
+                            <div class="category-top">
+                                <div class="cat-toggle category-checkbox">
+                                    <div class="cat-toggle-track"></div>
+                                    <div class="cat-toggle-thumb"></div>
+                                </div>
+                                <span class="cat-dot"></span>
+                                <div class="category-top-text">
+                                    <h3>Crimes</h3>
+                                </div>
+                                <span class="category-badge">—</span>
+                                <button class="expand-btn">−</button>
                             </div>
-                            <div class="category-badge">—</div>
-                            <button class="expand-btn">+</button>
-                        </div>
-                        <div class="subcategory-list">
-                            <!-- Tipo exato da coluna Tipo da planilha -->
-                            <div class="subcategory-item active" data-tipo="homicídio"><div class="sub-checkbox"></div><span class="sub-label">Homicídio</span></div>
-                            <div class="subcategory-item active" data-tipo="assalto"><div class="sub-checkbox"></div><span class="sub-label">Assalto / Roubo</span></div>
-                            <div class="subcategory-item active" data-tipo="furto"><div class="sub-checkbox"></div><span class="sub-label">Furto</span></div>
-                            <div class="subcategory-item active" data-tipo="tráfico"><div class="sub-checkbox"></div><span class="sub-label">Tráfico</span></div>
-                        </div>
-                    </div>
-
-                    <!-- ACIDENTES -->
-                    <div class="category-card active expanded" data-categoria="acidentes">
-                        <div class="category-top">
-                            <div class="category-checkbox"></div>
-                            <div class="category-top-text">
-                                <h3>Acidentes</h3>
-                                <span>Trânsito e vias</span>
+                            <div class="subcategory-list">
+                                <div class="subcategory-item active" data-tipo="homicídio">
+                                    <div class="sub-checkbox"></div>
+                                    <span class="sub-label">Homicídio</span>
+                                </div>
+                                <div class="subcategory-item active" data-tipo="assalto">
+                                    <div class="sub-checkbox"></div>
+                                    <span class="sub-label">Assalto / Roubo</span>
+                                </div>
+                                <div class="subcategory-item active" data-tipo="furto">
+                                    <div class="sub-checkbox"></div>
+                                    <span class="sub-label">Furto</span>
+                                </div>
+                                <div class="subcategory-item active" data-tipo="tráfico">
+                                    <div class="sub-checkbox"></div>
+                                    <span class="sub-label">Tráfico</span>
+                                </div>
+                                <div class="subcategory-item active" data-tipo="sequestro">
+                                    <div class="sub-checkbox"></div>
+                                    <span class="sub-label">Sequestro</span>
+                                </div>
+                                <div class="subcategory-item active" data-tipo="violência doméstica">
+                                    <div class="sub-checkbox"></div>
+                                    <span class="sub-label">Violência doméstica</span>
+                                </div>
                             </div>
-                            <div class="category-badge">—</div>
-                            <button class="expand-btn">+</button>
                         </div>
-                        <div class="subcategory-list">
-                            <!-- Todos os Tipos de acidente de trânsito da planilha -->
-                            <div class="subcategory-item active" data-tipo="carro"><div class="sub-checkbox"></div><span class="sub-label">Automóvel</span></div>
-                            <div class="subcategory-item active" data-tipo="moto"><div class="sub-checkbox"></div><span class="sub-label">Motocicleta</span></div>
-                            <div class="subcategory-item active" data-tipo="caminhão"><div class="sub-checkbox"></div><span class="sub-label">Caminhão</span></div>
-                            <div class="subcategory-item active" data-tipo="ônibus"><div class="sub-checkbox"></div><span class="sub-label">Ônibus</span></div>
-                            <div class="subcategory-item active" data-tipo="atropelamento"><div class="sub-checkbox"></div><span class="sub-label">Atropelamento</span></div>
-                            <div class="subcategory-item active" data-tipo="bicicleta"><div class="sub-checkbox"></div><span class="sub-label">Bicicleta</span></div>
-                        </div>
-                    </div>
 
-                    <!-- INCÊNDIOS -->
-                    <div class="category-card active expanded" data-categoria="incendios">
-                        <div class="category-top">
-                            <div class="category-checkbox"></div>
-                            <div class="category-top-text">
-                                <h3>Incêndios</h3>
-                                <span>Estrutural e vegetal</span>
+                        <!-- ACIDENTES -->
+                        <div class="category-card active expanded"
+                             data-categoria="acidentes"
+                             style="--cat-color: var(--c-acidente)">
+                            <div class="category-top">
+                                <div class="cat-toggle category-checkbox">
+                                    <div class="cat-toggle-track"></div>
+                                    <div class="cat-toggle-thumb"></div>
+                                </div>
+                                <span class="cat-dot"></span>
+                                <div class="category-top-text">
+                                    <h3>Acidentes</h3>
+                                </div>
+                                <span class="category-badge">—</span>
+                                <button class="expand-btn">−</button>
                             </div>
-                            <div class="category-badge">—</div>
-                            <button class="expand-btn">+</button>
-                        </div>
-                        <div class="subcategory-list">
-                            <div class="subcategory-item active" data-tipo="residência"><div class="sub-checkbox"></div><span class="sub-label">Residencial</span></div>
-                            <div class="subcategory-item active" data-tipo="comércio"><div class="sub-checkbox"></div><span class="sub-label">Comercial</span></div>
-                            <div class="subcategory-item active" data-tipo="veículo"><div class="sub-checkbox"></div><span class="sub-label">Veículo</span></div>
-                        </div>
-                    </div>
-
-                    <!-- CRIMES CONTRA MULHERES -->
-                    <div class="category-card active" data-categoria="crimes contra mulheres">
-                        <div class="category-top">
-                            <div class="category-checkbox"></div>
-                            <div class="category-top-text">
-                                <h3>Crimes c/ Mulheres</h3>
-                                <span>Violência de gênero</span>
+                            <div class="subcategory-list">
+                                <div class="subcategory-item active" data-tipo="carro">
+                                    <div class="sub-checkbox"></div>
+                                    <span class="sub-label">Automóvel</span>
+                                </div>
+                                <div class="subcategory-item active" data-tipo="moto">
+                                    <div class="sub-checkbox"></div>
+                                    <span class="sub-label">Motocicleta</span>
+                                </div>
+                                <div class="subcategory-item active" data-tipo="caminhão">
+                                    <div class="sub-checkbox"></div>
+                                    <span class="sub-label">Caminhão</span>
+                                </div>
+                                <div class="subcategory-item active" data-tipo="atropelamento">
+                                    <div class="sub-checkbox"></div>
+                                    <span class="sub-label">Atropelamento</span>
+                                </div>
+                                <div class="subcategory-item active" data-tipo="trabalho">
+                                    <div class="sub-checkbox"></div>
+                                    <span class="sub-label">Acidente de trabalho</span>
+                                </div>
                             </div>
-                            <div class="category-badge">—</div>
                         </div>
-                    </div>
 
-                    <!-- ACIDENTES NATURAIS / AFOGAMENTOS -->
-                    <div class="category-card active expanded" data-categoria="acidentes naturais">
-                        <div class="category-top">
-                            <div class="category-checkbox"></div>
-                            <div class="category-top-text">
-                                <h3>Acidentes Naturais</h3>
-                                <span>Clima e ambiente</span>
+                        <!-- INCÊNDIOS -->
+                        <div class="category-card active expanded"
+                             data-categoria="incendios"
+                             style="--cat-color: var(--c-incendio)">
+                            <div class="category-top">
+                                <div class="cat-toggle category-checkbox">
+                                    <div class="cat-toggle-track"></div>
+                                    <div class="cat-toggle-thumb"></div>
+                                </div>
+                                <span class="cat-dot"></span>
+                                <div class="category-top-text">
+                                    <h3>Incêndios</h3>
+                                </div>
+                                <span class="category-badge">—</span>
+                                <button class="expand-btn">−</button>
                             </div>
-                            <div class="category-badge">—</div>
-                            <button class="expand-btn">+</button>
-                        </div>
-                        <div class="subcategory-list">
-                            <div class="subcategory-item active" data-tipo="praia"><div class="sub-checkbox"></div><span class="sub-label">Afogamento (Praia)</span></div>
-                            <div class="subcategory-item active" data-tipo="rio"><div class="sub-checkbox"></div><span class="sub-label">Afogamento (Rio)</span></div>
-                            <div class="subcategory-item active" data-tipo="enchente"><div class="sub-checkbox"></div><span class="sub-label">Enchente</span></div>
-                            <div class="subcategory-item active" data-tipo="deslizamento"><div class="sub-checkbox"></div><span class="sub-label">Deslizamento</span></div>
-                        </div>
-                    </div>
-
-                    <!-- FACÇÕES -->
-                    <div class="category-card active" data-categoria="faccoes criminosas">
-                        <div class="category-top">
-                            <div class="category-checkbox"></div>
-                            <div class="category-top-text">
-                                <h3>Facções criminosas</h3>
-                                <span>Controle territorial</span>
+                            <div class="subcategory-list">
+                                <div class="subcategory-item active" data-tipo="residencial">
+                                    <div class="sub-checkbox"></div>
+                                    <span class="sub-label">Residencial</span>
+                                </div>
+                                <div class="subcategory-item active" data-tipo="comercial">
+                                    <div class="sub-checkbox"></div>
+                                    <span class="sub-label">Comercial</span>
+                                </div>
+                                <div class="subcategory-item active" data-tipo="veículo">
+                                    <div class="sub-checkbox"></div>
+                                    <span class="sub-label">Veículo</span>
+                                </div>
+                                <div class="subcategory-item active" data-tipo="vegetal">
+                                    <div class="sub-checkbox"></div>
+                                    <span class="sub-label">Vegetal</span>
+                                </div>
                             </div>
-                            <div class="category-badge">—</div>
                         </div>
+
+                        <!-- CRIMES C/ MULHERES -->
+                        <div class="category-card active"
+                             data-categoria="crimes contra mulheres"
+                             style="--cat-color: var(--c-mulher)">
+                            <div class="category-top">
+                                <div class="cat-toggle category-checkbox">
+                                    <div class="cat-toggle-track"></div>
+                                    <div class="cat-toggle-thumb"></div>
+                                </div>
+                                <span class="cat-dot"></span>
+                                <div class="category-top-text">
+                                    <h3>Crimes c/ Mulheres</h3>
+                                </div>
+                                <span class="category-badge">—</span>
+                            </div>
+                        </div>
+
+                        <!-- ACIDENTES NATURAIS -->
+                        <div class="category-card active"
+                             data-categoria="acidentes naturais"
+                             style="--cat-color: var(--c-natural)">
+                            <div class="category-top">
+                                <div class="cat-toggle category-checkbox">
+                                    <div class="cat-toggle-track"></div>
+                                    <div class="cat-toggle-thumb"></div>
+                                </div>
+                                <span class="cat-dot"></span>
+                                <div class="category-top-text">
+                                    <h3>Acidentes Naturais</h3>
+                                </div>
+                                <span class="category-badge">—</span>
+                            </div>
+                        </div>
+
+                        <!-- FACÇÕES -->
+                        <div class="category-card active"
+                             data-categoria="faccoes criminosas"
+                             style="--cat-color: var(--c-faccao)">
+                            <div class="category-top">
+                                <div class="cat-toggle category-checkbox">
+                                    <div class="cat-toggle-track"></div>
+                                    <div class="cat-toggle-thumb"></div>
+                                </div>
+                                <span class="cat-dot"></span>
+                                <div class="category-top-text">
+                                    <h3>Facções Criminosas</h3>
+                                </div>
+                                <span class="category-badge">—</span>
+                            </div>
+                        </div>
+
+                    </div><!-- /filter-section categorias -->
+
+                    <!-- CIDADE ATIVA -->
+                    <div class="city-box">
+                        <span>Cidade ativa</span>
+                        <strong id="cidade-ativa-label">Carregando...</strong>
                     </div>
 
-                </div>
-
-                <div class="city-box">
-                    <span>CIDADE ATIVA</span>
-                    <strong id="cidade-ativa-label">Carregando...</strong>
-                </div>
+                </div><!-- /sidebar-body -->
 
             </aside>
 
