@@ -295,69 +295,63 @@ function criarMarkers(arr) {
     const cor   = CONFIG.cores[item.Categoria?.trim()] || CONFIG.cores['default'];
     const icone = getIcone(item.Subcategoria, item.Categoria);
 
-    /* Div customizado como marker */
+    /* Elemento do marker — círculo simples com emoji, sem rotação */
     const el = document.createElement('div');
-    el.className = 'custom-marker';
     el.style.cssText = `
-      width:30px; height:30px;
-      background:${cor};
-      border:2px solid rgba(255,255,255,0.25);
-      border-radius:50% 50% 50% 0;
-      transform:rotate(-45deg);
-      display:flex; align-items:center; justify-content:center;
-      cursor:pointer;
-      box-shadow:0 2px 8px rgba(0,0,0,0.5);
-      transition:transform .15s ease, box-shadow .15s ease;
-      position:relative;
+      width: 32px;
+      height: 32px;
+      background: ${cor};
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.55);
+      transition: transform .12s ease, box-shadow .12s ease;
+      font-size: 14px;
+      line-height: 1;
+      user-select: none;
     `;
-
-    const inner = document.createElement('div');
-    inner.style.cssText = `
-      transform:rotate(45deg);
-      font-size:13px; line-height:1;
-      user-select:none;
-    `;
-    inner.textContent = icone;
-    el.appendChild(inner);
+    el.textContent = icone;
 
     el.addEventListener('mouseenter', () => {
-      el.style.transform = 'rotate(-45deg) scale(1.25)';
-      el.style.boxShadow = `0 4px 16px ${cor}88`;
-      el.style.zIndex = '999';
+      el.style.transform = 'scale(1.3)';
+      el.style.boxShadow = `0 4px 14px ${cor}99`;
     });
     el.addEventListener('mouseleave', () => {
-      el.style.transform = 'rotate(-45deg) scale(1)';
-      el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.5)';
-      el.style.zIndex = '';
+      el.style.transform = 'scale(1)';
+      el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.55)';
     });
 
     const popup = new mapboxgl.Popup({
-      offset: [0, -32],
+      offset: 18,
       closeButton: false,
       maxWidth: '300px',
     }).setHTML(`
       <div style="background:#1a1a1a;color:#f2f2f2;padding:14px 16px;border-radius:11px;font-family:Inter,sans-serif;min-width:210px;">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-          <span style="font-size:18px">${icone}</span>
+          <span style="font-size:20px">${icone}</span>
           <div>
-            <div style="font-size:11px;font-weight:600;color:${cor}">${item.Subcategoria||item.Categoria||'—'}</div>
+            <div style="font-size:12px;font-weight:600;color:${cor}">${item.Subcategoria||item.Categoria||'—'}</div>
             <div style="font-size:9px;opacity:.5;letter-spacing:.1em;text-transform:uppercase">${item.Categoria||''}</div>
           </div>
         </div>
         <div style="font-size:12.5px;color:#ddd;line-height:1.4;border-left:2px solid ${cor};padding-left:8px;margin-bottom:10px">${item.Descricao||'Ocorrência registrada'}</div>
-        <div style="font-size:11px;opacity:.75;display:flex;flex-direction:column;gap:3px">
-          ${item.Bairro  ?`<span>📍 ${item.Bairro}${item.Cidade?', '+item.Cidade:''}</span>`:''}
-          ${item.Data    ?`<span>📅 ${item.Data}${item.Hora?' às '+item.Hora:''}</span>`:''}
+        <div style="font-size:11px;opacity:.8;display:flex;flex-direction:column;gap:3px">
+          ${item.Bairro   ?`<span>📍 ${item.Bairro}${item.Cidade?', '+item.Cidade:''}</span>`:''}
+          ${item.Data     ?`<span>📅 ${item.Data}${item.Hora?' às '+item.Hora:''}</span>`:''}
           ${item.Gravidade?`<span>⚠️ ${item.Gravidade}${item.Detalhe?' · '+item.Detalhe:''}</span>`:''}
           ${item.VitimasMortas >0?`<span style="color:#E05252;font-weight:600">☠ ${item.VitimasMortas} morte${item.VitimasMortas>1?'s':''}</span>`:''}
           ${item.VitimasFeridas>0?`<span style="color:#D4853A">🚑 ${item.VitimasFeridas} ferido${item.VitimasFeridas>1?'s':''}</span>`:''}
+          ${item.Confirmado?`<span style="opacity:.4;font-size:10px">✓ ${item.Confirmado} · ${item.Fonte||''}</span>`:''}
         </div>
         ${item.Link?`<a href="${item.Link}" target="_blank" style="display:inline-block;margin-top:8px;font-size:10px;color:${cor};opacity:.7;text-decoration:none">Ver fonte →</a>`:''}
       </div>
     `);
 
     try {
-      const marker = new mapboxgl.Marker({ element: el, anchor: 'bottom-left' })
+      const marker = new mapboxgl.Marker({ element: el, anchor: 'center' })
         .setLngLat([item.Longitude, item.Latitude])
         .setPopup(popup)
         .addTo(map);
